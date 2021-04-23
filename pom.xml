@@ -12,7 +12,7 @@
   <artifactId>edge-inn-reach</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>edge-inn-reach</name>
-  <description>Access to INN-Reach service</description>
+  <description>INN-REACH system Edge API module</description>
 
   <licenses>
     <license>
