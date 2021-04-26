@@ -18,5 +18,4 @@ public class EdgeInnReachApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EdgeInnReachApplication.class, args);
 	}
-
 }

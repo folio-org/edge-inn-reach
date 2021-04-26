@@ -16,11 +16,13 @@ import java.io.IOException;
 public class INNReachStatusController {
   OkHttpClient client = new OkHttpClient().newBuilder()
     .build();
+
   @GetMapping("/innreach/v2/status")
   public ResponseEntity<String> okResponse(Model model, HttpServletRequest request) {
     Request newrequest = new Request.Builder()
-      .url("http://"+request.getHeader("host")+"/actuator/health")
+      .url("http://" + request.getHeader("host") + "/actuator/health")
       .method("GET", null)
+      .addHeader("X-Okapi-Tenant", "testtenant")
       .build();
     try {
       Response response = client.newCall(newrequest).execute();

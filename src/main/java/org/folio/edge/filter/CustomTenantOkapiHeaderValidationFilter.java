@@ -2,10 +2,8 @@ package org.folio.edge.filter;
 
 import lombok.RequiredArgsConstructor;
 import org.folio.spring.filter.TenantOkapiHeaderValidationFilter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -39,5 +37,4 @@ public class CustomTenantOkapiHeaderValidationFilter extends TenantOkapiHeaderVa
     var requestURI = servletRequest.getRequestURI();
     return tenantOkapiHeaderValidationFilterExcludeUrls.contains(requestURI);
   }
-
 }

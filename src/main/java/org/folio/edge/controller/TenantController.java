@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-
 @Log4j2
 @RestController("folioTenantController")
 @RequestMapping(value = "/_/")
