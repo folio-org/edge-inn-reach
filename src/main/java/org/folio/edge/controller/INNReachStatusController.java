@@ -14,18 +14,18 @@ import java.io.IOException;
 
 @RestController("innReachStratusController")
 public class INNReachStatusController {
-  OkHttpClient client = new OkHttpClient().newBuilder()
+  private final OkHttpClient client = new OkHttpClient().newBuilder()
     .build();
 
   @GetMapping("/innreach/v2/status")
   public ResponseEntity<String> okResponse(Model model, HttpServletRequest request) {
-    Request newrequest = new Request.Builder()
+    Request newRequest = new Request.Builder()
       .url("http://" + request.getHeader("host") + "/actuator/health")
       .method("GET", null)
       .addHeader("X-Okapi-Tenant", "testtenant")
       .build();
     try {
-      Response response = client.newCall(newrequest).execute();
+      Response response = client.newCall(newRequest).execute();
       return response.code() == HttpStatus.OK.value() ?
         ResponseEntity.ok("OK") : ResponseEntity.status(response.code()).body("");
     } catch (IOException e) {
