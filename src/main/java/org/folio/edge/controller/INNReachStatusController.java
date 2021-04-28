@@ -21,13 +21,13 @@ public class INNReachStatusController {
 
   @GetMapping("/innreach/v2/status")
   public ResponseEntity<String> okResponse(Model model, HttpServletRequest request) {
-    Request newRequest = new Request.Builder()
+    var newRequest = new Request.Builder()
       .url("http://" + request.getHeader("host") + "/actuator/health")
       .method("GET", null)
       .addHeader("X-Okapi-Tenant", "testtenant")
       .build();
     try {
-      Response response = client.newCall(newRequest).execute();
+      var response = client.newCall(newRequest).execute();
       return response.code() == HttpStatus.OK.value() ?
         ResponseEntity.ok("OK") : ResponseEntity.status(response.code()).body("");
     } catch (IOException e) {
