@@ -28,6 +28,7 @@
     <openapi.input.file>${project.basedir}/src/main/resources/swagger.api/inn-reach.yaml</openapi.input.file>
     <mapstruct.version>1.3.1.Final</mapstruct.version>
     <json.version>20200518</json.version>
+    <wiremock.version>2.27.2</wiremock.version>
     <sonar.exclusions>
       src/main/java/org/folio/edge/controller/TenantController.java,
       src/main/java/org/folio/edge/EdgeInnReachApplication.java
@@ -100,6 +101,12 @@
           <artifactId>logback-classic</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-standalone</artifactId>
+      <version>${wiremock.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
