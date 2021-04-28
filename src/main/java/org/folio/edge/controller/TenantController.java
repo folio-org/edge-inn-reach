@@ -16,7 +16,6 @@ public class TenantController implements TenantApi {
 
   @Override
   public ResponseEntity<String> postTenant(@Valid TenantAttributes tenantAttributes) {
-
     return ResponseEntity.ok().body("true");
   }
 }

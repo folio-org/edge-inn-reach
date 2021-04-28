@@ -1,5 +1,6 @@
 package org.folio.edge.controller;
 
+import lombok.extern.log4j.Log4j2;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@Log4j2
 @RestController("innReachStratusController")
 public class INNReachStatusController {
   private final OkHttpClient client = new OkHttpClient().newBuilder()
@@ -29,7 +31,7 @@ public class INNReachStatusController {
       return response.code() == HttpStatus.OK.value() ?
         ResponseEntity.ok("OK") : ResponseEntity.status(response.code()).body("");
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error(getClass().getName(),e);
     }
     return null;
   }
