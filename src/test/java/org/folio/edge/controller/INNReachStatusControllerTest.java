@@ -1,5 +1,6 @@
 package org.folio.edge.controller;
 
+import lombok.SneakyThrows;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ class INNReachStatusControllerTest {
   }
 
   @Test
-  void shouldReturnBadRequestForActuatorHealthWithoutTenantHeader() {
+  void shouldReturnBadRequestForActuatorHealthWithoutTenantHeader() throws Exception {
     headers.clear();
     HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> restTemplate
       .exchange(String.format(ACTUATOR_HEALTH_URL, port), HttpMethod.GET, new HttpEntity<>(headers), String.class));
