@@ -3,13 +3,15 @@ package org.folio.edge.controller;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
@@ -20,19 +22,15 @@ public class INNReachStatusController {
     .build();
 
   @GetMapping("/innreach/v2/status")
-  public ResponseEntity<String> okResponse(Model model, HttpServletRequest request) {
+  @ExceptionHandler({ IOException.class})
+  public ResponseEntity<String> okResponse(Model model, HttpServletRequest request) throws IOException {
     var newRequest = new Request.Builder()
       .url("http://" + request.getHeader("host") + "/actuator/health")
       .method("GET", null)
       .addHeader("X-Okapi-Tenant", "testtenant")
       .build();
-    try {
       var response = client.newCall(newRequest).execute();
       return response.code() == HttpStatus.OK.value() ?
         ResponseEntity.ok("OK") : ResponseEntity.status(response.code()).body("");
-    } catch (IOException e) {
-      log.error(getClass().getName(),e);
-    }
-    return null;
   }
 }
