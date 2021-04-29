@@ -1,0 +1,13 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: edge-inn-reach
+  liquibase:
+    enabled: false
+folio:
+  tenant:
+    validation:
+      enabled: true
+debug: false
+
