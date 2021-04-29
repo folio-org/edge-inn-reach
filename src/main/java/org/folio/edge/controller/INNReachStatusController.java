@@ -7,7 +7,6 @@ import okhttp3.Request;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,14 +20,19 @@ public class INNReachStatusController {
     .build();
 
   @GetMapping("/innreach/v2/status")
-  public ResponseEntity<String> okResponse(Model model, HttpServletRequest request) throws IOException {
+  public ResponseEntity<String> okResponse(Model model, HttpServletRequest request) {
     var newRequest = new Request.Builder()
       .url("http://" + request.getHeader("host") + "/actuator/health")
       .method("GET", null)
       .addHeader("X-Okapi-Tenant", "testtenant")
       .build();
+    try {
       var response = client.newCall(newRequest).execute();
       return response.code() == HttpStatus.OK.value() ?
         ResponseEntity.ok("OK") : ResponseEntity.status(response.code()).body("");
+    } catch (IOException e) {
+      log.error("InnReachStatusController",e.getMessage());
+    }
+    return ResponseEntity.badRequest().body("Bad request");
   }
 }
