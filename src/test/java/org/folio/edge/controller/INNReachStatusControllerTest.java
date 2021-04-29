@@ -49,9 +49,13 @@ class INNReachStatusControllerTest {
   @Test
   void shouldReturnBadRequestForActuatorHealthWithoutTenantHeader() throws Exception {
     headers.clear();
-    HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> restTemplate
-      .exchange(String.format(ACTUATOR_HEALTH_URL, port), HttpMethod.GET, new HttpEntity<>(headers), String.class));
-    assertThat(exception.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+    try {
+      HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> restTemplate
+        .exchange(String.format(ACTUATOR_HEALTH_URL, port), HttpMethod.GET, new HttpEntity<>(headers), String.class));
+      assertThat(exception.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
