@@ -13,7 +13,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {"management.port=0"})
-class TenantControllerTestIT {
+class TenantControllerTest {
 
   @LocalServerPort
   private int localServerPort;
@@ -38,7 +38,7 @@ class TenantControllerTestIT {
   }
 
   @Test
-  public void getTenantWithoutHeaderShouldReturnBadRequest() throws Exception {
+  void getTenantWithoutHeaderShouldReturnBadRequest() throws Exception {
     @SuppressWarnings("rawtypes")
     ResponseEntity<String> entity = this.testRestTemplate.getForEntity(
       "http://localhost:" + this.localServerPort + "/_/tenant", String.class);

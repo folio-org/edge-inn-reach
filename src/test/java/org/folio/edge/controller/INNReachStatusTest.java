@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
 
-class INNReachStatusTestIT {
+class INNReachStatusTest {
   private static final String STATUS_URL = "http://localhost:%s/innreach/v2/status";
   private static HttpHeaders headers;
   private static RestTemplate restTemplate;
