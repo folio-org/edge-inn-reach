@@ -15,6 +15,16 @@
           "pathPattern": "/_/tenant/{id}"
         }
       ]
+    },
+    {
+      "id": "inn-reach",
+      "version": "2.0",
+      "handrlers":[
+        {
+          "methods": ["GET"],
+          "pathPattern": "/innreach/v2/status"
+        }
+      ]
     }
   ],
   "permissionSets" : [],
