@@ -22,7 +22,7 @@ import java.util.List;
 )
 public class CustomTenantOkapiHeaderValidationFilter extends TenantOkapiHeaderValidationFilter {
 
-  private final List<String> tenantOkapiHeaderValidationFilterExcludeUrls;
+  private final List<String> tenantOkapiHeaderValidationFilterUrls;
 
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -35,6 +35,6 @@ public class CustomTenantOkapiHeaderValidationFilter extends TenantOkapiHeaderVa
 
   private boolean excludeFromFiltering(HttpServletRequest servletRequest) {
     var requestURI = servletRequest.getRequestURI();
-    return tenantOkapiHeaderValidationFilterExcludeUrls.contains(requestURI);
+    return tenantOkapiHeaderValidationFilterUrls.stream().filter(x->requestURI.startsWith(x)).findAny().isEmpty();
   }
 }

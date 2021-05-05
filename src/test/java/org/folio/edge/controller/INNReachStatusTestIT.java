@@ -22,9 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
 
-class INNReachStatusControllerTest {
+class INNReachStatusTestIT {
   private static final String STATUS_URL = "http://localhost:%s/innreach/v2/status";
-  private static final String ACTUATOR_HEALTH_URL = "http://localhost:%s/actuator/health";
   private static HttpHeaders headers;
   private static RestTemplate restTemplate;
 
@@ -43,27 +42,6 @@ class INNReachStatusControllerTest {
     ResponseEntity<String> response = restTemplate
       .exchange(String.format(STATUS_URL, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getBody(),is("OK"));
-  }
-
-  @Test
-  void shouldReturnBadRequestForActuatorHealthWithoutTenantHeader() throws Exception {
-    headers.clear();
-    try {
-      HttpClientErrorException exception = assertThrows(HttpClientErrorException.class, () -> restTemplate
-        .exchange(String.format(ACTUATOR_HEALTH_URL, port), HttpMethod.GET, new HttpEntity<>(headers), String.class));
-      assertThat(exception.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  @Test
-  void shouldReturnActuatorHealth() {
-    headers.clear();
-    headers.add(XOkapiHeaders.TENANT, "test_tenant");
-    ResponseEntity<String> response = restTemplate
-      .exchange(String.format(ACTUATOR_HEALTH_URL, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
-    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(response.getBody(),is("{\"status\":\"UP\"}"));
   }
 }

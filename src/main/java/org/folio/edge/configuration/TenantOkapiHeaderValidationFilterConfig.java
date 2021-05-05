@@ -14,6 +14,6 @@ public class TenantOkapiHeaderValidationFilterConfig {
 
   @Bean
   public List<String> tenantOkapiHeaderValidationFilterExcludeUrls() {
-    return List.of("/innreach/v2/status");
+    return List.of("/_/");
   }
 }

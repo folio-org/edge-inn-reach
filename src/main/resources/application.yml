@@ -5,6 +5,25 @@ spring:
     name: edge-inn-reach
   liquibase:
     enabled: false
+management:
+  #management.endpoints.web.base-path=/myapp
+  #management.endpoints.web.path-mapping.health=apphealth
+  #server:
+  #  port: 9001
+  endpoints:
+    web:
+      exposure:
+        include: "*"  #<2>
+      base-path: /innreach/v2/
+      path-mapping:
+        health: status
+    enabled-by-default: on
+  endpoint:
+    health:
+      show-details: when_authorized
+    shutdown:
+      enabled: on
+
 folio:
   tenant:
     validation:
