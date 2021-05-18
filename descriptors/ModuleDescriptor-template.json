@@ -1,51 +1,65 @@
 {
   "id": "@artifactId@-@version@",
   "name": "INN-REACH system Edge API module",
-  "provides": [
-    {
-      "id": "_tenant",
-      "version": "2.0",
-      "interfaceType": "system",
-      "handlers": [
-        {
-          "methods": ["POST"],
-          "pathPattern": "/_/tenant"
-        }, {
-          "methods": ["GET","DELETE"],
-          "pathPattern": "/_/tenant/{id}"
-        }
-      ]
-    },
-    {
-      "id": "inn-reach",
-      "version": "2.0",
-      "handrlers":[
-        {
-          "methods": ["GET"],
-          "pathPattern": "/innreach/v2/status"
-        }
-      ]
-    }
-  ],
-  "permissionSets" : [],
   "requires": [
     {
       "id": "login",
       "version": "5.0 6.0 7.0"
     }
   ],
+  "provides": [],
+  "permissionSets" : [],
   "launchDescriptor": {
     "dockerImage": "@artifactId@:@version@",
     "dockerPull": false,
     "dockerArgs": {
       "HostConfig": {
-        "Memory": 268435456,
-        "PortBindings": { "8081/tcp": [ { "HostPort": "%p" } ] }
+        "Memory": 536870912,
+        "PortBindings": {
+          "8081/tcp": [
+            {
+              "HostPort": "%p"
+            }
+          ]
+        }
       }
     },
     "env": [
-      { "name": "JAVA_OPTIONS",
-        "value": "-XX:MaxRAMPercentage=66.0"
+      {
+        "name": "JAVA_OPTIONS",
+        "value": "-XX:MaxRAMPercentage=85.0"
+      },
+      {
+        "name": "DB_HOST",
+        "value": "postgres"
+      },
+      {
+        "name": "DB_PORT",
+        "value": "5432"
+      },
+      {
+        "name": "DB_USERNAME",
+        "value": "folio_admin"
+      },
+      {
+        "name": "DB_PASSWORD",
+        "value": "folio_admin"
+      },
+      {
+        "name": "DB_DATABASE",
+        "value": "okapi_modules"
+      },
+      {
+        "name": "DB_QUERYTIMEOUT",
+        "value": "60000"
+      },
+      {
+        "name": "DB_CHARSET",
+        "value": "UTF-8"
+      },
+      {
+        "name": "DB_MAXPOOLSIZE",
+        "value": "5"
       }
     ]
   }
