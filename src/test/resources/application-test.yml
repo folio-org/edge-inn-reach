@@ -7,6 +7,8 @@ spring:
     enabled: false
   jackson:
     default-property-inclusion: NON_EMPTY
+  mustache:
+    check-template-location: false
 feign:
   client:
     config:
