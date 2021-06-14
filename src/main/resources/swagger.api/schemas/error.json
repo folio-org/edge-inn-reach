@@ -2,26 +2,18 @@
   "description": "An error",
   "type": "object",
   "properties": {
-    "message": {
+    "error": {
       "type": "string",
-      "description": "Error message text"
+      "description": "Error message"
     },
-    "type": {
+    "error_description": {
       "type": "string",
-      "description": "Error message type"
-    },
-    "code": {
-      "type": "string",
-      "description": "Error message code"
-    },
-    "parameters": {
-      "type": "object",
-      "description": "Error message parameters",
-      "$ref": "parameters.json"
+      "description": "Error description"
     }
   },
   "additionalProperties": false,
   "required": [
-    "message"
+    "error",
+    "error_description"
   ]
 }

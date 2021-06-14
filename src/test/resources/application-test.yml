@@ -23,3 +23,8 @@ folio:
   tenant:
     validation:
       enabled: false
+wiremock:
+  mod-inn-reach:
+    port: 8001
+okapi:
+  url: http://localhost:8080

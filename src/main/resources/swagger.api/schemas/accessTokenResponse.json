@@ -1,0 +1,18 @@
+{
+  "description": "Access token response",
+  "type": "object",
+  "properties": {
+    "access_token": {
+      "description": "Access token",
+      "type": "string"
+    },
+    "token_type": {
+      "description": "Access token type",
+      "type": "string"
+    },
+    "expires_in": {
+      "description": "Access token expiration time",
+      "type": "integer"
+    }
+  }
+}

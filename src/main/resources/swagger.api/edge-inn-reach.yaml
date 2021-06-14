@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  title: Edge INN-Reach API
+  version: v1
+servers:
+  - url: /innreach/
+paths:
+  /v2/oauth2/token:
+    post:
+      description: Authenticate credentials and get a new JWT token
+      operationId: getToken
+      tags:
+        - authentication
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/accessTokenResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+      parameters:
+        - $ref: '#/components/parameters/grant_type'
+        - $ref: '#/components/parameters/scope'
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/x_from_code'
+        - $ref: '#/components/parameters/x_request_creation_time'
+        - $ref: '#/components/parameters/x_to_code'
+components:
+  schemas:
+    accessTokenResponse:
+      $ref: schemas/accessTokenResponse.json
+    error:
+      $ref: schemas/error.json
+  parameters:
+    grant_type:
+      name: grant_type
+      in: query
+      description: The authorization grant type
+      schema:
+        type: string
+        pattern: client_credentials
+      required: true
+      allowEmptyValue: false
+    scope:
+      name: scope
+      in: query
+      description: Access token scope
+      schema:
+        type: string
+        pattern: innreach_tp
+      required: true
+      allowEmptyValue: false
+    authorization:
+      name: authorization
+      in: header
+      description: Authorization in form <token_type> <access_token> as returned by the authorization request
+      schema:
+        type: string
+    x_from_code:
+      name: x-from-code
+      in: header
+      description: Central/local code of sending system (five-character code).
+      schema:
+        type: string
+      required: true
+    x_request_creation_time:
+      name: x-request-creation-time
+      in: header
+      description: epoch UNIX time stamp
+      schema:
+        type: integer
+      required: true
+    x_to_code:
+      name: x-to-code
+      in: header
+      description: Central/local code of destination system (five-character code).
+      schema:
+        type: string
+      required: true
