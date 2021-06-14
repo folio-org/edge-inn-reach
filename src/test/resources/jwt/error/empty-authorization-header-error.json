@@ -1,0 +1,4 @@
+{
+  "httpCode": 401,
+  "message": "Empty authorization header"
+}

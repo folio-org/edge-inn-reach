@@ -1,0 +1,4 @@
+{
+  "httpCode": 401,
+  "message": "Invalid authorization scheme"
+}
