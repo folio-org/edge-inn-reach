@@ -1,4 +1,4 @@
-package org.folio.edge.external.model;
+package org.folio.edge.external;
 
 public class InnReachHttpHeaders {
 

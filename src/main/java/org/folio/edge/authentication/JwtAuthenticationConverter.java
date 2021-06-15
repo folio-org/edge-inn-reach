@@ -7,11 +7,10 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.folio.edge.domain.dto.JwtAccessToken;
+import org.folio.edge.domain.service.AccessTokenService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,8 +19,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.util.StringUtils;
 
-import org.folio.edge.config.JwtConfiguration;
-
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_AUTH_SCHEME;
 
 @RequiredArgsConstructor
@@ -29,24 +26,29 @@ public class JwtAuthenticationConverter implements AuthenticationConverter {
 
   private static final String AUTHORITIES_CLAIMS = "authorities";
 
-  private final JwtConfiguration jwtConfiguration;
+  private final AccessTokenService<JwtAccessToken, Jwt> accessTokenService;
 
   @Override
   public UsernamePasswordAuthenticationToken convert(HttpServletRequest httpServletRequest) {
-    var jwtTokenString = getJwtTokenString(httpServletRequest);
+    var jwtAccessToken = extractJwtTokenFromHeader(httpServletRequest);
 
-    var jwtToken = parseJwtTokenString(jwtTokenString);
+    var verifiedJwtToken = accessTokenService.verifyAccessToken(jwtAccessToken);
 
-    var claims = (Claims) jwtToken.getBody();
+    var claims = (Claims) verifiedJwtToken.getBody();
     var authoritiesClaims = (List<String>) claims.get(AUTHORITIES_CLAIMS);
 
     return new UsernamePasswordAuthenticationToken(claims.getSubject(), null, collectGrantedAuthorities(
         authoritiesClaims));
   }
 
-  private String getJwtTokenString(HttpServletRequest httpServletRequest) {
+  private JwtAccessToken extractJwtTokenFromHeader(HttpServletRequest httpServletRequest) {
     var validatedAuthorizationHeader = getValidatedAuthorizationHeader(httpServletRequest);
-    return validatedAuthorizationHeader.replaceAll(BEARER_AUTH_SCHEME, "").trim();
+    var jwtToken = validatedAuthorizationHeader.replaceAll(BEARER_AUTH_SCHEME, "").trim();
+
+    return JwtAccessToken
+      .builder()
+      .token(jwtToken)
+      .build();
   }
 
   private String getValidatedAuthorizationHeader(HttpServletRequest httpServletRequest) {
@@ -67,17 +69,6 @@ public class JwtAuthenticationConverter implements AuthenticationConverter {
     }
 
     return authorizationHeader;
-  }
-
-  private Jwt<Header, Claims> parseJwtTokenString(String jwtTokenString) {
-    try {
-      return Jwts.parser()
-        .setSigningKey(jwtConfiguration.getSecretKey())
-        .requireIssuer(jwtConfiguration.getIssuer())
-        .parse(jwtTokenString);
-    } catch (JwtException e) {
-      throw new BadCredentialsException(e.getMessage());
-    }
   }
 
   // GrantedAuthorities used by Spring security in case if user has some specific permissions, roles, etc.

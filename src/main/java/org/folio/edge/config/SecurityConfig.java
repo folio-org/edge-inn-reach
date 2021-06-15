@@ -1,23 +1,27 @@
 package org.folio.edge.config;
 
+import java.util.List;
+
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
-import org.folio.edge.authentication.JwtAuthenticationConverter;
-import org.folio.edge.authentication.filter.ExceptionHandlerFilter;
-import org.folio.edge.authentication.filter.JwtTokenVerifyFilter;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import org.folio.edge.authentication.JwtAuthenticationConverter;
+import org.folio.edge.domain.dto.JwtAccessToken;
+import org.folio.edge.domain.service.AccessTokenService;
+import org.folio.edge.filter.ExceptionHandlerFilter;
+import org.folio.edge.filter.JwtTokenVerifyFilter;
+
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private final JwtConfiguration jwtConfiguration;
+  private final AccessTokenService<JwtAccessToken, Jwt> accessTokenService;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -32,13 +36,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .anyRequest()
       .authenticated()
       .and()
-      .addFilterBefore(new JwtTokenVerifyFilter(new JwtAuthenticationConverter(jwtConfiguration)), UsernamePasswordAuthenticationFilter.class)
+      .addFilterBefore(new JwtTokenVerifyFilter(tokenVerifyFilterIgnoreURIList(),
+        new JwtAuthenticationConverter(accessTokenService)), UsernamePasswordAuthenticationFilter.class)
       .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenVerifyFilter.class);
   }
 
-  @Bean
-  public AuthenticationManager authenticationManager() throws Exception {
-    return super.authenticationManager();
+  private List<String> tokenVerifyFilterIgnoreURIList() {
+    return List.of("/v2/oauth2/token");
   }
 
   public static class AuthenticationScheme {

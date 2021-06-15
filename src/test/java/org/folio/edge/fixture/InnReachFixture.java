@@ -1,7 +1,8 @@
 package org.folio.edge.fixture;
 
-import org.folio.edge.domain.dto.AccessTokenRequest;
-import org.folio.edge.external.model.InnReachHttpHeaders;
+import org.folio.edge.domain.dto.AuthenticationRequest;
+import org.folio.edge.domain.dto.InnReachHeadersHolder;
+import org.folio.edge.external.InnReachHttpHeaders;
 import org.springframework.http.HttpHeaders;
 
 import java.util.Base64;
@@ -12,8 +13,8 @@ import static org.folio.edge.util.TestUtil.randomFiveCharacterCode;
 
 public class InnReachFixture {
 
-  public static AccessTokenRequest createAccessTokenRequest() {
-   return AccessTokenRequest
+  public static InnReachHeadersHolder createInnReachHeadersHolder() {
+    return InnReachHeadersHolder
       .builder()
       .authorization(createAuthenticationToken())
       .xRequestCreationTime(Integer.MAX_VALUE)

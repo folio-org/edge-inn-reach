@@ -2,17 +2,19 @@ package org.folio.edge.authentication;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import static org.folio.edge.util.TestUtils.readStringFromFile;
+import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
 import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +25,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import org.folio.edge.config.JwtConfiguration;
+import org.folio.edge.domain.dto.JwtAccessToken;
+import org.folio.edge.domain.service.AccessTokenService;
 
 class JwtAuthenticationConverterTest {
 
@@ -31,17 +34,21 @@ class JwtAuthenticationConverterTest {
   private static final String TEST_JWT_SIGNATURE_SECRET = "secret";
   private static final String TEST_PRINCIPAL = "1234567890";
 
-  private static final SecretKeySpec TEST_JWT_SECRET_KEY = new SecretKeySpec(TEST_JWT_SIGNATURE_SECRET.getBytes(),
-      SignatureAlgorithm.HS256.getJcaName());
+  private static final SecretKeySpec TEST_JWT_SECRET_KEY = new SecretKeySpec(
+    TEST_JWT_SIGNATURE_SECRET.getBytes(),
+    SignatureAlgorithm.HS256.getJcaName()
+  );
 
-  private static final List<SimpleGrantedAuthority> TEST_AUTHORITIES = List.of(new SimpleGrantedAuthority(
-      "authority_a"), new SimpleGrantedAuthority("authority_b"));
+  private static final List<SimpleGrantedAuthority> TEST_AUTHORITIES = List.of(
+    new SimpleGrantedAuthority("authority_a"),
+    new SimpleGrantedAuthority("authority_b")
+  );
 
   @Mock
   private HttpServletRequest httpServletRequest;
 
   @Mock
-  private JwtConfiguration jwtConfiguration;
+  private AccessTokenService<JwtAccessToken, Jwt> accessTokenService;
 
   @InjectMocks
   private JwtAuthenticationConverter jwtAuthenticationConverter;
@@ -49,8 +56,6 @@ class JwtAuthenticationConverterTest {
   @BeforeEach
   private void setupBeforeEach() {
     MockitoAnnotations.initMocks(this);
-
-    when(jwtConfiguration.getSecretKey()).thenReturn(TEST_JWT_SECRET_KEY);
   }
 
   @Test
@@ -84,10 +89,16 @@ class JwtAuthenticationConverterTest {
 
   @Test
   void returnAuthorizationToken_when_authorizationHeaderIsCorrectBearerJwtToken() {
-    var jwtTokenString = readStringFromFile("/jwt/token/jwt-simple.txt");
+    var jwtTokenString = readFileContentAsString("/jwt/token/jwt-simple.txt");
+
+    var jwt = Jwts.parser()
+      .setSigningKey(TEST_JWT_SECRET_KEY)
+      .parse(jwtTokenString);
 
     when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(String.format("%s %s",
         AUTHENTICATION_SCHEME_BEARER, jwtTokenString));
+
+    when(accessTokenService.verifyAccessToken(any())).thenReturn(jwt);
 
     var usernamePasswordAuthenticationToken = jwtAuthenticationConverter.convert(httpServletRequest);
 
@@ -97,10 +108,16 @@ class JwtAuthenticationConverterTest {
 
   @Test
   void returnAuthorizationTokenWithAuthorities_when_authorizationHeaderIsCorrectBearerJwtToken() {
-    var jwtTokenString = readStringFromFile("/jwt/token/jwt-with-authorities.txt");
+    var jwtTokenString = readFileContentAsString("/jwt/token/jwt-with-authorities.txt");
+
+    var jwt = Jwts.parser()
+      .setSigningKey(TEST_JWT_SECRET_KEY)
+      .parse(jwtTokenString);
 
     when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(String.format("%s %s",
         AUTHENTICATION_SCHEME_BEARER, jwtTokenString));
+
+    when(accessTokenService.verifyAccessToken(any())).thenReturn(jwt);
 
     var usernamePasswordAuthenticationToken = jwtAuthenticationConverter.convert(httpServletRequest);
 

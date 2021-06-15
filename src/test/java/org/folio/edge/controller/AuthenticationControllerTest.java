@@ -1,6 +1,5 @@
 package org.folio.edge.controller;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serviceUnavailable;
@@ -21,9 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.folio.edge.controller.base.BaseControllerTest;
 import org.folio.edge.dto.AccessTokenResponse;
 import org.folio.edge.dto.Error;
-import org.folio.edge.external.model.InnReachHttpHeaders;
+import org.folio.edge.external.InnReachHttpHeaders;
 
 import java.util.Base64;
 import java.util.List;

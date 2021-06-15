@@ -3,16 +3,15 @@ package org.folio.edge.controller;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import lombok.RequiredArgsConstructor;
+import org.folio.edge.domain.dto.InnReachHeadersHolder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.folio.edge.domain.dto.AccessTokenRequest;
+import org.folio.edge.domain.dto.AuthenticationRequest;
 import org.folio.edge.domain.service.AuthenticationService;
 import org.folio.edge.dto.AccessTokenResponse;
 import org.folio.edge.rest.resource.AuthenticationApi;
@@ -32,16 +31,16 @@ public class AuthenticationController implements AuthenticationApi {
                                                       Integer xRequestCreationTime,
                                                       String xToCode,
                                                       String authorization) {
-    var accessTokenRequest = buildAccessTokenRequest(authorization, xFromCode, xRequestCreationTime, xToCode);
+    var authenticationRequest = buildInnReachHeadersHolder(authorization, xFromCode, xRequestCreationTime, xToCode);
 
-    var accessTokenResponse = authenticationService.getAccessToken(accessTokenRequest);
+    var accessTokenResponse = authenticationService.authenticate(authenticationRequest);
 
     return ResponseEntity.ok(accessTokenResponse);
   }
 
-  private AccessTokenRequest buildAccessTokenRequest(String authorization, String xFromCode,
-      Integer xRequestCreationTime, String xToCode) {
-    return AccessTokenRequest
+  private InnReachHeadersHolder buildInnReachHeadersHolder(String authorization, String xFromCode,
+                                                           Integer xRequestCreationTime, String xToCode) {
+    return InnReachHeadersHolder
       .builder()
       .authorization(authorization)
       .xFromCode(xFromCode)

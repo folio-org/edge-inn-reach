@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AccessTokenRequest {
+public class InnReachHeadersHolder {
 
   @NotEmpty
   @Size(max = 5)

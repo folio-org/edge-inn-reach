@@ -1,4 +1,4 @@
-package org.folio.edge.authentication.filter;
+package org.folio.edge.filter;
 
 import java.io.IOException;
 

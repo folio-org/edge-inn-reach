@@ -1,4 +1,4 @@
-package org.folio.edge.domain.service;
+package org.folio.edge.domain.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,11 +8,12 @@ import static org.mockito.Mockito.when;
 
 import static org.folio.edge.config.JwtConfiguration.DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC;
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_AUTH_SCHEME;
-import static org.folio.edge.fixture.InnReachFixture.createAccessTokenRequest;
+import static org.folio.edge.fixture.InnReachFixture.createInnReachHeadersHolder;
+import static org.folio.edge.fixture.JwtTokenFixture.createRandomJwtAccessToken;
+import static org.folio.edge.util.TestUtil.randomUUIDString;
 
-import javax.crypto.spec.SecretKeySpec;
-
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.Jwt;
+import org.folio.edge.domain.service.AccessTokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,7 +22,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
 import org.folio.edge.client.ModInnReachFeignClient;
-import org.folio.edge.config.JwtConfiguration;
+import org.folio.edge.domain.dto.JwtAccessToken;
+import org.folio.edge.domain.service.impl.AuthenticationServiceImpl;
 
 class AuthenticationServiceImplTest {
 
@@ -29,7 +31,7 @@ class AuthenticationServiceImplTest {
   private ModInnReachFeignClient modInnReachFeignClient;
 
   @Mock
-  private JwtConfiguration jwtConfiguration;
+  private AccessTokenService<JwtAccessToken, Jwt> accessTokenService;
 
   @InjectMocks
   private AuthenticationServiceImpl authenticationService;
@@ -37,20 +39,16 @@ class AuthenticationServiceImplTest {
   @BeforeEach
   public void setupBeforeEach() {
     MockitoAnnotations.initMocks(this);
-
-    when(jwtConfiguration.getIssuer()).thenReturn("folio");
-    when(jwtConfiguration.getExpirationTimeSec()).thenReturn(DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC);
-    when(jwtConfiguration.getSignatureAlgorithm()).thenReturn(SignatureAlgorithm.HS256);
-    when(jwtConfiguration.getSecretKey()).thenReturn(new SecretKeySpec("secret".getBytes(), SignatureAlgorithm.HS256.getJcaName()));
   }
 
   @Test
   void returnAccessToken_when_centralServerIsAuthorized() {
     when(modInnReachFeignClient.authenticateCentralServer(any())).thenReturn(ResponseEntity.ok().build());
+    when(accessTokenService.generateAccessToken()).thenReturn(createRandomJwtAccessToken(randomUUIDString()));
 
-     var accessTokenRequest = createAccessTokenRequest();
+    var innReachHeadersHolder = createInnReachHeadersHolder();
 
-    var accessToken = authenticationService.getAccessToken(accessTokenRequest);
+    var accessToken = authenticationService.authenticate(innReachHeadersHolder);
 
     verify(modInnReachFeignClient).authenticateCentralServer(any());
 
