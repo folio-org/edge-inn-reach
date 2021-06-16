@@ -20,7 +20,7 @@ public class JwtConfiguration {
 
   public static final int DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC = 599;
 
-  private static final SignatureAlgorithm DEFAULT_SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
+  public static final SignatureAlgorithm DEFAULT_SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
 
   @Value("${folio.jwt.signature.algorithm}")
   private String jwtSignatureAlgorithm;

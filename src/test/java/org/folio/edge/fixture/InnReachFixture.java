@@ -1,15 +1,15 @@
 package org.folio.edge.fixture;
 
-import org.folio.edge.domain.dto.AuthenticationRequest;
-import org.folio.edge.domain.dto.InnReachHeadersHolder;
-import org.folio.edge.external.InnReachHttpHeaders;
-import org.springframework.http.HttpHeaders;
+import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BASIC_AUTH_SCHEME;
+import static org.folio.edge.util.TestUtil.randomFiveCharacterCode;
 
 import java.util.Base64;
 import java.util.UUID;
 
-import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BASIC_AUTH_SCHEME;
-import static org.folio.edge.util.TestUtil.randomFiveCharacterCode;
+import org.springframework.http.HttpHeaders;
+
+import org.folio.edge.domain.dto.InnReachHeadersHolder;
+import org.folio.edge.external.InnReachHttpHeaders;
 
 public class InnReachFixture {
 

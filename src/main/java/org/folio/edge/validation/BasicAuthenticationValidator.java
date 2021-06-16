@@ -1,10 +1,11 @@
-package org.folio.edge.external.validation;
+package org.folio.edge.validation;
+
+import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BASIC_AUTH_SCHEME;
+
+import java.util.Base64;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Base64;
-
-import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BASIC_AUTH_SCHEME;
 
 public class BasicAuthenticationValidator implements ConstraintValidator<InnReachAuthenticationHeader, String> {
 

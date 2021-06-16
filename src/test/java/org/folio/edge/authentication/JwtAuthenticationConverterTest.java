@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import static org.folio.edge.config.JwtConfiguration.DEFAULT_SIGNATURE_ALGORITHM;
 import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
 import java.util.List;
@@ -15,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -36,7 +36,7 @@ class JwtAuthenticationConverterTest {
 
   private static final SecretKeySpec TEST_JWT_SECRET_KEY = new SecretKeySpec(
     TEST_JWT_SIGNATURE_SECRET.getBytes(),
-    SignatureAlgorithm.HS256.getJcaName()
+    DEFAULT_SIGNATURE_ALGORITHM.getJcaName()
   );
 
   private static final List<SimpleGrantedAuthority> TEST_AUTHORITIES = List.of(

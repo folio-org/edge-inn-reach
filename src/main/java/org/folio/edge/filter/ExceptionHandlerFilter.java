@@ -14,8 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import org.folio.edge.dto.ErrorDto;
-
+import org.folio.edge.dto.Error;
 
 @Slf4j
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
@@ -48,7 +47,10 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
   }
 
   public String getErrorJsonString(int httpCode, Exception exception) throws JsonProcessingException {
-    var errorDto = new ErrorDto(httpCode, exception.getMessage());
-    return objectMapper.writeValueAsString(errorDto);
+    var error = new Error()
+      .error(String.valueOf(httpCode))
+      .errorDescription(exception.getMessage());
+
+    return objectMapper.writeValueAsString(error);
   }
 }

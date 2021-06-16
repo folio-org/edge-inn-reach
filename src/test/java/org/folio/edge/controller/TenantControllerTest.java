@@ -29,7 +29,7 @@ class TenantControllerTest extends BaseControllerTest {
     ResponseEntity<String> entity = this.testRestTemplate.exchange("http://localhost:" + this.localServerPort
         + "/_/tenant", HttpMethod.GET, HttpEntity.EMPTY, String.class);
 
-    then(entity.getStatusCode()).isEqualTo(HttpStatus.NOT_IMPLEMENTED);
+    then(entity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
   }
 
 }

@@ -36,12 +36,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .anyRequest()
       .authenticated()
       .and()
-      .addFilterBefore(new JwtTokenVerifyFilter(tokenVerifyFilterIgnoreURIList(),
+      .addFilterBefore(new JwtTokenVerifyFilter(jwtTokenVerifyFilterIgnoreURIs(),
         new JwtAuthenticationConverter(accessTokenService)), UsernamePasswordAuthenticationFilter.class)
       .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenVerifyFilter.class);
   }
 
-  private List<String> tokenVerifyFilterIgnoreURIList() {
+  private List<String> jwtTokenVerifyFilterIgnoreURIs() {
     return List.of("/v2/oauth2/token");
   }
 

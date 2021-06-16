@@ -6,13 +6,17 @@ import static com.github.tomakehurst.wiremock.client.WireMock.serviceUnavailable
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.unauthorized;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BASIC_AUTH_SCHEME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import static org.folio.edge.config.JwtConfiguration.DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC;
+import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BASIC_AUTH_SCHEME;
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_AUTH_SCHEME;
 import static org.folio.edge.fixture.InnReachFixture.createInnReachHttpHeaders;
+
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import org.junit.jupiter.api.AfterEach;
@@ -32,17 +36,12 @@ import org.folio.edge.dto.AccessTokenResponse;
 import org.folio.edge.dto.Error;
 import org.folio.edge.external.InnReachHttpHeaders;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
-
 class AuthenticationControllerTest extends BaseControllerTest {
 
   @Autowired
   private TestRestTemplate testRestTemplate;
 
   private WireMockServer wireMockServer = new WireMockServer();
-  // private WireMockServer wireMockServer = new WireMockServer(8001);
 
   @BeforeEach
   public void setupBeforeEach() {
@@ -59,7 +58,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
     var httpHeaders = createInnReachHttpHeaders();
     httpHeaders.remove(InnReachHttpHeaders.X_FROM_CODE);
 
-    var requestEntity = getEmptyRequestEntity(httpHeaders);
+    var requestEntity = new HttpEntity<>(httpHeaders);
 
     var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
         HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
@@ -74,11 +73,11 @@ class AuthenticationControllerTest extends BaseControllerTest {
   }
 
   @Test
-  void return400HttpCode_when_httpHeaderValueIsNotCorrect() {
+  void return400HttpCode_when_httpHeaderValueIsInvalid() {
     var httpHeaders = createInnReachHttpHeaders();
     httpHeaders.set(InnReachHttpHeaders.X_FROM_CODE, "qwe123");
 
-    var requestEntity = getEmptyRequestEntity(httpHeaders);
+    var requestEntity = new HttpEntity<>(httpHeaders);
 
     var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
         HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
@@ -94,7 +93,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
   @Test
   void return400HttpCode_when_missingRequiredRequestParameter() {
     var httpHeaders = createInnReachHttpHeaders();
-    var requestEntity = getEmptyRequestEntity(httpHeaders);
+    var requestEntity = new HttpEntity<>(httpHeaders);
 
     var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}", HttpMethod.POST,
         requestEntity, Error.class, "client_credentials");
@@ -109,9 +108,9 @@ class AuthenticationControllerTest extends BaseControllerTest {
   }
 
   @Test
-  void return400HttpCode_when_requestParameterIsNotValid() {
+  void return400HttpCode_when_requestParameterIsInvalid() {
     var httpHeaders = createInnReachHttpHeaders();
-    var requestEntity = getEmptyRequestEntity(httpHeaders);
+    var requestEntity = new HttpEntity<>(httpHeaders);
 
     var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
         HttpMethod.POST, requestEntity, Error.class, "client_credent", "reach_tp");
@@ -130,7 +129,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
     var httpHeaders = createInnReachHttpHeaders();
     httpHeaders.set(HttpHeaders.AUTHORIZATION, incorrectFormattedAuthToken);
 
-    var requestEntity = getEmptyRequestEntity(httpHeaders);
+    var requestEntity = new HttpEntity<>(httpHeaders);
 
     var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
         HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
@@ -160,7 +159,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
     stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(unauthorized()));
 
     var httpHeaders = createInnReachHttpHeaders();
-    var requestEntity = getEmptyRequestEntity(httpHeaders);
+    var requestEntity = new HttpEntity<>(httpHeaders);
 
     var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
         HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
@@ -179,10 +178,10 @@ class AuthenticationControllerTest extends BaseControllerTest {
     stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(serviceUnavailable()));
 
     var httpHeaders = createInnReachHttpHeaders();
-    var requestEntity = getEmptyRequestEntity(httpHeaders);
+    var requestEntity = new HttpEntity<>(httpHeaders);
 
     var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
-      HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
+        HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
 
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
 
@@ -198,7 +197,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
     stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(ok()));
 
     var httpHeaders = createInnReachHttpHeaders();
-    var requestEntity = getEmptyRequestEntity(httpHeaders);
+    var requestEntity = new HttpEntity<>(httpHeaders);
 
     var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
         HttpMethod.POST, requestEntity, AccessTokenResponse.class, "client_credentials", "innreach_tp");
@@ -213,7 +212,4 @@ class AuthenticationControllerTest extends BaseControllerTest {
     assertNotNull(body.getAccessToken());
   }
 
-  private static HttpEntity<Void> getEmptyRequestEntity(HttpHeaders httpHeaders) {
-    return new HttpEntity<>(null, httpHeaders);
-  }
 }

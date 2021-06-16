@@ -5,13 +5,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import lombok.RequiredArgsConstructor;
-import org.folio.edge.domain.dto.InnReachHeadersHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.folio.edge.domain.dto.AuthenticationRequest;
+import org.folio.edge.domain.dto.InnReachHeadersHolder;
 import org.folio.edge.domain.service.AuthenticationService;
 import org.folio.edge.dto.AccessTokenResponse;
 import org.folio.edge.rest.resource.AuthenticationApi;
