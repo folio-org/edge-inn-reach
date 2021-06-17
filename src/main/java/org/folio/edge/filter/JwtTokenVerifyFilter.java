@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -17,7 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.folio.edge.authentication.JwtAuthenticationConverter;
 
 @RequiredArgsConstructor
-@Slf4j
+@Log4j2
 public class JwtTokenVerifyFilter extends OncePerRequestFilter {
 
   private final List<String> ignoreURIs;

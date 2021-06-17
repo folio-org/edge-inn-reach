@@ -2,12 +2,12 @@ package org.folio.edge.client;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.folio.edge.domain.exception.EdgeServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 
-@Slf4j
+@Log4j2
 public class FeignErrorDecoder implements ErrorDecoder {
 
   @Override

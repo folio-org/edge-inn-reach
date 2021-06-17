@@ -21,17 +21,15 @@ public class JwtAccessTokenServiceImpl implements AccessTokenService<JwtAccessTo
   public JwtAccessToken generateAccessToken() {
     return JwtAccessToken
       .builder()
-      .token(buildJwtAccessToken()) //todo - fix
+      .token(buildJwtAccessToken())
       .expiresIn(jwtConfiguration.getExpirationTimeSec())
       .build();
   }
 
   private String buildJwtAccessToken() {
-    // todo - verify if claim values are correct
     return Jwts.builder()
       .setIssuer(jwtConfiguration.getIssuer())
       .setExpiration(jwtConfiguration.calculateExpirationTime())
-//      .setSubject(authenticationRequest.getXFromCode())
       .signWith(jwtConfiguration.getSignatureAlgorithm(), jwtConfiguration.getSecretKey())
       .compact();
   }

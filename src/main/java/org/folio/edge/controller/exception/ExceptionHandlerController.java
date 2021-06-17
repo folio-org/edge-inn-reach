@@ -16,11 +16,13 @@ import org.folio.edge.dto.Error;
 @RestControllerAdvice
 public class ExceptionHandlerController {
 
+  private static final String INVALID_REQUEST_ERROR_TYPE = "invalid_request";
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
     return new Error()
-      .error("invalid_request")
+      .error(INVALID_REQUEST_ERROR_TYPE)
       .errorDescription(e.getMessage());
   }
 
@@ -28,7 +30,7 @@ public class ExceptionHandlerController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleConstraintValidationException(ConstraintViolationException e) {
     return new Error()
-      .error("invalid_request")
+      .error(INVALID_REQUEST_ERROR_TYPE)
       .errorDescription(e.getMessage());
   }
 
@@ -36,7 +38,7 @@ public class ExceptionHandlerController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleMissingRequestParameterException(MissingServletRequestParameterException e) {
     return new Error()
-      .error("invalid_request")
+      .error(INVALID_REQUEST_ERROR_TYPE)
       .errorDescription(String.format("The %s parameter is required.", e.getParameterName()));
   }
 
@@ -44,7 +46,7 @@ public class ExceptionHandlerController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public Error handleMissingHeaderException(MissingRequestHeaderException e) {
     return new Error()
-      .error("invalid_request")
+      .error(INVALID_REQUEST_ERROR_TYPE)
       .errorDescription(String.format("The %s header is required.", e.getHeaderName()));
   }
 

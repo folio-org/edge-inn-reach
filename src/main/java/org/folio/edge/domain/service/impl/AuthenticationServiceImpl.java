@@ -11,9 +11,7 @@ import javax.validation.Valid;
 
 import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.folio.edge.domain.service.AccessTokenService;
-import org.folio.edge.domain.service.AuthenticationService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,11 +20,13 @@ import org.folio.edge.domain.dto.InnReachHeadersHolder;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.dto.modinnreach.CentralServerAuthenticationRequest;
 import org.folio.edge.domain.exception.EdgeServiceException;
+import org.folio.edge.domain.service.AccessTokenService;
+import org.folio.edge.domain.service.AuthenticationService;
 import org.folio.edge.dto.AccessTokenResponse;
 
 @RequiredArgsConstructor
 @Service
-@Slf4j
+@Log4j2
 @Validated
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -39,8 +39,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   @Override
   public AccessTokenResponse authenticate(@Valid InnReachHeadersHolder innReachHeadersHolder) {
-    // todo - validate xToCode
-
     var authenticationRequest = buildCentralServerAuthenticationRequest(innReachHeadersHolder);
     var authenticationResult = modInnReachFeignClient.authenticateCentralServer(authenticationRequest);
 
@@ -62,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     var keySecretArray = decodedAuthorizationHeader.split(AUTHENTICATION_TOKEN_KEY_SECRET_DELIMITER);
 
     return CentralServerAuthenticationRequest.builder()
-      .localServerCode(innReachHeadersHolder.getXFromCode()) // todo - verify
+      .localServerCode(innReachHeadersHolder.getXFromCode())
       .key(UUID.fromString(keySecretArray[KEY_POSITION_IN_TOKEN]))
       .secret(UUID.fromString(keySecretArray[SECRET_POSITION_IN_TOKEN]))
       .build();
