@@ -44,5 +44,7 @@ folio:
       issuer: folio
     expiration-time-sec: 599
 debug: false
+okapi:
+  url: http://localhost:9130
 
 

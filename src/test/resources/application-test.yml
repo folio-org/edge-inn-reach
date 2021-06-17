@@ -24,7 +24,7 @@ folio:
     validation:
       enabled: false
 wiremock:
-  mod-inn-reach:
-    port: 8001
+  server:
+    port: 8575
 okapi:
-  url: http://localhost:8080
+  url: http://localhost:${wiremock.server.port}

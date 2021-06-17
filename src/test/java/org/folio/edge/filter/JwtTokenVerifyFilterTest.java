@@ -1,5 +1,6 @@
 package org.folio.edge.filter;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
@@ -13,10 +14,12 @@ import static org.folio.edge.fixture.InnReachFixture.createInnReachHttpHeaders;
 import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
@@ -31,14 +34,20 @@ import org.folio.edge.dto.AccessTokenResponse;
 @ActiveProfiles("test")
 class JwtTokenVerifyFilterTest {
 
+  @Value("${wiremock.server.port}")
+  private int wireMockServerPort;
+
   @Autowired
   private TestRestTemplate testRestTemplate;
 
-  private WireMockServer wireMockServer = new WireMockServer();
+  private WireMockServer wireMockServer;
 
   @BeforeEach
   public void setupBeforeEach() {
+    wireMockServer = new WireMockServer(WireMockConfiguration.options().port(wireMockServerPort));
     wireMockServer.start();
+
+    configureFor(wireMockServerPort);
   }
 
   @AfterEach

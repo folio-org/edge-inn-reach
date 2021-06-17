@@ -1,11 +1,14 @@
 package org.folio.edge.controller;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.client.WireMock.options;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serviceUnavailable;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.unauthorized;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -19,12 +22,15 @@ import java.util.List;
 import java.util.UUID;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -38,14 +44,20 @@ import org.folio.edge.external.InnReachHttpHeaders;
 
 class AuthenticationControllerTest extends BaseControllerTest {
 
+  @Value("${wiremock.server.port}")
+  private int wireMockServerPort;
+
   @Autowired
   private TestRestTemplate testRestTemplate;
 
-  private WireMockServer wireMockServer = new WireMockServer();
+  private WireMockServer wireMockServer;
 
   @BeforeEach
   public void setupBeforeEach() {
+    wireMockServer = new WireMockServer(WireMockConfiguration.options().port(wireMockServerPort));
     wireMockServer.start();
+
+    configureFor(wireMockServerPort);
   }
 
   @AfterEach
