@@ -36,6 +36,15 @@ folio:
   tenant:
     validation:
       enabled: false
+  jwt:
+    signature:
+      algorithm: HS256
+      secret: secret
+    claims:
+      issuer: folio
+    expiration-time-sec: 599
 debug: false
+okapi:
+  url: http://localhost:9130
 
 
