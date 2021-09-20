@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .and()
       .authorizeRequests()
       .antMatchers(HttpMethod.GET,"/admin/health").permitAll()
-      .antMatchers(HttpMethod.POST,"/v2/oauth2/token").permitAll()
+      .antMatchers(HttpMethod.POST,"/v2/oauth2/token", "/_/tenant").permitAll()
       .anyRequest()
       .authenticated()
       .and()
@@ -45,7 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private List<String> jwtTokenVerifyFilterIgnoreURIs() {
     return List.of(
       "/admin/health",
-      "/v2/oauth2/token"
+      "/v2/oauth2/token",
+      "/_/tenant"
     );
   }
 

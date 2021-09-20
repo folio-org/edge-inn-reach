@@ -1,19 +1,57 @@
 {
   "id": "@artifactId@-@version@",
   "name": "INN-REACH system Edge API module",
-  "provides": [],
-  "requires": [
+  "provides": [
     {
-      "id": "login",
-      "version": "7.0"
-    },
+      "id": "_tenant",
+      "version": "1.2",
+      "interfaceType": "system",
+      "handlers": [
+        {
+          "methods": ["POST"],
+          "pathPattern": "/_/tenant",
+          "modulePermissions": [
+            "users.collection.get",
+            "users.item.post",
+            "login.item.post",
+            "perms.users.item.post",
+            "perms.users.get"
+          ],
+          "permissionsRequired": []
+        },
+        {
+          "methods": ["DELETE"],
+          "pathPattern": "/_/tenant",
+          "permissionsRequired": []
+        },
+        {
+          "methods": ["POST"],
+          "pathPattern": "/v2/oauth/token",
+          "permissionsRequired": []
+        }
+      ]
+    }
+  ],
+  "requires": [
     {
       "id": "users",
       "version": "15.3"
     },
     {
+      "id": "authtoken",
+      "version": "2.0"
+    },
+    {
+      "id": "login",
+      "version": "7.0"
+    },
+    {
       "id": "permissions",
       "version": "5.3"
+    },
+    {
+      "id": "inn-reach",
+      "version": "1.0"
     }
   ],
   "permissionSets" : [],
@@ -29,6 +67,10 @@
     "env": [
       { "name": "JAVA_OPTIONS",
         "value": "-XX:MaxRAMPercentage=66.0"
+      },
+      {
+        "name": "SYSTEM_USER_PASSWORD",
+        "value": "edge-innreach-1-0-0"
       }
     ]
   }

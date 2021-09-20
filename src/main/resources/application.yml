@@ -45,6 +45,25 @@ folio:
     expiration-time-sec: 599
 debug: false
 okapi:
-  url: http://localhost:9130
-
-
+  url: ${OKAPI_URL:http://localhost:9130}
+###################################################
+# System user configuration
+###################################################
+system-user:
+  username: ${SYSTEM_USER_USERNAME:edge-innreach-2}
+  password: ${SYSTEM_USER_PASSWORD:Edge-innreach-1-0-0}
+  lastname: System
+  permissionsFilePath: permissions/mod-innreach.csv
+  okapiTenant: diku
+  okapiToken: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWt1X2FkbWluIiwidXNlcl9pZCI6ImUyZjVlYmI3LTkyODUtNThmOC1iYzFlLTYwOGFjMjA4MDg2MSIsImlhdCI6MTYzMTgwOTkzNCwidGVuYW50IjoiZGlrdSJ9.V81OWU8eivTmtbaFIKSLqebgwG3ej9St_GwLl85HOmk
+  okapiUrl: ${OKAPI_URL:https://volaris-okapi.ci.folio.org/}
+###################################################
+# Caffeine cache configuration
+###################################################
+coffee-boots:
+  cache:
+    basic-spec: maximumSize=500,expireAfterAccess=1h
+    spec:
+      system-user-cache: maximumSize=5
+      users-by-id: maximumSize=100,expireAfterAccess=3h
+      users-by-name: maximumSize=10,expireAfterAccess=3h
