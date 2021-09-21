@@ -60,13 +60,13 @@
     "dockerPull": false,
     "dockerArgs": {
       "HostConfig": {
-        "Memory": 268435456,
+        "Memory": 536870912,
         "PortBindings": { "8081/tcp": [ { "HostPort": "%p" } ] }
       }
     },
     "env": [
       { "name": "JAVA_OPTIONS",
-        "value": "-XX:MaxRAMPercentage=66.0"
+        "value": "-XX:MaxRAMPercentage=85.0"
       },
       {
         "name": "SYSTEM_USER_PASSWORD",
