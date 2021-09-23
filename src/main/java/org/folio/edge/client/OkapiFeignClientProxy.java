@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class OkapiFeignClientProxy extends Client.Default {
 
-  @Value("${okapi.url}")
+  @Value("${okapi_url}")
   private String okapiUrl;
 
   public OkapiFeignClientProxy(SSLSocketFactory sslContextFactory, HostnameVerifier hostnameVerifier) {

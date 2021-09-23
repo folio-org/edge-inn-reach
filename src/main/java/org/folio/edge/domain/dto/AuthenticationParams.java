@@ -17,7 +17,7 @@ import org.folio.edge.validation.InnReachAuthenticationHeader;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class InnReachHeadersHolder {
+public class AuthenticationParams {
 
   @NotEmpty
   @Size(max = 5)
@@ -33,4 +33,7 @@ public class InnReachHeadersHolder {
   @NotEmpty
   @InnReachAuthenticationHeader
   private String authorization;
+
+  private String okapiTenant;
+  private String okapiToken;
 }

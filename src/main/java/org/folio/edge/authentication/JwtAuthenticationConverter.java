@@ -1,44 +1,41 @@
 package org.folio.edge.authentication;
 
+import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_AUTH_SCHEME;
+
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
-import org.folio.edge.domain.dto.JwtAccessToken;
-import org.folio.edge.domain.service.AccessTokenService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.util.StringUtils;
 
-import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_AUTH_SCHEME;
+import org.folio.edge.domain.dto.JwtAccessToken;
+import org.folio.edge.domain.service.AccessTokenService;
+import org.folio.edge.security.store.EdgeApiKeyHolder;
 
+@Log4j2
 @RequiredArgsConstructor
 public class JwtAuthenticationConverter implements AuthenticationConverter {
 
-  private static final String AUTHORITIES_CLAIMS = "authorities";
+  private static final String EDGE_API_KEY_CLAIM = "edgeApiKey";
 
-  private final AccessTokenService<JwtAccessToken, Jwt> accessTokenService;
+  private final AccessTokenService<JwtAccessToken, Jws<Claims>> accessTokenService;
 
   @Override
   public UsernamePasswordAuthenticationToken convert(HttpServletRequest httpServletRequest) {
     var jwtAccessToken = extractJwtTokenFromHeader(httpServletRequest);
 
     var verifiedJwtToken = accessTokenService.verifyAccessToken(jwtAccessToken);
+    EdgeApiKeyHolder.setEdgeApiKey((String) verifiedJwtToken.getBody().get(EDGE_API_KEY_CLAIM));
 
-    var claims = (Claims) verifiedJwtToken.getBody();
-    var authoritiesClaims = (List<String>) claims.get(AUTHORITIES_CLAIMS);
-
-    return new UsernamePasswordAuthenticationToken(claims.getSubject(), null, collectGrantedAuthorities(
-        authoritiesClaims));
+    return new UsernamePasswordAuthenticationToken(verifiedJwtToken.getBody().getSubject(), null, Collections.emptyList());
   }
 
   private JwtAccessToken extractJwtTokenFromHeader(HttpServletRequest httpServletRequest) {
@@ -71,13 +68,4 @@ public class JwtAuthenticationConverter implements AuthenticationConverter {
     return authorizationHeader;
   }
 
-  // GrantedAuthorities used by Spring security in case if user has some specific permissions, roles, etc.
-  private List<GrantedAuthority> collectGrantedAuthorities(List<String> authoritiesClaims) {
-    if (authoritiesClaims == null || authoritiesClaims.isEmpty()) {
-      return Collections.emptyList();
-    }
-    return authoritiesClaims.stream()
-            .map(SimpleGrantedAuthority::new)
-            .collect(Collectors.toList());
-  }
 }

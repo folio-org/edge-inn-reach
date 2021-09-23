@@ -43,6 +43,8 @@ paths:
         - $ref: '#/components/parameters/x_from_code'
         - $ref: '#/components/parameters/x_request_creation_time'
         - $ref: '#/components/parameters/x_to_code'
+        - $ref: '#/components/parameters/x-okapi-tenant'
+        - $ref: '#/components/parameters/x-okapi-token'
 components:
   schemas:
     accessTokenResponse:
@@ -95,3 +97,15 @@ components:
       schema:
         type: string
       required: true
+    x-okapi-token:
+      name: x-okapi-token
+      in: header
+      required: true
+      schema:
+        type: string
+    x-okapi-tenant:
+      name: x-okapi-tenant
+      in: header
+      required: true
+      schema:
+        type: string

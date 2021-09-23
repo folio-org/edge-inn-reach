@@ -1,4 +1,4 @@
-package org.folio.edge.client;
+package org.folio.edge.client.error;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;

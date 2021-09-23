@@ -2,6 +2,7 @@ package org.folio.edge.util;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +23,11 @@ public class TestUtil {
   @SneakyThrows
   public static String readFileContentAsString(String path) {
     var resource = TestUtil.class.getResource(path);
+
+    if (Objects.isNull(resource)) {
+      throw new RuntimeException("Can't find file by path: " + path);
+    }
+
     return Files.readString(Paths.get(resource.toURI())).trim();
   }
 

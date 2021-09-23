@@ -9,14 +9,15 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
-import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import org.folio.edge.client.ModInnReachFeignClient;
-import org.folio.edge.domain.dto.InnReachHeadersHolder;
+import org.folio.edge.client.ModInnReachClient;
+import org.folio.edge.domain.dto.AuthenticationParams;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.dto.modinnreach.CentralServerAuthenticationRequest;
 import org.folio.edge.domain.exception.EdgeServiceException;
@@ -34,20 +35,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private static final int KEY_POSITION_IN_TOKEN = 0;
   private static final int SECRET_POSITION_IN_TOKEN = 1;
 
-  private final ModInnReachFeignClient modInnReachFeignClient;
-  private final AccessTokenService<JwtAccessToken, Jwt> accessTokenService;
+  private final ModInnReachClient modInnReachClient;
+  private final AccessTokenService<JwtAccessToken, Jws<Claims>> accessTokenService;
 
   @Override
-  public AccessTokenResponse authenticate(@Valid InnReachHeadersHolder innReachHeadersHolder) {
-    var authenticationRequest = buildCentralServerAuthenticationRequest(innReachHeadersHolder);
-    var authenticationResult = modInnReachFeignClient.authenticateCentralServer(authenticationRequest);
+  public AccessTokenResponse authenticate(@Valid AuthenticationParams authenticationParams) {
+    var authenticationRequest = buildCentralServerAuthenticationRequest(authenticationParams);
+
+    var authenticationResult = modInnReachClient.authenticateCentralServer(authenticationRequest,
+      authenticationParams.getOkapiTenant(), authenticationParams.getOkapiToken());
 
     if (!authenticationResult.getStatusCode().is2xxSuccessful()) {
       log.debug("Authentication failed with status: {}", authenticationResult.getStatusCodeValue());
       throw new EdgeServiceException("Authentication failed");
     }
 
-    var jwtAccessToken = accessTokenService.generateAccessToken();
+    var jwtAccessToken = accessTokenService.generateAccessToken(authenticationParams.getXFromCode());
 
     return new AccessTokenResponse()
       .accessToken(jwtAccessToken.getToken())
@@ -55,12 +58,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       .expiresIn(jwtAccessToken.getExpiresIn());
   }
 
-  private CentralServerAuthenticationRequest buildCentralServerAuthenticationRequest(InnReachHeadersHolder innReachHeadersHolder) {
-    var decodedAuthorizationHeader = decodeAuthorizationHeader(innReachHeadersHolder.getAuthorization());
+  private CentralServerAuthenticationRequest buildCentralServerAuthenticationRequest(AuthenticationParams authenticationParams) {
+    var decodedAuthorizationHeader = decodeAuthorizationHeader(authenticationParams.getAuthorization());
     var keySecretArray = decodedAuthorizationHeader.split(AUTHENTICATION_TOKEN_KEY_SECRET_DELIMITER);
 
     return CentralServerAuthenticationRequest.builder()
-      .localServerCode(innReachHeadersHolder.getXFromCode())
+      .localServerCode(authenticationParams.getXFromCode())
       .key(UUID.fromString(keySecretArray[KEY_POSITION_IN_TOKEN]))
       .secret(UUID.fromString(keySecretArray[SECRET_POSITION_IN_TOKEN]))
       .build();
