@@ -14,7 +14,8 @@ import java.util.List;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 
-import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ class JwtAuthenticationConverterTest {
   private HttpServletRequest httpServletRequest;
 
   @Mock
-  private AccessTokenService<JwtAccessToken, Jwt> accessTokenService;
+  private AccessTokenService<JwtAccessToken, Jws<Claims>> accessTokenService;
 
   @InjectMocks
   private JwtAuthenticationConverter jwtAuthenticationConverter;
@@ -93,7 +94,7 @@ class JwtAuthenticationConverterTest {
 
     var jwt = Jwts.parser()
       .setSigningKey(TEST_JWT_SECRET_KEY)
-      .parse(jwtTokenString);
+      .parseClaimsJws(jwtTokenString);
 
     when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(String.format("%s %s",
         AUTHENTICATION_SCHEME_BEARER, jwtTokenString));
@@ -112,7 +113,7 @@ class JwtAuthenticationConverterTest {
 
     var jwt = Jwts.parser()
       .setSigningKey(TEST_JWT_SECRET_KEY)
-      .parse(jwtTokenString);
+      .parseClaimsJws(jwtTokenString);
 
     when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(String.format("%s %s",
         AUTHENTICATION_SCHEME_BEARER, jwtTokenString));
@@ -123,8 +124,6 @@ class JwtAuthenticationConverterTest {
 
     assertNotNull(usernamePasswordAuthenticationToken);
     assertEquals(TEST_PRINCIPAL, usernamePasswordAuthenticationToken.getPrincipal());
-
-    assertEquals(TEST_AUTHORITIES, usernamePasswordAuthenticationToken.getAuthorities());
   }
 
 }

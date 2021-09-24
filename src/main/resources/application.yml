@@ -39,12 +39,38 @@ folio:
   jwt:
     signature:
       algorithm: HS256
-      secret: secret
+      secret: ${Djwt_secret}
     claims:
       issuer: folio
-    expiration-time-sec: 599
+    expiration-time-sec: ${Djwt_exp_time_sec}
 debug: false
-okapi:
-  url: http://localhost:9130
+
+#Dokapi_url: http://localhost:9130
+Dokapi_url: https://volaris-okapi.ci.folio.org/
+okapi_url: ${Dokapi_url}
+
+###################################################
+# JWT configuration properties
+###################################################
+Djwt_secret: e13eeb7d-94fe-476d-8d65-73ded910dc4e
+Djwt_exp_time_sec: 599
+
+###################################################
+# Security store properties
+###################################################
+Dsecure_store_props: src/main/resources/ephemeral.properties
+secure_store_props: ${Dsecure_store_props}
+
+Dsecure_store: Ephemeral
+secure_store: ${Dsecure_store}
+
+Dinnreach_tenants: innreach_tenants
+innreach_tenants: ${Dinnreach_tenants}
+
+Dinnreach_tenants_mappings: innreach_tenants_mappings
+innreach_tenants_mappings: ${Dinnreach_tenants_mappings}
+
+Dinnreach_client: innreachClient
+innreach_client: ${Dinnreach_client}
 
 

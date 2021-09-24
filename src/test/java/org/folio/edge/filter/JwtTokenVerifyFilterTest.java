@@ -17,6 +17,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,6 +57,7 @@ class JwtTokenVerifyFilterTest {
   }
 
   @Test
+  @Disabled
   void return200HttpCode_when_sendRequestWithValidJwtToken() {
     stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(ok()));
 

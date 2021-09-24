@@ -8,13 +8,13 @@ import java.util.UUID;
 
 import org.springframework.http.HttpHeaders;
 
-import org.folio.edge.domain.dto.InnReachHeadersHolder;
+import org.folio.edge.domain.dto.AuthenticationParams;
 import org.folio.edge.external.InnReachHttpHeaders;
 
 public class InnReachFixture {
 
-  public static InnReachHeadersHolder createInnReachHeadersHolder() {
-    return InnReachHeadersHolder
+  public static AuthenticationParams createInnReachHeadersHolder() {
+    return AuthenticationParams
       .builder()
       .authorization(createAuthenticationToken())
       .xRequestCreationTime(Integer.MAX_VALUE)

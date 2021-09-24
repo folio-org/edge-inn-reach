@@ -12,8 +12,8 @@ import static org.folio.edge.fixture.InnReachFixture.createInnReachHeadersHolder
 import static org.folio.edge.fixture.JwtTokenFixture.createRandomJwtAccessToken;
 import static org.folio.edge.util.TestUtil.randomUUIDString;
 
-import io.jsonwebtoken.Jwt;
-import org.folio.edge.domain.service.AccessTokenService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,17 +21,17 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
-import org.folio.edge.client.ModInnReachFeignClient;
+import org.folio.edge.client.ModInnReachClient;
 import org.folio.edge.domain.dto.JwtAccessToken;
-import org.folio.edge.domain.service.impl.AuthenticationServiceImpl;
+import org.folio.edge.domain.service.AccessTokenService;
 
 class AuthenticationServiceImplTest {
 
   @Mock
-  private ModInnReachFeignClient modInnReachFeignClient;
+  private ModInnReachClient modInnReachClient;
 
   @Mock
-  private AccessTokenService<JwtAccessToken, Jwt> accessTokenService;
+  private AccessTokenService<JwtAccessToken, Jws<Claims>> accessTokenService;
 
   @InjectMocks
   private AuthenticationServiceImpl authenticationService;
@@ -43,14 +43,14 @@ class AuthenticationServiceImplTest {
 
   @Test
   void returnAccessToken_when_centralServerIsAuthorized() {
-    when(modInnReachFeignClient.authenticateCentralServer(any())).thenReturn(ResponseEntity.ok().build());
-    when(accessTokenService.generateAccessToken()).thenReturn(createRandomJwtAccessToken(randomUUIDString()));
+    when(modInnReachClient.authenticateCentralServer(any(), any(), any())).thenReturn(ResponseEntity.ok().build());
+    when(accessTokenService.generateAccessToken(any())).thenReturn(createRandomJwtAccessToken(randomUUIDString()));
 
     var innReachHeadersHolder = createInnReachHeadersHolder();
 
     var accessToken = authenticationService.authenticate(innReachHeadersHolder);
 
-    verify(modInnReachFeignClient).authenticateCentralServer(any());
+    verify(modInnReachClient).authenticateCentralServer(any(), any(), any());
 
     assertNotNull(accessToken);
     assertNotNull(accessToken.getAccessToken());

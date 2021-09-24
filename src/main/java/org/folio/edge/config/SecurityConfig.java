@@ -2,7 +2,8 @@ package org.folio.edge.config;
 
 import java.util.List;
 
-import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,14 +15,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.folio.edge.authentication.JwtAuthenticationConverter;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
+import org.folio.edge.security.filter.EdgeSecurityFilter;
 import org.folio.edge.filter.ExceptionHandlerFilter;
-import org.folio.edge.filter.JwtTokenVerifyFilter;
+import org.folio.edge.security.filter.JwtTokenVerifyFilter;
+import org.folio.edge.security.service.SecurityManagerService;
 
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private final AccessTokenService<JwtAccessToken, Jwt> accessTokenService;
+  private final AccessTokenService<JwtAccessToken, Jws<Claims>> accessTokenService;
+  private final SecurityManagerService securityManagerService;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -37,12 +41,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .anyRequest()
       .authenticated()
       .and()
-      .addFilterBefore(new JwtTokenVerifyFilter(jwtTokenVerifyFilterIgnoreURIs(),
-        new JwtAuthenticationConverter(accessTokenService)), UsernamePasswordAuthenticationFilter.class)
+      .addFilterBefore(new JwtTokenVerifyFilter(jwtTokenVerifyFilterIgnoreURIList(), new JwtAuthenticationConverter(accessTokenService)), UsernamePasswordAuthenticationFilter.class)
+      .addFilterAfter(new EdgeSecurityFilter(securityFilterIgnoreURIList(), securityManagerService), JwtTokenVerifyFilter.class)
       .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenVerifyFilter.class);
   }
 
-  private List<String> jwtTokenVerifyFilterIgnoreURIs() {
+  private List<String> securityFilterIgnoreURIList() {
+    return List.of(
+      "/admin/health"
+    );
+  }
+
+  private List<String> jwtTokenVerifyFilterIgnoreURIList() {
     return List.of(
       "/admin/health",
       "/v2/oauth2/token"
