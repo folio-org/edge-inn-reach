@@ -45,21 +45,12 @@ API provides the following URLs:
 3. User `{{username}}` with password `{{password}}` and inn-reach.all permissions should be created on FOLIO.
 
 ##### Create InnReach Central Server configuration
-1. ...
-2. ...
-3. ...
+1. Log in to Folio, go to "Settings" -> "INN-Reach" -> "Central server configuration", click "New" button.
+2. Fill in all the required fields
+3. Press Generate keypair for Local server key and local server secret generation
+4. Press save & close
 
 *Note: InnReach Central Server configuration settings applied only upon module startup, so in case of their changes, edge-inn-reach service must be restarted.*
-
-#### InnReach EMS setup
-The deployment information above is related only to InnReach Central Server edge user. For InnReach EMS another edge user (with corresponding API_KEY) should be created following the standard process for edge users creation.
-
-##### Create InnReach EMS configuration
-1. ...
-2. ...
-3. ...
-
-*Note: Since InnReach EMS flows initiated on provider side, all other settings can be omitted.*
 
 ### Required Permissions
 The following permissions should be granted to institutional users (as well as InnReach tenants) in order to use this edge API:
