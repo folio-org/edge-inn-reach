@@ -14,6 +14,8 @@ spring:
     default-property-inclusion: NON_EMPTY
   mustache:
     check-template-location: false
+  main:
+    allow-bean-definition-overriding: true
 management:
   endpoints:
     web:
@@ -45,8 +47,7 @@ folio:
     expiration-time-sec: ${Djwt_exp_time_sec}
 debug: false
 
-#Dokapi_url: http://localhost:9130
-Dokapi_url: https://volaris-okapi.ci.folio.org/
+Dokapi_url: http://localhost:9130
 okapi_url: ${Dokapi_url}
 
 ###################################################
@@ -72,5 +73,3 @@ innreach_tenants_mappings: ${Dinnreach_tenants_mappings}
 
 Dinnreach_client: innreachClient
 innreach_client: ${Dinnreach_client}
-
-

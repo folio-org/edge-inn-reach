@@ -19,17 +19,12 @@ import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import org.folio.edge.client.ModInnReachClient;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.folio.edge.client.InnReachAuthClient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
@@ -48,7 +43,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
 //  private int wireMockServerPort;
 
   @MockBean
-  private ModInnReachClient modInnReachClient;
+  private InnReachAuthClient innReachAuthClient;
 
   @Autowired
   private TestRestTemplate testRestTemplate;

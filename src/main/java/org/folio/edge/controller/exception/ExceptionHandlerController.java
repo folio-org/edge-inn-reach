@@ -3,6 +3,7 @@ package org.folio.edge.controller.exception;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import org.folio.edge.domain.exception.EdgeServiceException;
 import org.folio.edge.dto.Error;
 
 @RestControllerAdvice
@@ -52,7 +54,7 @@ public class ExceptionHandlerController {
 
   @ExceptionHandler(BadCredentialsException.class)
   @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  public Error handleBadCredentialsException(BadCredentialsException e){
+  public Error handleBadCredentialsException(BadCredentialsException e) {
     return new Error()
       .error("invalid_token")
       .errorDescription("Token authentication failed");
@@ -64,6 +66,11 @@ public class ExceptionHandlerController {
     return new Error()
       .error("internal_error")
       .errorDescription("Internal server error");
+  }
+
+  @ExceptionHandler(EdgeServiceException.class)
+  public ResponseEntity<Error> handleEdgeServiceException(EdgeServiceException e) {
+    return new ResponseEntity<>(new Error().error(INVALID_REQUEST_ERROR_TYPE), HttpStatus.valueOf(e.getStatus()));
   }
 
 }
