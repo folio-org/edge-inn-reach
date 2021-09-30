@@ -36,7 +36,7 @@ public class InnReachRequestBuilder {
   private String requestBodyAsString(HttpServletRequest request) {
     try {
       return new String(request.getInputStream().readAllBytes());
-    } catch (IOException e) {
+    } catch (Exception e) {
       log.error("Can't read request body as String", e);
       throw new EdgeServiceException("Can't parse request body");
     }
