@@ -16,7 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import org.folio.edge.client.ModInnReachClient;
+import org.folio.edge.client.InnReachAuthClient;
 import org.folio.edge.domain.dto.AuthenticationParams;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.dto.modinnreach.CentralServerAuthenticationRequest;
@@ -35,14 +35,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private static final int KEY_POSITION_IN_TOKEN = 0;
   private static final int SECRET_POSITION_IN_TOKEN = 1;
 
-  private final ModInnReachClient modInnReachClient;
+  private final InnReachAuthClient innReachAuthClient;
   private final AccessTokenService<JwtAccessToken, Jws<Claims>> accessTokenService;
 
   @Override
   public AccessTokenResponse authenticate(@Valid AuthenticationParams authenticationParams) {
     var authenticationRequest = buildCentralServerAuthenticationRequest(authenticationParams);
 
-    var authenticationResult = modInnReachClient.authenticateCentralServer(authenticationRequest,
+    var authenticationResult = innReachAuthClient.authenticateCentralServer(authenticationRequest,
       authenticationParams.getOkapiTenant(), authenticationParams.getOkapiToken());
 
     if (!authenticationResult.getStatusCode().is2xxSuccessful()) {

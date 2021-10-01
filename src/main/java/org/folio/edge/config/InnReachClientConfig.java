@@ -4,14 +4,14 @@ import feign.Client;
 import feign.codec.ErrorDecoder;
 import org.springframework.context.annotation.Bean;
 
-import org.folio.edge.client.OkapiFeignClientProxy;
+import org.folio.edge.client.InnReachClientProxy;
 import org.folio.edge.client.error.FeignErrorDecoder;
 
-public class OkapiFeignClientConfig {
+public class InnReachClientConfig {
 
   @Bean
   public Client OkapiFeignClient() {
-    return new OkapiFeignClientProxy(null, null);
+    return new InnReachClientProxy(null, null);
   }
 
   @Bean

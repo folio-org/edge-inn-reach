@@ -21,14 +21,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
-import org.folio.edge.client.ModInnReachClient;
+import org.folio.edge.client.InnReachAuthClient;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
 
 class AuthenticationServiceImplTest {
 
   @Mock
-  private ModInnReachClient modInnReachClient;
+  private InnReachAuthClient innReachAuthClient;
 
   @Mock
   private AccessTokenService<JwtAccessToken, Jws<Claims>> accessTokenService;
@@ -43,14 +43,14 @@ class AuthenticationServiceImplTest {
 
   @Test
   void returnAccessToken_when_centralServerIsAuthorized() {
-    when(modInnReachClient.authenticateCentralServer(any(), any(), any())).thenReturn(ResponseEntity.ok().build());
+    when(innReachAuthClient.authenticateCentralServer(any(), any(), any())).thenReturn(ResponseEntity.ok().build());
     when(accessTokenService.generateAccessToken(any())).thenReturn(createRandomJwtAccessToken(randomUUIDString()));
 
     var innReachHeadersHolder = createInnReachHeadersHolder();
 
     var accessToken = authenticationService.authenticate(innReachHeadersHolder);
 
-    verify(modInnReachClient).authenticateCentralServer(any(), any(), any());
+    verify(innReachAuthClient).authenticateCentralServer(any(), any(), any());
 
     assertNotNull(accessToken);
     assertNotNull(accessToken.getAccessToken());

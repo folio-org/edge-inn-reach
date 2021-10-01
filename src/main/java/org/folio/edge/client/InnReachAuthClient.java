@@ -13,7 +13,7 @@ import org.folio.edge.config.OkapiFeignClientConfig;
 import org.folio.edge.domain.dto.modinnreach.CentralServerAuthenticationRequest;
 
 @FeignClient(value = "inn-reach", configuration = OkapiFeignClientConfig.class)
-public interface ModInnReachClient {
+public interface InnReachAuthClient {
 
   @PostMapping("/authentication")
   ResponseEntity<Object> authenticateCentralServer(@RequestBody CentralServerAuthenticationRequest centralServerAuthenticationRequest,
