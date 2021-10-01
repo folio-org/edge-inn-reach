@@ -8,9 +8,9 @@ import javax.net.ssl.SSLSocketFactory;
 import feign.Client;
 import feign.Request;
 import feign.Response;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 public class InnReachClientProxy extends Client.Default {
 
   public InnReachClientProxy(SSLSocketFactory sslContextFactory, HostnameVerifier hostnameVerifier) {
