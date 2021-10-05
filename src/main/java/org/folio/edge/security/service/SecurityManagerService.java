@@ -46,9 +46,16 @@ public class SecurityManagerService {
 
   @PostConstruct
   public void init() {
+    log.debug("Starting initialization with securityStoreConfigProperties: [{}]", securityStoreConfigProperties);
+
     var secureStoreProps = getProperties(securityStoreConfigProperties.getSecureStorePropsFile());
+    log.debug("Secure store properties have been initialized: [{}]", secureStoreProps);
+
     this.secureStore = SecureStoreFactory.getSecureStore(securityStoreConfigProperties.getSecureStoreType(), secureStoreProps);
+    log.debug("Secure store has been initialized: [{}]", secureStore);
+
     var tenantsMappings = SecureTenantsProducer.getTenantsMappings(secureStoreProps, secureStore, securityStoreConfigProperties.getInnreachTenantsMappings());
+    log.debug("Tenant mappings have been initialized: [{}]", tenantsMappings);
 
     tenantsMappings.ifPresent(mappings ->
       Arrays.stream(mappings.split(TENANT_MAPPINGS_SPLIT_SYMBOL))
@@ -56,6 +63,8 @@ public class SecurityManagerService {
       .filter(mappingArray -> mappingArray.length == TENANT_MAPPING_PARTS_SIZE)
       .forEach(mappingArray -> tenantMappingMap.put(mappingArray[0], new TenantMapping(mappingArray[0], mappingArray[1], securityStoreConfigProperties.getInnreachClient())))
     );
+
+    log.debug("Tenant map has been initialized: [{}]", tenantMappingMap);
   }
 
   public TenantMapping getTenantMappingByXFromCode(String xFromCode) {

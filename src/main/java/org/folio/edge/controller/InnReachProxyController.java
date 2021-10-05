@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.folio.edge.client.InnReachClient;
 import org.folio.edge.domain.InnReachRequestBuilder;
-import org.folio.spring.integration.XOkapiHeaders;
 
 @Log4j2
 @RestController
@@ -27,39 +25,27 @@ public class InnReachProxyController {
   private final InnReachClient innReachClient;
 
   @GetMapping
-  public ResponseEntity<?> handleGETRequest(HttpServletRequest request,
-                                            @RequestHeader(XOkapiHeaders.TOKEN) String okapiToken,
-                                            @RequestHeader(XOkapiHeaders.TENANT) String okapiTenant) {
+  public ResponseEntity<?> handleGETRequest(HttpServletRequest request) {
     var innReachRequest = innReachRequestBuilder.buildInnReachRequest(request);
-
-    return innReachClient.getCall(innReachRequest.getRequestUrl(), okapiTenant, okapiToken);
+    return innReachClient.getCall(innReachRequest.getRequestUrl(), innReachRequest.getHeaders());
   }
 
   @PostMapping
-  public ResponseEntity<?> handlePOSTRequest(HttpServletRequest request,
-                                             @RequestHeader(XOkapiHeaders.TOKEN) String okapiToken,
-                                             @RequestHeader(XOkapiHeaders.TENANT) String okapiTenant) {
+  public ResponseEntity<?> handlePOSTRequest(HttpServletRequest request) {
     var innReachRequest = innReachRequestBuilder.buildInnReachRequest(request);
-
-    return innReachClient.postCall(innReachRequest.getRequestUrl(), innReachRequest.getRequestBody(), okapiTenant, okapiToken);
+    return innReachClient.postCall(innReachRequest.getRequestUrl(), innReachRequest.getRequestBody(), innReachRequest.getHeaders());
   }
 
   @PutMapping
-  public ResponseEntity<?> handlePUTRequest(HttpServletRequest request,
-                                            @RequestHeader(XOkapiHeaders.TOKEN) String okapiToken,
-                                            @RequestHeader(XOkapiHeaders.TENANT) String okapiTenant) {
+  public ResponseEntity<?> handlePUTRequest(HttpServletRequest request) {
     var innReachRequest = innReachRequestBuilder.buildInnReachRequest(request);
-
-    return innReachClient.putCall(innReachRequest.getRequestUrl(), innReachRequest.getRequestBody(), okapiTenant, okapiToken);
+    return innReachClient.putCall(innReachRequest.getRequestUrl(), innReachRequest.getRequestBody(), innReachRequest.getHeaders());
   }
 
   @DeleteMapping
-  public ResponseEntity<?> handleDELETERequest(HttpServletRequest request,
-                                               @RequestHeader(XOkapiHeaders.TOKEN) String okapiToken,
-                                               @RequestHeader(XOkapiHeaders.TENANT) String okapiTenant) {
+  public ResponseEntity<?> handleDELETERequest(HttpServletRequest request) {
     var innReachRequest = innReachRequestBuilder.buildInnReachRequest(request);
-    innReachClient.deleteCall(innReachRequest.getRequestUrl(), okapiTenant, okapiToken);
-
+    innReachClient.deleteCall(innReachRequest.getRequestUrl(), innReachRequest.getHeaders());
     return ResponseEntity.noContent().build();
   }
 
