@@ -1,5 +1,7 @@
 package org.folio.edge.utils;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 import java.util.Base64;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,15 +14,15 @@ public class ApiKeyUtils {
 
   @SneakyThrows
   public static String generateApiKey(String salt, String tenantId, String username) {
-    if (salt == null || salt.isEmpty()) {
+    if (isEmpty(salt)) {
       throw new IllegalArgumentException("ClientID/Salt cannot be null");
     }
 
-    if (tenantId == null || tenantId.isEmpty()) {
+    if (isEmpty(tenantId)) {
       throw new IllegalArgumentException("TenantID cannot be null");
     }
 
-    if (username == null || username.isEmpty()) {
+    if (isEmpty(username)) {
       throw new IllegalArgumentException("Username cannot be null");
     }
 
