@@ -44,7 +44,7 @@ class JwtAccessTokenServiceImplTest {
   @Test
   @Disabled
   void returnJwtAccessToken() {
-    var jwtAccessToken = accessTokenService.generateAccessToken("fli01");
+    var jwtAccessToken = accessTokenService.generateAccessToken("d2ir", "fli01");
 
     assertNotNull(jwtAccessToken);
     assertNotNull(jwtAccessToken.getToken());

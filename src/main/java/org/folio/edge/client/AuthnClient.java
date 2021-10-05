@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-import org.folio.edge.domain.dto.ConnectionSystemParameters;
+import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
 
 @FeignClient("authn")
 public interface AuthnClient {

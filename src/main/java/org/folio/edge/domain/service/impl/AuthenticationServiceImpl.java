@@ -39,18 +39,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final AccessTokenService<JwtAccessToken, Jws<Claims>> accessTokenService;
 
   @Override
-  public AccessTokenResponse authenticate(@Valid AuthenticationParams authenticationParams) {
-    var authenticationRequest = buildCentralServerAuthenticationRequest(authenticationParams);
+  public AccessTokenResponse authenticate(@Valid AuthenticationParams authParams) {
+    var authenticationRequest = buildCentralServerAuthenticationRequest(authParams);
 
-    var authenticationResult = innReachAuthClient.authenticateCentralServer(authenticationRequest,
-      authenticationParams.getOkapiTenant(), authenticationParams.getOkapiToken());
+    var authResult = innReachAuthClient.authenticateCentralServer(authenticationRequest,
+      authParams.getOkapiTenant(), authParams.getOkapiToken());
 
-    if (!authenticationResult.getStatusCode().is2xxSuccessful()) {
-      log.debug("Authentication failed with status: {}", authenticationResult.getStatusCodeValue());
+    if (!authResult.getStatusCode().is2xxSuccessful()) {
+      log.debug("Authentication failed with status: {}", authResult.getStatusCodeValue());
       throw new EdgeServiceException("Authentication failed");
     }
 
-    var jwtAccessToken = accessTokenService.generateAccessToken(authenticationParams.getXFromCode());
+    var jwtAccessToken = accessTokenService.generateAccessToken(authParams.getXFromCode(), authParams.getXToCode());
 
     return new AccessTokenResponse()
       .accessToken(jwtAccessToken.getToken())
@@ -58,12 +58,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       .expiresIn(jwtAccessToken.getExpiresIn());
   }
 
-  private CentralServerAuthenticationRequest buildCentralServerAuthenticationRequest(AuthenticationParams authenticationParams) {
-    var decodedAuthorizationHeader = decodeAuthorizationHeader(authenticationParams.getAuthorization());
+  private CentralServerAuthenticationRequest buildCentralServerAuthenticationRequest(AuthenticationParams params) {
+    var decodedAuthorizationHeader = decodeAuthorizationHeader(params.getAuthorization());
     var keySecretArray = decodedAuthorizationHeader.split(AUTHENTICATION_TOKEN_KEY_SECRET_DELIMITER);
 
     return CentralServerAuthenticationRequest.builder()
-      .localServerCode(authenticationParams.getXFromCode())
+      .localServerCode(params.getXFromCode())
       .key(UUID.fromString(keySecretArray[KEY_POSITION_IN_TOKEN]))
       .secret(UUID.fromString(keySecretArray[SECRET_POSITION_IN_TOKEN]))
       .build();

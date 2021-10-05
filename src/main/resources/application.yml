@@ -16,23 +16,26 @@ spring:
     check-template-location: false
   main:
     allow-bean-definition-overriding: true
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=200,expireAfterAccess=1h
 management:
   endpoints:
     web:
       exposure:
-        include: info,health,env,httptrace
+        include: info,health,env,httptrace,loggers
       base-path: /admin
   #  endpoint:
   #    health:
   #      show-details: always
   #      show-components: always
-  ###################################################
-  # Disable all checks except for readiness
-  ###################################################
   health:
     defaults:
-      enabled: false
+      enabled: true
     readinessstate:
+      enabled: true
+    livenessstate:
       enabled: true
 folio:
   tenant:

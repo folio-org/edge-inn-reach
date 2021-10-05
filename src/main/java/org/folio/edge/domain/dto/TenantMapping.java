@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TenantMapping {
-  private String xCodeFrom;
+  private String xToCode;
   private String tenantId;
   private String username;
 }
