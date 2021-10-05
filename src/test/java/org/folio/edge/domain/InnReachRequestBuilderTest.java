@@ -1,23 +1,30 @@
 package org.folio.edge.domain;
 
-import org.folio.edge.domain.dto.InnReachRequest;
-import org.folio.edge.domain.exception.EdgeServiceException;
-import org.junit.jupiter.api.BeforeEach;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-
-import java.io.IOException;
-import java.net.URI;
-
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import org.folio.edge.domain.exception.EdgeServiceException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 class InnReachRequestBuilderTest {
@@ -37,25 +44,54 @@ class InnReachRequestBuilderTest {
   @Mock
   private ServletInputStream servletInputStream;
 
-  @BeforeEach
-  private void setup() throws IOException {
-    when(httpServletRequest.getRequestURI()).thenReturn(INN_REACH_URI_PREFIX + "/resource/subresource");
-    when(httpServletRequest.getInputStream()).thenReturn(servletInputStream);
-  }
-
   @Test
   public void returnInnReachRequestWithURLandRequestBody() throws IOException {
+    var httpServletRequest = getMockHttpServletRequest();
+
     when(servletInputStream.readAllBytes()).thenReturn(new byte[] {});
 
     var innReachRequest = innReachRequestBuilder.buildInnReachRequest(httpServletRequest);
 
     assertNotNull(innReachRequest);
+    assertNotNull(innReachRequest.getHeaders());
+
+    assertFalse(innReachRequest.getHeaders().isEmpty());
+
     assertEquals(URI.create(okapiUrl + INN_REACH_D2IR_URL_PREFIX + "/resource/subresource"), innReachRequest.getRequestUrl());
     assertEquals(EMPTY, innReachRequest.getRequestBody());
   }
 
   @Test
-  public void throwException_when_cantReadRequestBodyAsString() throws IOException {
+  public void throwException_when_cantReadRequestBodyAsString() {
+    var httpServletRequest = getMockHttpServletRequest();
     assertThrows(EdgeServiceException.class, () -> innReachRequestBuilder.buildInnReachRequest(httpServletRequest));
+  }
+
+  private HttpServletRequestWrapper getMockHttpServletRequest() {
+    return new HttpServletRequestWrapper(httpServletRequest) {
+
+      private final Map<String, String> headers = new HashMap<>();
+
+      @Override
+      public String getRequestURI() {
+        return INN_REACH_URI_PREFIX + "/resource/subresource";
+      }
+
+      @Override
+      public ServletInputStream getInputStream() {
+        return servletInputStream;
+      }
+
+      @Override
+      public Enumeration<String> getHeaderNames() {
+        headers.put("x-code-from", "fli01");
+        return Collections.enumeration(headers.keySet());
+      }
+
+      @Override
+      public String getHeader(String name) {
+        return headers.get(name);
+      }
+    };
   }
 }
