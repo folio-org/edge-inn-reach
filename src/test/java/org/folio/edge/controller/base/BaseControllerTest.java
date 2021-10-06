@@ -13,6 +13,9 @@ import org.folio.edge.extension.WireMockExtension;
 @ActiveProfiles("test")
 public class BaseControllerTest {
 
+  protected static final String TEST_TOKEN =
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbm5yZWFjaENsaWVudCIsInVzZXJfaWQiOiI1ZDE3YTAzNy1hNWY2LTU0NzUtYjRmOC1jYmNkNjg0MjliMmEiLCJ0ZW5hbnQiOiJ0ZXN0X3RlbmFudCJ9.r-_5wYXKgSxDIVY_SptQef4v69BQHVL7VotGzwet8Zc";
+
   @RegisterExtension
   protected static WireMockExtension wireMock =
       new WireMockExtension("okapi_url", wireMockConfig().dynamicPort().notifier(new Slf4jNotifier(true)));
