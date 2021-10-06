@@ -37,7 +37,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
       writer.write(getErrorJsonString(HttpStatus.UNAUTHORIZED.value(), e));
 
     } catch (Exception e) {
-      log.debug("Request failed!", e);
+      log.error("Request failed!", e);
+
       httpServletResponse.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
       httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 

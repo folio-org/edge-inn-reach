@@ -23,8 +23,3 @@ folio:
   tenant:
     validation:
       enabled: false
-wiremock:
-  server:
-    port: 8575
-okapi:
-  url: http://localhost:${wiremock.server.port}

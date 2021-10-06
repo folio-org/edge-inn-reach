@@ -16,13 +16,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.folio.edge.api.utils.model.ClientInfo;
 import org.folio.edge.api.utils.util.ApiKeyParser;
 
 @ExtendWith({
-    MockitoExtension.class,
     RandomBeansExtension.class
 })
 class ApiKeyUtilsTest {
