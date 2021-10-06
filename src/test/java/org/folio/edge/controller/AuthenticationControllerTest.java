@@ -4,7 +4,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serviceUnavailable;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.unauthorized;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -164,7 +163,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
 
   @Test
   void return401HttpCode_when_keySecretIsNotAuthenticated() {
-    stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(unauthorized()));
+    wireMock.stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(unauthorized()));
 
     var httpHeaders = createInnReachHttpHeaders();
     var requestEntity = new HttpEntity<>(httpHeaders);
@@ -183,7 +182,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
 
   @Test
   void return500HttpCode_when_modInnReachServiceIsUnavailable() {
-    stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(serviceUnavailable()));
+    wireMock.stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(serviceUnavailable()));
 
     var httpHeaders = createInnReachHttpHeaders();
     var requestEntity = new HttpEntity<>(httpHeaders);
@@ -202,7 +201,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
 
   @Test
   void return200HttpCode_and_validAuthToken_when_keySecretIsSuccessfullyAuthenticated() {
-    stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(ok()));
+    wireMock.stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(ok()));
 
     var httpHeaders = createInnReachHttpHeaders();
     var requestEntity = new HttpEntity<>(httpHeaders);
