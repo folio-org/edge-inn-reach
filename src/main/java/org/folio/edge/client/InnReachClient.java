@@ -1,9 +1,7 @@
 package org.folio.edge.client;
 
-import static org.folio.spring.integration.XOkapiHeaders.TENANT;
-import static org.folio.spring.integration.XOkapiHeaders.TOKEN;
-
 import java.net.URI;
+import java.util.Map;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -21,24 +19,14 @@ import org.folio.edge.config.InnReachClientConfig;
 public interface InnReachClient {
 
   @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  ResponseEntity<?> getCall(URI modInnReachURI,
-                            @RequestHeader(TENANT) String okapiTenant,
-                            @RequestHeader(TOKEN) String okapiToken);
+  ResponseEntity<?> getCall(URI modInnReachURI, @RequestHeader Map<String, String> headers);
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  ResponseEntity<?> postCall(URI modInnReachURI,
-                             @RequestBody String requestBody,
-                             @RequestHeader(TENANT) String okapiTenant,
-                             @RequestHeader(TOKEN) String okapiToken);
+  ResponseEntity<?> postCall(URI modInnReachURI, @RequestBody String requestBody, @RequestHeader Map<String, String> headers);
 
   @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  ResponseEntity<?> putCall(URI modInnReachURI,
-                            @RequestBody String requestBody,
-                            @RequestHeader(TENANT) String okapiTenant,
-                            @RequestHeader(TOKEN) String okapiToken);
+  ResponseEntity<?> putCall(URI modInnReachURI, @RequestBody String requestBody, @RequestHeader Map<String, String> headers);
 
   @DeleteMapping
-  void deleteCall(URI modInnReachURI,
-                  @RequestHeader(TENANT) String okapiTenant,
-                  @RequestHeader(TOKEN) String okapiToken);
+  void deleteCall(URI modInnReachURI, @RequestHeader Map<String, String> headers);
 }
