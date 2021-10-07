@@ -34,7 +34,7 @@ API provides the following URLs:
 #### InnReach Central Server setup
 1. InnReach Central Server connection should be established from the InnReach edge Folio module. Therefore InnReach edge module
    needs to know the name of all the tenants mappings between InnReach Central Server and Folio tenant, which has InnReach Central Server connection. For the ephemeral configuration these mappings locate in the
-   `ephemeral.properties` (key `tenantsMappings`). In order to provide it before the deployment the list of tenant mappings (e.g. InnReach Header x-from-code:tenantId) should be put to AWS parameters store (as String). The tenant mappings list separated by
+   `ephemeral.properties` (key `tenantsMappings`). In order to provide it before the deployment the list of tenant mappings (e.g. InnReach Header x-to-code:tenantId) should be put to AWS parameters store (as String). The tenant mappings list separated by
    coma (e.g. fli01:diku, fli02:someothertenantname) should be stored in AWS param store in the variable with
    key: `innreach_tenants_mappings` by default or could be provided its own key through `innreach_tenants_mappings` parameter of starting module.
 2. For each tenant using InnReach the corresponding user should be added

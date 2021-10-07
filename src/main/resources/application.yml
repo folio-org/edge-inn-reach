@@ -16,23 +16,26 @@ spring:
     check-template-location: false
   main:
     allow-bean-definition-overriding: true
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=200,expireAfterAccess=1h
 management:
   endpoints:
     web:
       exposure:
-        include: info,health,env,httptrace
+        include: info,health,env,httptrace,loggers
       base-path: /admin
   #  endpoint:
   #    health:
   #      show-details: always
   #      show-components: always
-  ###################################################
-  # Disable all checks except for readiness
-  ###################################################
   health:
     defaults:
-      enabled: false
+      enabled: true
     readinessstate:
+      enabled: true
+    livenessstate:
       enabled: true
 folio:
   tenant:
@@ -45,6 +48,13 @@ folio:
     claims:
       issuer: folio
     expiration-time-sec: ${Djwt_exp_time_sec}
+########################################
+## disable standard edge security filter
+########################################
+edge:
+  security:
+    filter:
+      enabled: false
 debug: false
 
 Dokapi_url: http://localhost:9130

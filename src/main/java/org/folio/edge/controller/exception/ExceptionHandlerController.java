@@ -2,6 +2,7 @@ package org.folio.edge.controller.exception;
 
 import javax.validation.ConstraintViolationException;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.folio.edge.domain.exception.EdgeServiceException;
 import org.folio.edge.dto.Error;
 
+@Log4j2
 @RestControllerAdvice
 public class ExceptionHandlerController {
 
@@ -63,6 +65,8 @@ public class ExceptionHandlerController {
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public Error handleException(Exception e) {
+    log.error("Unexpected exception: " + e.getMessage(), e);
+
     return new Error()
       .error("internal_error")
       .errorDescription("Internal server error");

@@ -1,65 +1,50 @@
 package org.folio.edge.filter;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import static org.folio.edge.api.utils.Constants.X_OKAPI_TOKEN;
 import static org.folio.edge.config.JwtConfiguration.DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC;
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_AUTH_SCHEME;
 import static org.folio.edge.fixture.InnReachFixture.createInnReachHttpHeaders;
+import static org.folio.edge.util.TestUtil.TEST_TOKEN;
 import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ActiveProfiles;
 
+import org.folio.edge.controller.base.BaseControllerTest;
 import org.folio.edge.dto.AccessTokenResponse;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-class JwtTokenVerifyFilterTest {
-
-  @Value("${wiremock.server.port}")
-  private int wireMockServerPort;
+@Disabled
+class JwtTokenVerifyFilterTest extends BaseControllerTest {
 
   @Autowired
   private TestRestTemplate testRestTemplate;
 
-  private WireMockServer wireMockServer;
 
   @BeforeEach
   public void setupBeforeEach() {
-    wireMockServer = new WireMockServer(WireMockConfiguration.options().port(wireMockServerPort));
-    wireMockServer.start();
-
-    configureFor(wireMockServerPort);
-  }
-
-  @AfterEach
-  public void tearDownAfterEach() {
-    wireMockServer.stop();
+    wireMock.stubFor(post(urlEqualTo("/authn/login"))
+        .willReturn(aResponse()
+            .withStatus(HttpStatus.CREATED.value())
+            .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
   }
 
   @Test
-  @Disabled
   void return200HttpCode_when_sendRequestWithValidJwtToken() {
-    stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(ok()));
+    wireMock.stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(ok()));
 
     var httpHeaders = new HttpHeaders();
     httpHeaders.set(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtToken());

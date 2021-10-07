@@ -10,6 +10,9 @@ import lombok.SneakyThrows;
 
 public class TestUtil {
 
+  public static final String TEST_TOKEN =
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbm5yZWFjaENsaWVudCIsInVzZXJfaWQiOiI1ZDE3YTAzNy1hNWY2LTU0NzUtYjRmOC1jYmNkNjg0MjliMmEiLCJ0ZW5hbnQiOiJ0ZXN0X3RlbmFudCJ9.r-_5wYXKgSxDIVY_SptQef4v69BQHVL7VotGzwet8Zc";
+
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
   public static String randomUUIDString() {

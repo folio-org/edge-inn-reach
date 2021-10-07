@@ -1,6 +1,6 @@
 package org.folio.edge.security.filter;
 
-import static org.folio.edge.external.InnReachHttpHeaders.X_FROM_CODE;
+import static org.folio.edge.external.InnReachHttpHeaders.X_TO_CODE;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.TOKEN;
 
@@ -17,47 +17,47 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import org.folio.edge.domain.dto.ConnectionSystemParameters;
-import org.folio.edge.domain.dto.HttpRequestHeadersWrapper;
-import org.folio.edge.security.service.SecurityManagerService;
+import org.folio.edge.security.service.SecurityService;
 import org.folio.edge.security.store.EdgeApiKeyHolder;
+import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
+import org.folio.edgecommonspring.domain.entity.RequestWithHeaders;
 
 @Log4j2
 @RequiredArgsConstructor
 public class EdgeSecurityFilter extends OncePerRequestFilter {
 
   private final List<String> securityFilterIgnoreURIList;
-  private final SecurityManagerService securityManagerService;
+  private final SecurityService securityService;
 
   @Override
-  protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
 
-    if (doNotFilter(httpServletRequest)) {
-      log.info("JWT token verification isn't needed, since requested URI [{}] is in the ignore URIs list", httpServletRequest.getRequestURI());
-      filterChain.doFilter(httpServletRequest, httpServletResponse);
+    if (doNotFilter(request)) {
+      log.info("JWT token verification isn't needed, since requested URI [{}] is in the ignore URIs list", request.getRequestURI());
+      filterChain.doFilter(request, response);
       return;
     }
 
-    var okapiConnectionParameters = getOkapiConnectionParameters(httpServletRequest.getHeader(X_FROM_CODE));
+    var okapiParameters = getOkapiConnectionParameters(request.getHeader(X_TO_CODE));
 
-    var requestWrapper = new HttpRequestHeadersWrapper(httpServletRequest);
-    requestWrapper.putHeader(TOKEN, okapiConnectionParameters.getOkapiToken());
-    requestWrapper.putHeader(TENANT, okapiConnectionParameters.getTenantId());
+    var requestWrapper = new RequestWithHeaders(request);
+    requestWrapper.putHeader(TOKEN, okapiParameters.getOkapiToken());
+    requestWrapper.putHeader(TENANT, okapiParameters.getTenantId());
 
-    filterChain.doFilter(requestWrapper, httpServletResponse);
+    filterChain.doFilter(requestWrapper, response);
   }
 
   private boolean doNotFilter(HttpServletRequest request) {
     return securityFilterIgnoreURIList.contains(request.getRequestURI());
   }
 
-  private ConnectionSystemParameters getOkapiConnectionParameters(String xFromCode) {
+  private ConnectionSystemParameters getOkapiConnectionParameters(String xToCode) {
     var edgeApiKey = EdgeApiKeyHolder.getEdgeApiKey();
 
     if (StringUtils.isNotEmpty(edgeApiKey)) {
-      return securityManagerService.getOkapiConnectionParameters(edgeApiKey);
+      return securityService.getOkapiConnectionParameters(edgeApiKey);
     }
-    return securityManagerService.getInnReachConnectionParameters(xFromCode);
+    return securityService.getInnReachConnectionParameters(xToCode);
   }
 }
