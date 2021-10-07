@@ -14,14 +14,13 @@ import static org.folio.edge.config.JwtConfiguration.DEFAULT_TOKEN_EXPIRATION_TI
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BASIC_AUTH_SCHEME;
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_AUTH_SCHEME;
 import static org.folio.edge.fixture.InnReachFixture.createInnReachHttpHeaders;
+import static org.folio.edge.util.TestUtil.TEST_TOKEN;
 
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -49,11 +48,6 @@ class AuthenticationControllerTest extends BaseControllerTest {
         .willReturn(aResponse()
             .withStatus(HttpStatus.CREATED.value())
             .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
-  }
-
-  @AfterEach
-  public void tearDownAfterEach() {
-    /*wireMockServer.stop();*/
   }
 
   @Test
@@ -126,7 +120,6 @@ class AuthenticationControllerTest extends BaseControllerTest {
     assertEquals("invalid_request", body.getError());
   }
 
-  @Disabled
   @ParameterizedTest
   @MethodSource("incorrectFormattedAuthTokenList")
   void return400HttpCode_when_authenticationTokenHasIncorrectFormat(String incorrectFormattedAuthToken) {
@@ -178,7 +171,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
   }
 
   @Test
-  void return500HttpCode_when_modInnReachServiceIsUnavailable() {
+  void return503HttpCode_when_modInnReachServiceIsUnavailable() {
     wireMock.stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(serviceUnavailable()));
 
     var httpHeaders = createInnReachHttpHeaders();
@@ -187,13 +180,11 @@ class AuthenticationControllerTest extends BaseControllerTest {
     var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
         HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
 
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.SERVICE_UNAVAILABLE, responseEntity.getStatusCode());
 
     var body = responseEntity.getBody();
 
     assertNotNull(body);
-    assertEquals("internal_error", body.getError());
-    assertEquals("Internal server error", body.getErrorDescription());
   }
 
   @Test
