@@ -63,7 +63,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     var keySecretArray = decodedAuthorizationHeader.split(AUTHENTICATION_TOKEN_KEY_SECRET_DELIMITER);
 
     return CentralServerAuthenticationRequest.builder()
-      .localServerCode(params.getXFromCode())
+      .localServerCode(params.getXToCode())
       .key(UUID.fromString(keySecretArray[KEY_POSITION_IN_TOKEN]))
       .secret(UUID.fromString(keySecretArray[SECRET_POSITION_IN_TOKEN]))
       .build();
