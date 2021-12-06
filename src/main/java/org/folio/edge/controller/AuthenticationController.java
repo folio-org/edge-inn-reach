@@ -17,7 +17,7 @@ import org.folio.edge.rest.resource.AuthenticationApi;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/v2/oauth2")
+@RequestMapping("/innreach/v2/oauth2")
 public class AuthenticationController implements AuthenticationApi {
 
   private final AuthenticationService authenticationService;
