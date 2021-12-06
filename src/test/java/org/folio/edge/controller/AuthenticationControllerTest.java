@@ -38,9 +38,10 @@ import org.folio.edge.external.InnReachHttpHeaders;
 
 class AuthenticationControllerTest extends BaseControllerTest {
 
+  private static final String OAUTH_TOKEN_URI = "/innreach/v2/oauth2/token?grant_type={grant_type}&scope={scope}";
+
   @Autowired
   private TestRestTemplate testRestTemplate;
-
 
   @BeforeEach
   public void setupBeforeEach() {
@@ -57,7 +58,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
 
     var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
+    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
         HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -76,7 +77,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
 
     var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
+    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
         HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -92,7 +93,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
     var httpHeaders = createInnReachHttpHeaders();
     var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}", HttpMethod.POST,
+    var responseEntity = testRestTemplate.exchange("/innreach/v2/oauth2/token?grant_type={grant_type}", HttpMethod.POST,
         requestEntity, Error.class, "client_credentials");
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -109,7 +110,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
     var httpHeaders = createInnReachHttpHeaders();
     var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
+    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
         HttpMethod.POST, requestEntity, Error.class, "client_credent", "reach_tp");
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -128,7 +129,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
 
     var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
+    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
         HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -158,7 +159,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
     var httpHeaders = createInnReachHttpHeaders();
     var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
+    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
         HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
 
     assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
@@ -177,7 +178,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
     var httpHeaders = createInnReachHttpHeaders();
     var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
+    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
         HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
 
     assertEquals(HttpStatus.SERVICE_UNAVAILABLE, responseEntity.getStatusCode());
@@ -194,7 +195,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
     var httpHeaders = createInnReachHttpHeaders();
     var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
+    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
         HttpMethod.POST, requestEntity, AccessTokenResponse.class, "client_credentials", "innreach_tp");
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
