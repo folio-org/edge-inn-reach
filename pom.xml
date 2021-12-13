@@ -33,6 +33,7 @@
     <wiremock.version>2.28.1</wiremock.version>
     <junit-extensions.version>2.5.0</junit-extensions.version>
     <mockito.version>3.12.4</mockito.version>
+    <log4j2.version>2.15.0</log4j2.version>
     <argLine />
     <sonar.exclusions>
       src/main/java/org/folio/edge/EdgeInnReachApplication.java,
