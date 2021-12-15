@@ -1,3 +1,8 @@
+## v1.0.2 2021-12-15
+
+### Stories
+* [EDGINREACH-21](https://issues.folio.org/browse/EDGINREACH-21) - Log4j vulnerability verification and correction
+
 ## v1.0.1 2021-10-07
 
 ### Stories
