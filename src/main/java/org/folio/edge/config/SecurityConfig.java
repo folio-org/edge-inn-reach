@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .and()
       .authorizeRequests()
       .antMatchers(HttpMethod.GET,"/admin/health").permitAll()
-      .antMatchers(HttpMethod.POST,"/v2/oauth2/token").permitAll()
+      .antMatchers(HttpMethod.POST,"/innreach/v2/oauth2/token").permitAll()
       .anyRequest()
       .authenticated()
       .and()
@@ -57,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private List<String> jwtTokenVerifyFilterIgnoreURIList() {
     return List.of(
       "/admin/health",
-      "/v2/oauth2/token"
+      "/innreach/v2/oauth2/token"
     );
   }
 
