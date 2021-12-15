@@ -9,7 +9,7 @@
   </parent>
   <groupId>org.folio</groupId>
   <artifactId>edge-inn-reach</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.3-SNAPSHOT</version>
   <name>edge-inn-reach</name>
   <description>INN-REACH system Edge API module</description>
 
@@ -33,7 +33,7 @@
     <wiremock.version>2.28.1</wiremock.version>
     <junit-extensions.version>2.5.0</junit-extensions.version>
     <mockito.version>3.12.4</mockito.version>
-    <log4j2.version>2.15.0</log4j2.version>
+    <log4j2.version>2.16.0</log4j2.version>
     <argLine />
     <sonar.exclusions>
       src/main/java/org/folio/edge/EdgeInnReachApplication.java,
