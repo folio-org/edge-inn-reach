@@ -51,6 +51,19 @@ components:
       $ref: schemas/accessTokenResponse.json
     error:
       $ref: schemas/error.json
+    innReachError:
+      $ref: schemas/v2/innReachError.json
+    innReachResponseDTO:
+      type: object
+      properties:
+        status:
+          type: string
+        reason:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: schemas/v2/innReachError.json
   parameters:
     grant_type:
       name: grant_type
