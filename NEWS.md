@@ -1,3 +1,8 @@
+## v1.0.3 2021-12-22
+
+### Stories
+* [EDGINREACH-22](https://issues.folio.org/browse/EDGINREACH-22) - Log4j 2.17.0 upgrade
+
 ## v1.0.2 2021-12-15
 
 ### Stories
