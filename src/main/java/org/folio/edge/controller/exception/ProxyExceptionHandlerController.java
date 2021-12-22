@@ -14,8 +14,8 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @RequiredArgsConstructor
-@RestControllerAdvice(basePackages = "org.folio.edge.controller")
-public class V2ExceptionHandlerController {
+@RestControllerAdvice
+public class ProxyExceptionHandlerController {
 
   @ExceptionHandler(FeignException.class)
   public ResponseEntity<InnReachResponseDTO> handleFeignStatusException(FeignException feignException) {
