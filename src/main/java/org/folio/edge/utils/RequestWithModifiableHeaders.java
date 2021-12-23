@@ -21,8 +21,10 @@ public class RequestWithModifiableHeaders extends HttpServletRequestWrapper {
   }
 
   public void renameHeader(String name, String newName) {
-    var value = headers.remove(name);
-    headers.put(newName, value);
+    if (headers.containsKey(name)) {
+      var value = headers.remove(name);
+      headers.put(newName, value);
+    }
   }
 
   public void putHeader(String name, String value) {
