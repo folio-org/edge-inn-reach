@@ -1,5 +1,8 @@
 package org.folio.edge.security.filter;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
+import static org.folio.edge.external.InnReachHttpHeaders.X_D2IR_AUTHORIZATION;
 import static org.folio.edge.external.InnReachHttpHeaders.X_TO_CODE;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.TOKEN;
@@ -19,8 +22,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import org.folio.edge.security.service.SecurityService;
 import org.folio.edge.security.store.EdgeApiKeyHolder;
+import org.folio.edge.utils.RequestWithModifiableHeaders;
 import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
-import org.folio.edgecommonspring.domain.entity.RequestWithHeaders;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -31,7 +34,7 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-      FilterChain filterChain) throws ServletException, IOException {
+                                  FilterChain filterChain) throws ServletException, IOException {
 
     if (doNotFilter(request)) {
       log.info("JWT token verification isn't needed, since requested URI [{}] is in the ignore URIs list", request.getRequestURI());
@@ -41,9 +44,10 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
 
     var okapiParameters = getOkapiConnectionParameters(request.getHeader(X_TO_CODE));
 
-    var requestWrapper = new RequestWithHeaders(request);
+    var requestWrapper = new RequestWithModifiableHeaders(request);
     requestWrapper.putHeader(TOKEN, okapiParameters.getOkapiToken());
     requestWrapper.putHeader(TENANT, okapiParameters.getTenantId());
+    requestWrapper.renameHeader(AUTHORIZATION, X_D2IR_AUTHORIZATION);
 
     filterChain.doFilter(requestWrapper, response);
   }
