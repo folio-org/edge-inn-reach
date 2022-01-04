@@ -2,7 +2,9 @@ package org.folio.edge.controller.exception;
 
 import javax.validation.ConstraintViolationException;
 
-import lombok.extern.log4j.Log4j2;
+import org.folio.edge.domain.exception.EdgeServiceException;
+import org.folio.edge.dto.Error;
+import org.folio.edge.dto.InnReachResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,14 +15,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import org.folio.edge.domain.exception.EdgeServiceException;
-import org.folio.edge.dto.Error;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import feign.FeignException;
+import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @RestControllerAdvice
 public class ExceptionHandlerController {
 
   private static final String INVALID_REQUEST_ERROR_TYPE = "invalid_request";
+  private static final ObjectMapper objectMapper = new ObjectMapper();
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -77,4 +83,17 @@ public class ExceptionHandlerController {
     return new ResponseEntity<>(new Error().error(INVALID_REQUEST_ERROR_TYPE), HttpStatus.valueOf(e.getStatus()));
   }
 
+  @ExceptionHandler(FeignException.class)
+  public ResponseEntity<InnReachResponseDTO> handleFeignStatusException(FeignException feignException) {
+    var status = HttpStatus.resolve(feignException.status());
+    String body = feignException.contentUTF8();
+    InnReachResponseDTO innReachResponseDTO = null;
+    try {
+      innReachResponseDTO = objectMapper.readValue(body, InnReachResponseDTO.class);
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
+
+    return new ResponseEntity<InnReachResponseDTO>(innReachResponseDTO, status);
+  }
 }
