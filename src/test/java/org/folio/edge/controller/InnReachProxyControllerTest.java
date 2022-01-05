@@ -5,6 +5,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.ACCEPT_ENCODING;
@@ -27,6 +28,7 @@ import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import org.folio.edge.dto.InnReachResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,7 @@ import org.springframework.http.HttpEntity;
 import org.folio.edge.controller.base.BaseControllerTest;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
+import org.springframework.http.ResponseEntity;
 
 public class InnReachProxyControllerTest extends BaseControllerTest {
 
@@ -109,14 +112,11 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
         .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
         .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
 
-    testRestTemplate.exchange(BASE_URI + "/circ/verifypatron",
-      POST, requestEntity, Object.class);
+    ResponseEntity<InnReachResponseDTO> responseEntity = testRestTemplate.exchange(BASE_URI + "/circ/verifypatron",
+      POST, requestEntity, InnReachResponseDTO.class);
 
-    wireMock.verify(postRequestedFor(PATRON_VERIFY_URL_PATTERN)
-      .withHeader(X_D2IR_AUTHORIZATION, equalTo(AUTH_TOKEN_VALUE))
-      .with
-    );
-    // verify(getRequestedFor(urlEqualTo("/baeldung")));
+    assertTrue(responseEntity.getStatusCode().is4xxClientError());
+    assertTrue(responseEntity.hasBody());
   }
 
 }
