@@ -31,7 +31,7 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-      FilterChain filterChain) throws ServletException, IOException {
+                                  FilterChain filterChain) throws ServletException, IOException {
 
     if (doNotFilter(request)) {
       log.info("JWT token verification isn't needed, since requested URI [{}] is in the ignore URIs list", request.getRequestURI());
