@@ -98,4 +98,25 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     );
   }
 
+  @Test
+  void shouldHandleCommonErrors() {
+    var httpHeaders = createInnReachHttpHeaders();
+    var requestEntity = new HttpEntity<>(httpHeaders);
+
+    wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
+      .willReturn(aResponse().withBody("{}")
+        .withStatus(400)
+        .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+        .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
+
+    testRestTemplate.exchange(BASE_URI + "/circ/verifypatron",
+      POST, requestEntity, Object.class);
+
+    wireMock.verify(postRequestedFor(PATRON_VERIFY_URL_PATTERN)
+      .withHeader(X_D2IR_AUTHORIZATION, equalTo(AUTH_TOKEN_VALUE))
+      .with
+    );
+    // verify(getRequestedFor(urlEqualTo("/baeldung")));
+  }
+
 }
