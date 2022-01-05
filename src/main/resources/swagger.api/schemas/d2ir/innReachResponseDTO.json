@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "V2 response",
+  "description": "D2IR response",
   "type": "object",
   "properties": {
     "status": {
@@ -15,7 +15,7 @@
       "description": "Errors",
       "type": "array",
       "items": {
-        "$ref": "../v2/innReachError.json"
+        "$ref": "../d2ir/innReachError.json"
       }
     }
   },

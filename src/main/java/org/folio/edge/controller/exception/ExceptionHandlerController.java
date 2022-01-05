@@ -91,9 +91,17 @@ public class ExceptionHandlerController {
     try {
       innReachResponseDTO = objectMapper.readValue(body, InnReachResponseDTO.class);
     } catch (JsonProcessingException e) {
-      e.printStackTrace();
+      log.error("Unexpected exception: {}" + e.getMessage());
+      innReachResponseDTO = failed(body);
+      return new ResponseEntity<>(innReachResponseDTO, status);
     }
 
-    return new ResponseEntity<InnReachResponseDTO>(innReachResponseDTO, status);
+    return new ResponseEntity<>(innReachResponseDTO, status);
+  }
+
+  private InnReachResponseDTO failed(String reason) {
+    return new InnReachResponseDTO()
+      .status("failed")
+      .reason(reason);
   }
 }

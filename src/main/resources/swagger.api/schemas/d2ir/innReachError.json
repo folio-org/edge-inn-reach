@@ -1,5 +1,5 @@
 {
-  "description": "V2 error",
+  "description": "D2IR error",
   "type": "object",
   "properties": {
     "messages": {

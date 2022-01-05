@@ -52,9 +52,9 @@ components:
     error:
       $ref: schemas/error.json
     innReachError:
-      $ref: schemas/v2/innReachError.json
+      $ref: schemas/d2ir/innReachError.json
     innReachEdgeResponseDTO:
-      $ref: schemas/v2/innReachResponseDTO.json
+      $ref: schemas/d2ir/innReachResponseDTO.json
   parameters:
     grant_type:
       name: grant_type
