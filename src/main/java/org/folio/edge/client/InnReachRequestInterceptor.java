@@ -12,11 +12,11 @@ public class InnReachRequestInterceptor implements RequestInterceptor {
 
   @Override
   public void apply(RequestTemplate template) {
-    updateAuthorizationHeaderName(template);
+    renameAuthorizationHeader(template);
     template.removeHeader(ACCEPT_ENCODING); // spring-cloud-feign prior to v3.1.0 doesn't handle content compression
   }
 
-  private void updateAuthorizationHeaderName(RequestTemplate template) {
+  private void renameAuthorizationHeader(RequestTemplate template) {
     var authorizationValue = template.headers().get(AUTHORIZATION);
     template.removeHeader(AUTHORIZATION);
     template.header(X_D2IR_AUTHORIZATION, authorizationValue);
