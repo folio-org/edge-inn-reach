@@ -93,7 +93,6 @@ public class ExceptionHandlerController {
     } catch (JsonProcessingException e) {
       log.error("Unexpected exception: {}" + e.getMessage());
       innReachResponseDTO = failed(body);
-      return new ResponseEntity<>(innReachResponseDTO, status);
     }
 
     return new ResponseEntity<>(innReachResponseDTO, status);

@@ -5,6 +5,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -12,6 +13,7 @@ import static org.springframework.http.HttpHeaders.ACCEPT_ENCODING;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -24,6 +26,7 @@ import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -40,6 +43,8 @@ import org.folio.edge.controller.base.BaseControllerTest;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
 import org.springframework.http.ResponseEntity;
+
+import java.io.IOException;
 
 public class InnReachProxyControllerTest extends BaseControllerTest {
 
@@ -104,10 +109,24 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
   @Test
   void shouldHandleCommonErrors() {
     var httpHeaders = createInnReachHttpHeaders();
-    var requestEntity = new HttpEntity<>(httpHeaders);
+    httpHeaders.set(ACCEPT_ENCODING, "gzip");
+    httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
+
+    InnReachResponseDTO innReachResponseDTO = new InnReachResponseDTO();
+    innReachResponseDTO.status("failed");
+    ObjectMapper obj = new ObjectMapper();
+    String jsonStr = null;
+    try {
+      jsonStr = obj.writeValueAsString(innReachResponseDTO);
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    HttpEntity<InnReachResponseDTO> requestEntity = new HttpEntity<>(innReachResponseDTO, httpHeaders);
 
     wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
-      .willReturn(aResponse().withBody("{}")
+      .willReturn(aResponse().withBody(jsonStr)
         .withStatus(400)
         .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
         .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
@@ -116,7 +135,9 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
       POST, requestEntity, InnReachResponseDTO.class);
 
     assertTrue(responseEntity.getStatusCode().is4xxClientError());
+    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
     assertTrue(responseEntity.hasBody());
+    assertEquals(innReachResponseDTO, responseEntity.getBody());
   }
 
 }
