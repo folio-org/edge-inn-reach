@@ -31,6 +31,7 @@ import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import org.folio.edge.domain.dto.InnReachRequest;
 import org.folio.edge.dto.InnReachResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -140,4 +141,38 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     assertEquals(innReachResponseDTO, responseEntity.getBody());
   }
 
+  @Test
+  void shouldHandleCommonErrorsWhenCantReadBody() {
+    var httpHeaders = createInnReachHttpHeaders();
+    httpHeaders.set(ACCEPT_ENCODING, "gzip");
+    httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
+
+    InnReachResponseDTO innReachResponseDTO = new InnReachResponseDTO();
+    innReachResponseDTO.status("failed");
+    InnReachRequest innReachRequest = new InnReachRequest();
+    ObjectMapper obj = new ObjectMapper();
+    String jsonStr = null;
+    try {
+      jsonStr = obj.writeValueAsString(innReachRequest);
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    HttpEntity<InnReachResponseDTO> requestEntity = new HttpEntity<>(innReachResponseDTO, httpHeaders);
+
+    wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
+      .willReturn(aResponse().withBody(jsonStr)
+        .withStatus(400)
+        .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+        .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
+
+    ResponseEntity<InnReachResponseDTO> responseEntity = testRestTemplate.exchange(BASE_URI + "/circ/verifypatron",
+      POST, requestEntity, InnReachResponseDTO.class);
+
+    assertTrue(responseEntity.getStatusCode().is4xxClientError());
+    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+    assertTrue(responseEntity.hasBody());
+    assertEquals(innReachResponseDTO.reason("{\"requestUrl\":null,\"requestBody\":null,\"headers\":null}"), responseEntity.getBody());
+  }
 }

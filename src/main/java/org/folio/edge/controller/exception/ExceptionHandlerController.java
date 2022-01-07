@@ -85,13 +85,15 @@ public class ExceptionHandlerController {
 
   @ExceptionHandler(FeignException.class)
   public ResponseEntity<InnReachResponseDTO> handleFeignStatusException(FeignException feignException) {
+    log.error("Unexpected exception: {}", feignException.getMessage());
+
     var status = HttpStatus.resolve(feignException.status());
     String body = feignException.contentUTF8();
     InnReachResponseDTO innReachResponseDTO = null;
     try {
       innReachResponseDTO = objectMapper.readValue(body, InnReachResponseDTO.class);
     } catch (JsonProcessingException e) {
-      log.error("Unexpected exception: {}" + e.getMessage());
+      log.error("Unexpected exception. Can't retrieve response body: {}", e.getMessage());
       innReachResponseDTO = failed(body);
     }
 
