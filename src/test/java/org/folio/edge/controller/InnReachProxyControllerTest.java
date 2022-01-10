@@ -31,8 +31,8 @@ import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import org.folio.edge.domain.dto.InnReachRequest;
 import org.folio.edge.dto.InnReachResponseDTO;
+import org.folio.edge.util.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +45,7 @@ import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
 import org.springframework.http.ResponseEntity;
 
+import java.io.File;
 import java.io.IOException;
 
 public class InnReachProxyControllerTest extends BaseControllerTest {
@@ -110,17 +111,14 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
   @Test
   void shouldHandleCommonErrors() {
     var httpHeaders = createInnReachHttpHeaders();
-    httpHeaders.set(ACCEPT_ENCODING, "gzip");
     httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
 
-    InnReachResponseDTO innReachResponseDTO = new InnReachResponseDTO();
-    innReachResponseDTO.status("failed");
-    ObjectMapper obj = new ObjectMapper();
-    String jsonStr = null;
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonStr = TestUtil.readFileContentAsString("/error/common-error.json");
+    InnReachResponseDTO innReachResponseDTO = null;
     try {
-      jsonStr = obj.writeValueAsString(innReachResponseDTO);
-    }
-    catch (IOException e) {
+      innReachResponseDTO = mapper.readValue(new File("src/test/resources/error/common-error.json"), InnReachResponseDTO.class);
+    } catch (IOException e) {
       e.printStackTrace();
     }
 
@@ -144,25 +142,20 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
   @Test
   void shouldHandleCommonErrorsWhenCantReadBody() {
     var httpHeaders = createInnReachHttpHeaders();
-    httpHeaders.set(ACCEPT_ENCODING, "gzip");
     httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
 
-    InnReachResponseDTO innReachResponseDTO = new InnReachResponseDTO();
-    innReachResponseDTO.status("failed");
-    InnReachRequest innReachRequest = new InnReachRequest();
     ObjectMapper obj = new ObjectMapper();
-    String jsonStr = null;
+    InnReachResponseDTO innReachResponseDTO = null;
     try {
-      jsonStr = obj.writeValueAsString(innReachRequest);
-    }
-    catch (IOException e) {
+      innReachResponseDTO = obj.readValue(new File("src/test/resources/error/common-error.json"), InnReachResponseDTO.class);
+    } catch (IOException e) {
       e.printStackTrace();
     }
 
     HttpEntity<InnReachResponseDTO> requestEntity = new HttpEntity<>(innReachResponseDTO, httpHeaders);
 
     wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
-      .willReturn(aResponse().withBody(jsonStr)
+      .willReturn(aResponse().withBody("Some plain text")
         .withStatus(400)
         .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
         .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
@@ -173,6 +166,6 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     assertTrue(responseEntity.getStatusCode().is4xxClientError());
     assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
     assertTrue(responseEntity.hasBody());
-    assertEquals(innReachResponseDTO.reason("{\"requestUrl\":null,\"requestBody\":null,\"headers\":null}"), responseEntity.getBody());
+    assertEquals(innReachResponseDTO.reason("Some plain text"), responseEntity.getBody());
   }
 }
