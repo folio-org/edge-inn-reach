@@ -5,14 +5,18 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.ACCEPT_ENCODING;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 import static org.folio.edge.api.utils.Constants.X_OKAPI_TOKEN;
 import static org.folio.edge.config.JwtConfiguration.DEFAULT_SIGNATURE_ALGORITHM;
@@ -37,6 +41,7 @@ import org.springframework.http.HttpEntity;
 import org.folio.edge.controller.base.BaseControllerTest;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
+import org.folio.edge.dto.InnReachResponseDTO;
 
 public class InnReachProxyControllerTest extends BaseControllerTest {
 
@@ -98,4 +103,51 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     );
   }
 
+  @Test
+  void shouldHandleCommonErrors() {
+    var httpHeaders = createInnReachHttpHeaders();
+    httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
+
+    var requestEntity = new HttpEntity<>(httpHeaders);
+
+    wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
+      .willReturn(aResponse().withBody(readFileContentAsString("/error/common-error.json"))
+        .withStatus(400)
+        .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+        .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
+
+    var responseEntity = testRestTemplate.exchange(BASE_URI + "/circ/verifypatron",
+      POST, requestEntity, InnReachResponseDTO.class);
+
+    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+    assertTrue(responseEntity.hasBody());
+
+    var response = responseEntity.getBody();
+    assertEquals("failed", response.getStatus());
+    assertEquals("Appeared common error", response.getReason());
+  }
+
+  @Test
+  void shouldHandleCommonErrorsWhenCantReadBody() {
+    var httpHeaders = createInnReachHttpHeaders();
+    httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
+
+    var requestEntity = new HttpEntity<>(httpHeaders);
+
+    wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
+      .willReturn(aResponse().withBody("Plain text error msg")
+        .withStatus(400)
+        .withHeader(CONTENT_TYPE, TEXT_PLAIN_VALUE)
+        .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
+
+    var responseEntity = testRestTemplate.exchange(BASE_URI + "/circ/verifypatron",
+      POST, requestEntity, InnReachResponseDTO.class);
+
+    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+    assertTrue(responseEntity.hasBody());
+
+    var response = responseEntity.getBody();
+    assertEquals("failed", response.getStatus());
+    assertEquals("Plain text error msg", response.getReason());
+  }
 }
