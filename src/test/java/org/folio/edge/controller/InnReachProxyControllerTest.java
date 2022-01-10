@@ -26,13 +26,10 @@ import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
 import javax.crypto.spec.SecretKeySpec;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import org.folio.edge.dto.InnReachResponseDTO;
-import org.folio.edge.util.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +40,7 @@ import org.springframework.http.HttpEntity;
 import org.folio.edge.controller.base.BaseControllerTest;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
-import org.springframework.http.ResponseEntity;
-
-import java.io.File;
-import java.io.IOException;
+import org.folio.edge.dto.InnReachResponseDTO;
 
 public class InnReachProxyControllerTest extends BaseControllerTest {
 
@@ -113,30 +107,23 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     var httpHeaders = createInnReachHttpHeaders();
     httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
 
-    ObjectMapper mapper = new ObjectMapper();
-    String jsonStr = TestUtil.readFileContentAsString("/error/common-error.json");
-    InnReachResponseDTO innReachResponseDTO = null;
-    try {
-      innReachResponseDTO = mapper.readValue(new File("src/test/resources/error/common-error.json"), InnReachResponseDTO.class);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    HttpEntity<InnReachResponseDTO> requestEntity = new HttpEntity<>(innReachResponseDTO, httpHeaders);
+    var requestEntity = new HttpEntity<>(httpHeaders);
 
     wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
-      .willReturn(aResponse().withBody(jsonStr)
+      .willReturn(aResponse().withBody(readFileContentAsString("/error/common-error.json"))
         .withStatus(400)
         .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
         .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
 
-    ResponseEntity<InnReachResponseDTO> responseEntity = testRestTemplate.exchange(BASE_URI + "/circ/verifypatron",
+    var responseEntity = testRestTemplate.exchange(BASE_URI + "/circ/verifypatron",
       POST, requestEntity, InnReachResponseDTO.class);
 
-    assertTrue(responseEntity.getStatusCode().is4xxClientError());
     assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
     assertTrue(responseEntity.hasBody());
-    assertEquals(innReachResponseDTO, responseEntity.getBody());
+
+    var response = responseEntity.getBody();
+    assertEquals("failed", response.getStatus());
+    assertEquals("Appeared common error", response.getReason());
   }
 
   @Test
@@ -144,28 +131,22 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     var httpHeaders = createInnReachHttpHeaders();
     httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
 
-    ObjectMapper obj = new ObjectMapper();
-    InnReachResponseDTO innReachResponseDTO = null;
-    try {
-      innReachResponseDTO = obj.readValue(new File("src/test/resources/error/common-error.json"), InnReachResponseDTO.class);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    HttpEntity<InnReachResponseDTO> requestEntity = new HttpEntity<>(innReachResponseDTO, httpHeaders);
+    var requestEntity = new HttpEntity<>(httpHeaders);
 
     wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
-      .willReturn(aResponse().withBody("Some plain text")
+      .willReturn(aResponse().withBody("Plain text error msg")
         .withStatus(400)
         .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
         .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
 
-    ResponseEntity<InnReachResponseDTO> responseEntity = testRestTemplate.exchange(BASE_URI + "/circ/verifypatron",
+    var responseEntity = testRestTemplate.exchange(BASE_URI + "/circ/verifypatron",
       POST, requestEntity, InnReachResponseDTO.class);
 
-    assertTrue(responseEntity.getStatusCode().is4xxClientError());
     assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
     assertTrue(responseEntity.hasBody());
-    assertEquals(innReachResponseDTO.reason("Some plain text"), responseEntity.getBody());
+
+    var response = responseEntity.getBody();
+    assertEquals("failed", response.getStatus());
+    assertEquals("Plain text error msg", response.getReason());
   }
 }
