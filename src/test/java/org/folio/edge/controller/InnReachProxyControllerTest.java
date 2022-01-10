@@ -16,6 +16,7 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 import static org.folio.edge.api.utils.Constants.X_OKAPI_TOKEN;
 import static org.folio.edge.config.JwtConfiguration.DEFAULT_SIGNATURE_ALGORITHM;
@@ -136,7 +137,7 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
       .willReturn(aResponse().withBody("Plain text error msg")
         .withStatus(400)
-        .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+        .withHeader(CONTENT_TYPE, TEXT_PLAIN_VALUE)
         .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
 
     var responseEntity = testRestTemplate.exchange(BASE_URI + "/circ/verifypatron",
