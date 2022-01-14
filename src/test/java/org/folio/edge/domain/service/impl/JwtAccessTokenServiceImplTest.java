@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 import static org.folio.edge.fixture.JwtTokenFixture.createRandomJwtAccessToken;
 import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
+import java.util.UUID;
+
 import javax.crypto.spec.SecretKeySpec;
 
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -44,7 +46,7 @@ class JwtAccessTokenServiceImplTest {
   @Test
   @Disabled
   void returnJwtAccessToken() {
-    var jwtAccessToken = accessTokenService.generateAccessToken("d2ir", "fli01");
+    var jwtAccessToken = accessTokenService.generateAccessToken(UUID.randomUUID());
 
     assertNotNull(jwtAccessToken);
     assertNotNull(jwtAccessToken.getToken());

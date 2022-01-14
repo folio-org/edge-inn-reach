@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import org.folio.edge.config.OkapiFeignClientConfig;
-import org.folio.edge.domain.dto.modinnreach.CentralServerAuthenticationRequest;
+import org.folio.edge.domain.dto.modinnreach.LocalServerCredentials;
 
 @FeignClient(value = "inn-reach", configuration = OkapiFeignClientConfig.class)
 public interface InnReachAuthClient {
 
   @PostMapping("/authentication")
-  ResponseEntity<Object> authenticateCentralServer(@RequestBody CentralServerAuthenticationRequest centralServerAuthenticationRequest,
+  ResponseEntity<Object> authenticateCentralServer(@RequestBody LocalServerCredentials localServerCredentials,
                                                    @RequestHeader(TENANT) String okapiTenant,
                                                    @RequestHeader(TOKEN) String okapiToken);
 }
