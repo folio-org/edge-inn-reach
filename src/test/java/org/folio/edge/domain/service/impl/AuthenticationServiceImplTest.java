@@ -44,7 +44,7 @@ class AuthenticationServiceImplTest {
   @Test
   void returnAccessToken_when_centralServerIsAuthorized() {
     when(innReachAuthClient.authenticateCentralServer(any(), any(), any())).thenReturn(ResponseEntity.ok().build());
-    when(accessTokenService.generateAccessToken(any(), any())).thenReturn(createRandomJwtAccessToken(randomUUIDString()));
+    when(accessTokenService.generateAccessToken(any())).thenReturn(createRandomJwtAccessToken(randomUUIDString()));
 
     var innReachHeadersHolder = createInnReachHeadersHolder();
 

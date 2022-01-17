@@ -13,13 +13,12 @@ import org.folio.edge.external.InnReachHttpHeaders;
 
 public class InnReachFixture {
 
+  public static final String LOCAL_SERVER_KEY = "5858f9d8-1558-4513-aa25-bad839eb803a";
+
   public static AuthenticationParams createInnReachHeadersHolder() {
     return AuthenticationParams
       .builder()
       .authorization(createAuthenticationToken())
-      .xRequestCreationTime(Integer.MAX_VALUE)
-      .xFromCode(randomFiveCharacterCode())
-      .xToCode(randomFiveCharacterCode())
       .build();
   }
 
@@ -34,6 +33,6 @@ public class InnReachFixture {
   }
 
   private static String createAuthenticationToken() {
-    return Base64.getEncoder().encodeToString(String.format("%s:%s", UUID.randomUUID(), UUID.randomUUID()).getBytes());
+    return Base64.getEncoder().encodeToString(String.format("%s:%s", UUID.fromString(LOCAL_SERVER_KEY), UUID.randomUUID()).getBytes());
   }
 }

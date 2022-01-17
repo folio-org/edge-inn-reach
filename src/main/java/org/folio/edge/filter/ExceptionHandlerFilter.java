@@ -34,7 +34,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
       httpServletResponse.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
 
       var writer = httpServletResponse.getWriter();
-      writer.write(getErrorJsonString(HttpStatus.UNAUTHORIZED.value(), e));
+      writer.write(getErrorJsonString("invalid_token", e));
 
     } catch (Exception e) {
       log.error("Request failed!", e);
@@ -43,13 +43,13 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
       httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 
       var writer = httpServletResponse.getWriter();
-      writer.write(getErrorJsonString(HttpStatus.INTERNAL_SERVER_ERROR.value(), e));
+      writer.write(getErrorJsonString(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()), e));
     }
   }
 
-  public String getErrorJsonString(int httpCode, Exception exception) throws JsonProcessingException {
+  public String getErrorJsonString(String reason, Exception exception) throws JsonProcessingException {
     var error = new Error()
-      .error(String.valueOf(httpCode))
+      .error(reason)
       .errorDescription(exception.getMessage());
 
     return objectMapper.writeValueAsString(error);

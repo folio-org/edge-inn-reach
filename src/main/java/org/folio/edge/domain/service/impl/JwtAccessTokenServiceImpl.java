@@ -1,5 +1,7 @@
 package org.folio.edge.domain.service.impl;
 
+import java.util.UUID;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -12,7 +14,7 @@ import org.folio.edge.config.JwtConfiguration;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
 import org.folio.edge.security.service.SecurityService;
-import org.folio.edge.utils.ApiKeyUtils;
+import org.folio.edge.utils.CredentialsUtils;
 
 @RequiredArgsConstructor
 @Service
@@ -24,28 +26,28 @@ public class JwtAccessTokenServiceImpl implements AccessTokenService<JwtAccessTo
   private final SecurityService securityService;
 
   @Override
-  public JwtAccessToken generateAccessToken(String xFromCode, String xToCode) {
+  public JwtAccessToken generateAccessToken(UUID localServerKey) {
     return JwtAccessToken
       .builder()
-      .token(buildJwtAccessToken(xFromCode, xToCode))
+      .token(buildJwtAccessToken(localServerKey))
       .expiresIn(jwtConfiguration.getExpirationTimeSec())
       .build();
   }
 
-  private String buildJwtAccessToken(String xFromCode, String xToCode) {
+  private String buildJwtAccessToken(UUID localServerKey) {
     return Jwts.builder()
       .setIssuer(jwtConfiguration.getIssuer())
-      .setSubject(xFromCode)
-      .claim(EDGE_API_KEY, generateEdgeApiKey(xToCode))
+      .setSubject(localServerKey.toString())
+      .claim(EDGE_API_KEY, generateEdgeApiKey(localServerKey))
       .setExpiration(jwtConfiguration.calculateExpirationTime())
       .signWith(jwtConfiguration.getSignatureAlgorithm(), jwtConfiguration.getSecretKey())
       .compact();
   }
 
-  private String generateEdgeApiKey(String xToCode) {
-    var tenantMapping = securityService.getTenantMappingByXToCode(xToCode);
-    
-    return ApiKeyUtils.generateApiKey(tenantMapping.getUsername(), tenantMapping.getTenantId(), tenantMapping.getUsername());
+  private String generateEdgeApiKey(UUID localServerKey) {
+    var tenantMapping = securityService.getTenantMappingByLocalServerKey(localServerKey);
+
+    return CredentialsUtils.generateApiKey(tenantMapping.getUsername(), tenantMapping.getTenantId(), tenantMapping.getUsername());
   }
 
   @Override
