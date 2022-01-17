@@ -28,14 +28,14 @@ API provides the following URLs:
 
 | Method | URL | Headers | Description | 
 |---|---|---|---|
-| POST | /v2/oauth2/token?grant_type=client_credentials&scope=innreach_tp | x-from-code x-to-code, x-request-creation-time, authorization | Creates a new JWT token |
+| POST | /v2/oauth2/token?grant_type=client_credentials&scope=innreach_tp | authorization | Creates a new JWT token |
 
 ### Deployment information
 #### InnReach Central Server setup
 1. InnReach Central Server connection should be established from the InnReach edge Folio module. Therefore InnReach edge module
    needs to know the name of all the tenants mappings between InnReach Central Server and Folio tenant, which has InnReach Central Server connection. For the ephemeral configuration these mappings locate in the
-   `ephemeral.properties` (key `tenantsMappings`). In order to provide it before the deployment the list of tenant mappings (e.g. InnReach Header x-to-code:tenantId) should be put to AWS parameters store (as String). The tenant mappings list separated by
-   coma (e.g. fli01:diku, fli02:someothertenantname) should be stored in AWS param store in the variable with
+   `ephemeral.properties` (key `tenantsMappings`). In order to provide it before the deployment the list of tenant mappings (by local server keys) should be put to AWS parameters store (as String). The tenant mappings list separated by
+   coma (e.g. 5858f9d8-1558-4513-aa25-bad839eb803a:diku, 62031473-09b9-4617-8bca-9da16ee546a0:someothertenantname) should be stored in AWS param store in the variable with
    key: `innreach_tenants_mappings` by default or could be provided its own key through `innreach_tenants_mappings` parameter of starting module.
 2. For each tenant using InnReach the corresponding user should be added
    to the AWS parameter store with key in the following format `{{username}}_{{tenant}}_{{username}}` (where salt and username are the same - `{{username}}`) with value of corresponding `{{password}}` (as Secured String).
