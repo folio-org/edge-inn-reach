@@ -26,7 +26,6 @@ public class InnReachFixture {
     var httpHeaders = new HttpHeaders();
     httpHeaders.add(InnReachHttpHeaders.X_FROM_CODE, randomFiveCharacterCode());
     httpHeaders.add(InnReachHttpHeaders.X_TO_CODE, "fli01");
-    httpHeaders.add(InnReachHttpHeaders.X_REQUEST_CREATION_TIME, String.valueOf(Integer.MAX_VALUE));
     httpHeaders.add(HttpHeaders.AUTHORIZATION, String.format("%s %s", BASIC_AUTH_SCHEME, createAuthenticationToken()));
 
     return httpHeaders;
