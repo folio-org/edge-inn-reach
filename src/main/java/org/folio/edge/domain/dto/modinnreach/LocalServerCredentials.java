@@ -13,9 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CentralServerAuthenticationRequest {
-
-  private String localServerCode;
+public class LocalServerCredentials {
   private UUID key;
   private UUID secret;
 }

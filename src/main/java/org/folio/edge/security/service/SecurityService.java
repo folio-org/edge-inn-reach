@@ -6,6 +6,7 @@ import static org.folio.edge.api.utils.util.PropertiesUtil.getProperties;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
@@ -13,6 +14,7 @@ import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
 import org.folio.edge.api.utils.exception.AuthorizationException;
@@ -22,10 +24,9 @@ import org.folio.edge.api.utils.util.ApiKeyParser;
 import org.folio.edge.client.AuthnClient;
 import org.folio.edge.config.properties.SecurityStoreConfigProperties;
 import org.folio.edge.domain.dto.TenantMapping;
-import org.folio.edge.domain.exception.EdgeServiceException;
 import org.folio.edge.security.store.SecureStoreFactory;
 import org.folio.edge.security.store.SecureTenantsProducer;
-import org.folio.edge.utils.ApiKeyUtils;
+import org.folio.edge.utils.CredentialsUtils;
 import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
 
 @Log4j2
@@ -69,14 +70,14 @@ public class SecurityService {
     log.debug("Tenant map has been initialized: [{}]", tenantMappingMap);
   }
 
-  public TenantMapping getTenantMappingByXToCode(String xToCode) {
-    return Optional.ofNullable(tenantMappingMap.get(xToCode))
-      .orElseThrow(() -> new EdgeServiceException("Tenant mapping for x-to-code: " + xToCode + " not found!"));
+  public TenantMapping getTenantMappingByLocalServerKey(UUID localServerKey) {
+    return Optional.ofNullable(tenantMappingMap.get(localServerKey.toString()))
+      .orElseThrow(() -> new BadCredentialsException("Tenant mapping for local server key: " + localServerKey + " not found!"));
   }
 
-  @Cacheable(value = SYSTEM_USER_PARAMETERS_CACHE, key = "#xToCode")
-  public ConnectionSystemParameters getInnReachConnectionParameters(String xToCode) {
-    var tenantMapping = getTenantMappingByXToCode(xToCode);
+  @Cacheable(value = SYSTEM_USER_PARAMETERS_CACHE, key = "#localServerKey")
+  public ConnectionSystemParameters getInnReachConnectionParameters(UUID localServerKey) {
+    var tenantMapping = getTenantMappingByLocalServerKey(localServerKey);
 
     return enrichConnectionSystemParametersWithOkapiToken(securityStoreConfigProperties.getInnreachClient(),
         tenantMapping.getTenantId(), tenantMapping.getUsername());
@@ -85,7 +86,7 @@ public class SecurityService {
   @Cacheable(value = SYSTEM_USER_PARAMETERS_CACHE, key = "#edgeApiKey")
   public ConnectionSystemParameters getOkapiConnectionParameters(String edgeApiKey) {
     try {
-      ClientInfo clientInfo = ApiKeyUtils.parseApiKey(edgeApiKey);
+      ClientInfo clientInfo = CredentialsUtils.parseApiKey(edgeApiKey);
       return enrichConnectionSystemParametersWithOkapiToken(clientInfo.salt, clientInfo.tenantId, clientInfo.username);
     } catch (ApiKeyParser.MalformedApiKeyException e) {
       throw new AuthorizationException("Malformed edge api key: " + edgeApiKey);

@@ -13,13 +13,12 @@ import org.folio.edge.external.InnReachHttpHeaders;
 
 public class InnReachFixture {
 
+  public static final String LOCAL_SERVER_KEY = "5858f9d8-1558-4513-aa25-bad839eb803a";
+
   public static AuthenticationParams createInnReachHeadersHolder() {
     return AuthenticationParams
       .builder()
       .authorization(createAuthenticationToken())
-      .xRequestCreationTime(Integer.MAX_VALUE)
-      .xFromCode(randomFiveCharacterCode())
-      .xToCode(randomFiveCharacterCode())
       .build();
   }
 
@@ -27,13 +26,12 @@ public class InnReachFixture {
     var httpHeaders = new HttpHeaders();
     httpHeaders.add(InnReachHttpHeaders.X_FROM_CODE, randomFiveCharacterCode());
     httpHeaders.add(InnReachHttpHeaders.X_TO_CODE, "fli01");
-    httpHeaders.add(InnReachHttpHeaders.X_REQUEST_CREATION_TIME, String.valueOf(Integer.MAX_VALUE));
     httpHeaders.add(HttpHeaders.AUTHORIZATION, String.format("%s %s", BASIC_AUTH_SCHEME, createAuthenticationToken()));
 
     return httpHeaders;
   }
 
   private static String createAuthenticationToken() {
-    return Base64.getEncoder().encodeToString(String.format("%s:%s", UUID.randomUUID(), UUID.randomUUID()).getBytes());
+    return Base64.getEncoder().encodeToString(String.format("%s:%s", UUID.fromString(LOCAL_SERVER_KEY), UUID.randomUUID()).getBytes());
   }
 }

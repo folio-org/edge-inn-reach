@@ -1,6 +1,7 @@
 package org.folio.edge.security.filter;
 
-import static org.folio.edge.external.InnReachHttpHeaders.X_TO_CODE;
+import static org.folio.edge.utils.CredentialsUtils.parseBasicAuth;
+import static org.folio.spring.integration.XOkapiHeaders.AUTHORIZATION;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.TOKEN;
 
@@ -39,7 +40,7 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
       return;
     }
 
-    var okapiParameters = getOkapiConnectionParameters(request.getHeader(X_TO_CODE));
+    var okapiParameters = getOkapiConnectionParameters(request.getHeader(AUTHORIZATION));
 
     var requestWrapper = new RequestWithHeaders(request);
     requestWrapper.putHeader(TOKEN, okapiParameters.getOkapiToken());
@@ -52,12 +53,14 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
     return securityFilterIgnoreURIList.contains(request.getRequestURI());
   }
 
-  private ConnectionSystemParameters getOkapiConnectionParameters(String xToCode) {
+  private ConnectionSystemParameters getOkapiConnectionParameters(String authToken) {
     var edgeApiKey = EdgeApiKeyHolder.getEdgeApiKey();
 
     if (StringUtils.isNotEmpty(edgeApiKey)) {
       return securityService.getOkapiConnectionParameters(edgeApiKey);
     }
-    return securityService.getInnReachConnectionParameters(xToCode);
+
+    var localServerCredentials = parseBasicAuth(authToken);
+    return securityService.getInnReachConnectionParameters(localServerCredentials.getKey());
   }
 }

@@ -42,6 +42,8 @@ import org.folio.edge.controller.base.BaseControllerTest;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
 import org.folio.edge.dto.InnReachResponseDTO;
+import org.folio.edge.security.service.SecurityService;
+import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
 
 public class InnReachProxyControllerTest extends BaseControllerTest {
 
@@ -65,6 +67,9 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
   @Autowired
   private TestRestTemplate testRestTemplate;
 
+  @MockBean
+  private SecurityService securityService;
+
   @BeforeEach
   void mockTest() {
     var jwt = Jwts.parser()
@@ -72,6 +77,9 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
       .parseClaimsJws(JWT_TOKEN_STRING);
 
     when(accessTokenService.verifyAccessToken(any())).thenReturn(jwt);
+
+    when(securityService.getOkapiConnectionParameters(any())).thenReturn(
+      new ConnectionSystemParameters().withOkapiToken("token").withTenantId("test"));
 
     wireMock.stubFor(post(LOGIN_URL_PATTERN)
       .willReturn(aResponse()

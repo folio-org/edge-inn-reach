@@ -20,17 +20,6 @@ import org.folio.edge.validation.InnReachAuthenticationHeader;
 public class AuthenticationParams {
 
   @NotEmpty
-  @Size(max = 5)
-  private String xFromCode;
-
-  @Positive
-  private Integer xRequestCreationTime;
-
-  @NotEmpty
-  @Size(max = 5)
-  private String xToCode;
-
-  @NotEmpty
   @InnReachAuthenticationHeader
   private String authorization;
 

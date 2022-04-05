@@ -34,11 +34,11 @@ import org.springframework.http.HttpStatus;
 import org.folio.edge.controller.base.BaseControllerTest;
 import org.folio.edge.dto.AccessTokenResponse;
 import org.folio.edge.dto.Error;
-import org.folio.edge.external.InnReachHttpHeaders;
 
 class AuthenticationControllerTest extends BaseControllerTest {
 
   private static final String OAUTH_TOKEN_URI = "/innreach/v2/oauth2/token?grant_type={grant_type}&scope={scope}";
+  private static final String UNKNOWN_LOCAL_SERVER_BASIC_CREDS = "Basic MjJhZGJlYzYtMWVkYy00YjUzLTk1ZDYtOTA3NmE2OGI3NjM0OmIyNTc1N2U1LWE1NTYtNGNlNS1hNjdjLTMyNGE0MDljOWYwZA==";
 
   @Autowired
   private TestRestTemplate testRestTemplate;
@@ -52,40 +52,21 @@ class AuthenticationControllerTest extends BaseControllerTest {
   }
 
   @Test
-  void return400HttpCode_when_missingRequiredHttpHeader() {
-    var httpHeaders = createInnReachHttpHeaders();
-    httpHeaders.remove(InnReachHttpHeaders.X_FROM_CODE);
-
-    var requestEntity = new HttpEntity<>(httpHeaders);
-
-    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
-        HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
-
-    assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-
-    Error body = responseEntity.getBody();
-
-    assertNotNull(body);
-    assertEquals("invalid_request", body.getError());
-    assertEquals("The x-from-code header is required.", body.getErrorDescription());
-  }
-
-  @Test
   void return400HttpCode_when_httpHeaderValueIsInvalid() {
     var httpHeaders = createInnReachHttpHeaders();
-    httpHeaders.set(InnReachHttpHeaders.X_FROM_CODE, "qwe123");
+    httpHeaders.set(HttpHeaders.AUTHORIZATION, UNKNOWN_LOCAL_SERVER_BASIC_CREDS);
 
     var requestEntity = new HttpEntity<>(httpHeaders);
 
     var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
         HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
 
-    assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
 
     Error body = responseEntity.getBody();
 
     assertNotNull(body);
-    assertEquals("invalid_request", body.getError());
+    assertEquals("invalid_token", body.getError());
   }
 
   @Test
@@ -132,12 +113,12 @@ class AuthenticationControllerTest extends BaseControllerTest {
     var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
         HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
 
-    assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
 
     Error body = responseEntity.getBody();
 
     assertNotNull(body);
-    assertEquals("invalid_request", body.getError());
+    assertEquals("invalid_token", body.getError());
   }
 
   private static List<String> incorrectFormattedAuthTokenList() {

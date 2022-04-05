@@ -31,7 +31,7 @@ class ApiKeyUtilsTest {
   void generateApiKey_when_saltTenantUsernameProvided(@Random String salt, @Random String tenantId,
       @Random String username) throws IOException {
 
-    var key = ApiKeyUtils.generateApiKey(salt, tenantId, username);
+    var key = CredentialsUtils.generateApiKey(salt, tenantId, username);
 
     var decodedKey = Base64.getUrlDecoder().decode(key);
     var actualClientInfo = objectMapper.readValue(decodedKey, ClientInfo.class);
@@ -45,7 +45,7 @@ class ApiKeyUtilsTest {
   @NullAndEmptySource
   void raiseException_when_saltIsEmpty(String salt) {
     var exception = assertThrows(IllegalArgumentException.class,
-        () -> ApiKeyUtils.generateApiKey(salt, "tenant", "user")
+        () -> CredentialsUtils.generateApiKey(salt, "tenant", "user")
     );
 
     Assertions.assertThat(exception).hasMessage("ClientID/Salt cannot be null");
@@ -55,7 +55,7 @@ class ApiKeyUtilsTest {
   @NullAndEmptySource
   void raiseException_when_tenantIsEmpty(String tenantId) {
     var exception = assertThrows(IllegalArgumentException.class,
-        () -> ApiKeyUtils.generateApiKey("salt", tenantId, "user")
+        () -> CredentialsUtils.generateApiKey("salt", tenantId, "user")
     );
 
     Assertions.assertThat(exception).hasMessage("TenantID cannot be null");
@@ -65,7 +65,7 @@ class ApiKeyUtilsTest {
   @NullAndEmptySource
   void raiseException_when_userNameIsEmpty(String username) {
     var exception = assertThrows(IllegalArgumentException.class,
-        () -> ApiKeyUtils.generateApiKey("salt", "tenant", username)
+        () -> CredentialsUtils.generateApiKey("salt", "tenant", username)
     );
 
     Assertions.assertThat(exception).hasMessage("Username cannot be null");
@@ -78,8 +78,8 @@ class ApiKeyUtilsTest {
     try (MockedStatic<ApiKeyParser> parser = Mockito.mockStatic(ApiKeyParser.class)) {
       parser.when(() -> ApiKeyParser.parseApiKey(apiKey)).thenReturn(clientInfo);
 
-      var actual = ApiKeyUtils.parseApiKey(apiKey);
-      
+      var actual = CredentialsUtils.parseApiKey(apiKey);
+
       assertEquals(clientInfo, actual);
     }
   }

@@ -40,9 +40,6 @@ paths:
         - $ref: '#/components/parameters/grant_type'
         - $ref: '#/components/parameters/scope'
         - $ref: '#/components/parameters/authorization'
-        - $ref: '#/components/parameters/x_from_code'
-        - $ref: '#/components/parameters/x_request_creation_time'
-        - $ref: '#/components/parameters/x_to_code'
         - $ref: '#/components/parameters/x-okapi-tenant'
         - $ref: '#/components/parameters/x-okapi-token'
 components:
@@ -86,13 +83,6 @@ components:
       description: Central/local code of sending system (five-character code).
       schema:
         type: string
-      required: true
-    x_request_creation_time:
-      name: x-request-creation-time
-      in: header
-      description: epoch UNIX time stamp
-      schema:
-        type: integer
       required: true
     x_to_code:
       name: x-to-code
