@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.3.4.RELEASE</version>
+    <version>2.6.6</version>
     <relativePath />
   </parent>
   <groupId>org.folio</groupId>
@@ -24,9 +24,9 @@
     <java.version>11</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <folio-spring-base.version>1.0.5</folio-spring-base.version>
+    <folio-spring-base.version>3.0.1</folio-spring-base.version>
     <edge-common-spring.version>1.1.0</edge-common-spring.version>
-    <openapi-generator.version>4.3.1</openapi-generator.version>
+    <openapi-generator.version>5.4.0</openapi-generator.version>
     <openapi.input.file>${project.basedir}/src/main/resources/swagger.api/edge-inn-reach.yaml</openapi.input.file>
     <mapstruct.version>1.4.2.Final</mapstruct.version>
     <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
