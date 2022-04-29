@@ -1,3 +1,15 @@
+## v1.0.4 2022-04-29
+
+### Stories
+* [EDGINREACH-33](https://issues.folio.org/browse/EDGINREACH-33 - Spring4Shell Lotus/Kiwi (CVE-2022-22965)
+* [EDGINREACH-31](https://issues.folio.org/browse/EDGINREACH-31) - Get Bib Record D2IR API Edge Endpoint "No suitable module found" Error
+* [EDGINREACH-27](https://issues.folio.org/browse/EDGINREACH-27) - Remove "X-Request-Creation-Time" from list of required headers for EDGE-INN-Reach Requests
+* [EDGINREACH-26](https://issues.folio.org/browse/EDGINREACH-26) - 3rd-party API Authentication Endpoint Should Not Require the Same Required Headers as the Rest of the D2IR API Methods
+* [EDGINREACH-16](https://issues.folio.org/browse/EDGINREACH-16) - EDGE: Implement a new error response type
+* [EDGINREACH-24](https://issues.folio.org/browse/EDGINREACH-24) - Add Authorization header to D2IR API calls
+* [EDGINREACH-1](https://issues.folio.org/browse/EDGINREACH-1) - D2IR Local Endpoint (Circulation): Respond to Patron Verification Requests at /innreach/v2/circ/verifypatron
+* [EDGINREACH-25](https://issues.folio.org/browse/EDGINREACH-25) - Edge module doesn't return payload of proxied responses from mod-inn-reach 
+
 ## v1.0.3 2021-12-22
 
 ### Stories
