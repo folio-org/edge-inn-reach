@@ -1,7 +1,12 @@
+## v1.0.5 2022-05-30
+
+### Stories
+* [EDGINREACH-37](https://issues.folio.org/browse/EDGINREACH-37) - Release edge-inn-reach v1.0.5 fixing ZipException on 64-bit systems
+
 ## v1.0.4 2022-04-29
 
 ### Stories
-* [EDGINREACH-33](https://issues.folio.org/browse/EDGINREACH-33 - Spring4Shell Lotus/Kiwi (CVE-2022-22965)
+* [EDGINREACH-33](https://issues.folio.org/browse/EDGINREACH-33) - Spring4Shell Lotus/Kiwi (CVE-2022-22965)
 * [EDGINREACH-31](https://issues.folio.org/browse/EDGINREACH-31) - Get Bib Record D2IR API Edge Endpoint "No suitable module found" Error
 * [EDGINREACH-27](https://issues.folio.org/browse/EDGINREACH-27) - Remove "X-Request-Creation-Time" from list of required headers for EDGE-INN-Reach Requests
 * [EDGINREACH-26](https://issues.folio.org/browse/EDGINREACH-26) - 3rd-party API Authentication Endpoint Should Not Require the Same Required Headers as the Rest of the D2IR API Methods
