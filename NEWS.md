@@ -1,3 +1,7 @@
+## v1.1.0 IN-PROGRESS
+
+* [EDGINREACH-41] (https://issues.folio.org/browse/EDGINREACH-41) - Now supports users interface 15.3 16.0
+
 ## v1.0.5 2022-05-30
 
 ### Stories
