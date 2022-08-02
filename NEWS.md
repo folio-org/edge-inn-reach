@@ -1,3 +1,6 @@
+## v2.0.2 2023-02-17
+* [EDGINREACH-41] (https://issues.folio.org/browse/EDGINREACH-41) - Now supports users interface 15.3 16.0
+
 ## v2.0.1 2022-08-16
 
 ### Stories
