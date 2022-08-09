@@ -45,6 +45,7 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
     var requestWrapper = new RequestWithHeaders(request);
     requestWrapper.putHeader(TOKEN, okapiParameters.getOkapiToken());
     requestWrapper.putHeader(TENANT, okapiParameters.getTenantId());
+    requestWrapper.putHeader("authorization", request.getHeader(AUTHORIZATION));
 
     filterChain.doFilter(requestWrapper, response);
   }
