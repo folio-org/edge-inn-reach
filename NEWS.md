@@ -1,7 +1,3 @@
-## v2.0.0 2022-08-10
-
-* [EDGINREACH-42] (https://issues.folio.org/browse/EDGINREACH-42) - Bump up edge-common-spring version
-
 ## v1.1.0 IN-PROGRESS
 
 * [EDGINREACH-41] (https://issues.folio.org/browse/EDGINREACH-41) - Now supports users interface 15.3 16.0
