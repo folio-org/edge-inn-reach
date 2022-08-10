@@ -27,6 +27,9 @@ import org.folio.edgecommonspring.domain.entity.RequestWithHeaders;
 @RequiredArgsConstructor
 public class EdgeSecurityFilter extends OncePerRequestFilter {
 
+  public static final String X_TO_CODE = "x-to-code";
+  public static final String X_FROM_CODE = "x-from-code";
+  public static final String AUTHORIZATION_HEADER = "authorization";
   private final List<String> securityFilterIgnoreURIList;
   private final SecurityService securityService;
 
@@ -45,7 +48,16 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
     var requestWrapper = new RequestWithHeaders(request);
     requestWrapper.putHeader(TOKEN, okapiParameters.getOkapiToken());
     requestWrapper.putHeader(TENANT, okapiParameters.getTenantId());
-    requestWrapper.putHeader("authorization", request.getHeader(AUTHORIZATION));
+    /*
+      * added as edge-common-spring is removing / not capturing headers apart from x-okapi-token
+      * and as per d2ir specification inn-reach module require x-to-code and x-from-code
+      * and for edge to work it requires authorization header
+    */
+    requestWrapper.putHeader(AUTHORIZATION_HEADER, request.getHeader(AUTHORIZATION));
+    requestWrapper.putHeader(X_TO_CODE, request.getHeader(X_TO_CODE));
+    requestWrapper.putHeader(X_FROM_CODE, request.getHeader(X_FROM_CODE));
+
+    //end
 
     filterChain.doFilter(requestWrapper, response);
   }
