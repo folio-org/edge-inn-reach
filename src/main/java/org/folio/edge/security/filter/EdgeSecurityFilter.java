@@ -4,6 +4,8 @@ import static org.folio.edge.utils.CredentialsUtils.parseBasicAuth;
 import static org.folio.spring.integration.XOkapiHeaders.AUTHORIZATION;
 import static org.folio.spring.integration.XOkapiHeaders.TENANT;
 import static org.folio.spring.integration.XOkapiHeaders.TOKEN;
+import static org.folio.edge.external.InnReachHttpHeaders.X_FROM_CODE;
+import static org.folio.edge.external.InnReachHttpHeaders.X_TO_CODE;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,9 +29,6 @@ import org.folio.edgecommonspring.domain.entity.RequestWithHeaders;
 @RequiredArgsConstructor
 public class EdgeSecurityFilter extends OncePerRequestFilter {
 
-  public static final String X_TO_CODE = "x-to-code";
-  public static final String X_FROM_CODE = "x-from-code";
-  public static final String AUTHORIZATION_HEADER = "authorization";
   private final List<String> securityFilterIgnoreURIList;
   private final SecurityService securityService;
 
@@ -53,7 +52,7 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
       * and as per d2ir specification inn-reach module require x-to-code and x-from-code
       * and for edge to work it requires authorization header
     */
-    requestWrapper.putHeader(AUTHORIZATION_HEADER, request.getHeader(AUTHORIZATION));
+    requestWrapper.putHeader(AUTHORIZATION.toLowerCase(), request.getHeader(AUTHORIZATION));
     requestWrapper.putHeader(X_TO_CODE, request.getHeader(X_TO_CODE));
     requestWrapper.putHeader(X_FROM_CODE, request.getHeader(X_FROM_CODE));
 
