@@ -1,6 +1,13 @@
-## v1.1.0 IN-PROGRESS
+## v2.1.0 IN-PROGRESS
 
 * [EDGINREACH-41] (https://issues.folio.org/browse/EDGINREACH-41) - Now supports users interface 15.3 16.0
+
+## v2.0.1 2022-08-16
+
+### Stories
+* [EDGINREACH-35] (https://issues.folio.org/browse/EDGINREACH-35) - edge-inn-reach Spring 2.7 upgrade for Morning Glory 2022 R2
+* [EDGINREACH-42] (https://issues.folio.org/browse/EDGINREACH-42) - bump up edge-common-spring version
+
 
 ## v1.0.5 2022-05-30
 
