@@ -9,7 +9,7 @@
   </parent>
   <groupId>org.folio</groupId>
   <artifactId>edge-inn-reach</artifactId>
-  <version>1.0.6-SNAPSHOT</version>
+  <version>2.1.0-SNAPSHOT</version>
   <name>edge-inn-reach</name>
   <description>INN-REACH system Edge API module</description>
 
