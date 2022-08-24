@@ -43,8 +43,21 @@ API provides the following URLs:
 - his username and salt name are - `{{username}}`.
   By default the value of `{{username}}` is `innreachClient`. It could be changed through `innreach_client` parameter of starting module.
 3. User `{{username}}` with password `{{password}}` and inn-reach.all permissions should be created on FOLIO.
-
-##### Create InnReach Central Server configuration
+4. For Karate Tests to run successfully the `ephemeral.properties` values would be as mentioned below -
+```
+secureStore.type=Ephemeral
+# a comma separated list of tenants
+tenants=test_inn_reach_tenant
+# a comma separated list of tenants mappings in form localServerKey:tenant, where localServerKey is a key of target INN-Reach server
+tenantsMappings=5858f9d8-1558-4513-aa25-bad839eb803a:test_inn_reach_tenant
+#######################################################
+# For each tenant, the institutional user password...
+#
+# Note: this is intended for development purposes only
+#######################################################
+test_inn_reach_tenant=innreachClient,password
+```
+### Create InnReach Central Server configuration
 1. Log in to Folio, go to "Settings" -> "INN-Reach" -> "Central server configuration", click "New" button.
 2. Fill in all the required fields
 3. Press Generate keypair for Local server key and local server secret generation
@@ -58,14 +71,25 @@ The following permissions should be granted to institutional users (as well as I
                               
 ### Configuration
 
-Please refer to the [Configuration](https://github.com/folio-org/edge-inn-rach/blob/master/README.md#configuration) 
-section in the [edge-inn-reach](https://github.com/folio-org/edge-inn-reach/blob/master/README.md) documentation to see all available system properties and their default values.
+Configuration information is specified in two forms:
+1. System Properties - General configuration
+1. Properties File - Configuration specific to the desired secure store
 
-For example, to enable HTTP compression based on `Accept-Encoding` header the `-Dresponse_compression=true` should be specified as VM option.
+### System Properties
+
+| Property                    | Default                          | Description                                                             |
+|-----------------------------|----------------------------------|-------------------------------------------------------------------------|
+| `port`                      | `8081`                           | Server port to listen on                                                |
+| `okapi_url`                 | `http://okapi:9130`              | Okapi (URL)                                                             |
+| `secure_store`              | `Ephemeral`                      | Type of secure store to use.  Valid: `Ephemeral`, `AwsSsm`, `Vault`     |
+| `secure_store_props`        | `/etc/edge/ephemeral.properties` | Path to a properties file specifying secure store configuration         |
+| `log_level`                 | `DEBUG`                          | Log4j Log Level                                                         |
+| `innreach_tenants_mappings` | `innreach_tenants_mappings`      | A variable name which contains comma separated list of tenants mappings |
+| `innreach_client`           | `innreachClient`                 | A placeholder for user name                                             |
 
 ### Issue tracker
 
-See project [EDGINNREACH](https://issues.folio.org/browse/EDGEINNREACH)
+See project [EDGINNREACH](https://issues.folio.org/projects/EDGINREACH)
 at the [FOLIO issue tracker](https://dev.folio.org/guidelines/issue-tracker).
 
 ### Other documentation
