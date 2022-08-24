@@ -43,7 +43,22 @@ API provides the following URLs:
 - his username and salt name are - `{{username}}`.
   By default the value of `{{username}}` is `innreachClient`. It could be changed through `innreach_client` parameter of starting module.
 3. User `{{username}}` with password `{{password}}` and inn-reach.all permissions should be created on FOLIO.
-4. For Karate Tests to run successfully the `ephemeral.properties` values would be as mentioned below -
+4. As an example in dev sandbox environment the `ephemeral.properties` would look like (same is present in rancher volaris environment)-
+```
+secureStore.type=Ephemeral
+# a comma separated list of tenants
+tenants=dikuvolaris
+tenantsMappings=72fbf754-5888-4903-a2c1-b4836b3f0106:dikuvolaris
+#######################################################
+# For each tenant, the institutional user password...
+#
+# Note: this is intended for development purposes only
+#######################################################
+dikuvolaris=diku_admin,admin
+
+```
+*Note: The value `72fbf754-5888-4903-a2c1-b4836b3f0106` is the local server key is a generated value (refer section [Create InnReach Central Server configuration](https://github.com/folio-org/edge-inn-reach/blob/master/README.md#create-innreach-central-server-configuration) to get a generated value) and it would be the same value present in the D2IR's Central Server configuration page. ("Settings" -> "INN-Reach" -> "Central server configuration" -> "D2IR" -> "Actions" -> "Edit" button.)
+6. For Karate Tests to run successfully the `ephemeral.properties` values would be as mentioned below -
 ```
 secureStore.type=Ephemeral
 # a comma separated list of tenants
