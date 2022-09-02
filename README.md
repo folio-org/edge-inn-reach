@@ -40,11 +40,40 @@ API provides the following URLs:
 2. For each tenant using InnReach the corresponding user should be added
    to the AWS parameter store with key in the following format `{{username}}_{{tenant}}_{{username}}` (where salt and username are the same - `{{username}}`) with value of corresponding `{{password}}` (as Secured String).
    This user should work as ordinary edge institutional user with the only one difference
-- his username and salt name are - `{{username}}`.
+- This username and salt name are - `{{username}}`.
   By default the value of `{{username}}` is `innreachClient`. It could be changed through `innreach_client` parameter of starting module.
 3. User `{{username}}` with password `{{password}}` and inn-reach.all permissions should be created on FOLIO.
+4. As an example in dev sandbox environment the `ephemeral.properties` would look like (same is present in rancher volaris environment)-
+```
+secureStore.type=Ephemeral
+# a comma separated list of tenants
+tenants=dikuvolaris
+tenantsMappings=72fbf754-5888-4903-a2c1-b4836b3f0106:dikuvolaris
+#######################################################
+# For each tenant, the institutional user password...
+#
+# Note: this is intended for development purposes only
+#######################################################
+dikuvolaris=diku_admin,admin
 
-##### Create InnReach Central Server configuration
+```
+*Note: The value `72fbf754-5888-4903-a2c1-b4836b3f0106` is the local server key is a generated value (refer section [Create InnReach Central Server configuration](https://github.com/folio-org/edge-inn-reach/blob/master/README.md#create-innreach-central-server-configuration) to get a generated value) and it would be the same value present in the D2IR's Central Server configuration page. ("Settings" -> "INN-Reach" -> "Central server configuration" -> "D2IR" -> "Actions" -> "Edit" button.)
+5. For Karate Tests to run successfully the `ephemeral.properties` values would be as mentioned below -
+```
+secureStore.type=Ephemeral
+# a comma separated list of tenants
+tenants=test_inn_reach_tenant
+# a comma separated list of tenants mappings in form localServerKey:tenant, where localServerKey is a key of target INN-Reach server
+tenantsMappings=5858f9d8-1558-4513-aa25-bad839eb803a:test_inn_reach_tenant
+#######################################################
+# For each tenant, the institutional user password...
+#
+# Note: this is intended for development purposes only
+#######################################################
+test_inn_reach_tenant=innreachClient,password
+```
+*Note: The value `5858f9d8-1558-4513-aa25-bad839eb803a` is the local server key used by Karate test cases to complete the authorization.
+### Create InnReach Central Server configuration
 1. Log in to Folio, go to "Settings" -> "INN-Reach" -> "Central server configuration", click "New" button.
 2. Fill in all the required fields
 3. Press Generate keypair for Local server key and local server secret generation
@@ -58,14 +87,28 @@ The following permissions should be granted to institutional users (as well as I
                               
 ### Configuration
 
-Please refer to the [Configuration](https://github.com/folio-org/edge-inn-rach/blob/master/README.md#configuration) 
-section in the [edge-inn-reach](https://github.com/folio-org/edge-inn-reach/blob/master/README.md) documentation to see all available system properties and their default values.
+Configuration information is specified in two forms:
+1. System Properties - General configuration
+1. Properties File - Configuration specific to the desired secure store
 
-For example, to enable HTTP compression based on `Accept-Encoding` header the `-Dresponse_compression=true` should be specified as VM option.
+### System Properties
 
+| Property                    | Default                          | Description                                                             |
+|-----------------------------|----------------------------------|-------------------------------------------------------------------------|
+| `port`                      | `8081`                           | Server port to listen on                                                |
+| `okapi_url`                 | `http://okapi:9130`              | Okapi (URL)                                                             |
+| `secure_store`              | `Ephemeral`                      | Type of secure store to use.  Valid: `Ephemeral`, `AwsSsm`, `Vault`     |
+| `secure_store_props`        | `/etc/edge/ephemeral.properties` | Path to a properties file specifying secure store configuration         |
+| `log_level`                 | `DEBUG`                          | Log4j Log Level                                                         |
+| `innreach_tenants_mappings` | `innreach_tenants_mappings`      | A variable name which contains comma separated list of tenants mappings |
+| `innreach_client`           | `innreachClient`                 | A placeholder for user name                                             |
+
+- For example, to enable HTTP compression based on `Accept-Encoding` header the `-Dresponse_compression=true` should be specified as VM option.
+- For example, the path to `ephemeral.properties` files could be specified as `-Dsecure_store_props=/etc/edge/ephemeral.properties`
+- The Rancher environments system properties values are specified as - `	-XX:MaxRAMPercentage=85.0 -XX:+UseG1GC -Dsecure_store_props=/etc/edge/ephemeral.properties -Dokapi_url=http://okapi:9130 -Dlog_level=DEBUG -Dlog4j2.formatMsgNoLookups=true -Dinnreach_client=diku_admin` 
 ### Issue tracker
 
-See project [EDGINNREACH](https://issues.folio.org/browse/EDGEINNREACH)
+See project [EDGINNREACH](https://issues.folio.org/projects/EDGINREACH)
 at the [FOLIO issue tracker](https://dev.folio.org/guidelines/issue-tracker).
 
 ### Other documentation
