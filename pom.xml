@@ -24,7 +24,7 @@
     <java.version>11</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <folio-spring-base.version>5.0.1</folio-spring-base.version>
+    <folio-spring-base.version>5.0.2</folio-spring-base.version>
     <edge-common-spring.version>2.0.2</edge-common-spring.version>
     <openapi-generator.version>5.4.0</openapi-generator.version>
     <openapi.input.file>${project.basedir}/src/main/resources/swagger.api/edge-inn-reach.yaml</openapi.input.file>
@@ -34,7 +34,7 @@
     <junit-extensions.version>2.5.0</junit-extensions.version>
     <mockito.version>4.6.1</mockito.version>
     <log4j2.version>2.19.0</log4j2.version>
-    <micrometer-core.version>1.9.4</micrometer-core.version>
+    <micrometer.version>1.9.4</micrometer.version>
     <argLine />
     <sonar.exclusions>
       src/main/java/org/folio/edge/EdgeInnReachApplication.java,
@@ -156,7 +156,7 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-core</artifactId>
-      <version>${micrometer-core.version}</version>
+      <version>${micrometer.version}</version>
     </dependency>
   </dependencies>
 
