@@ -42,6 +42,7 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
       return;
     }
 
+    log.info("From Do Filter Internal header authorization " + request.getHeader(AUTHORIZATION));
     var okapiParameters = getOkapiConnectionParameters(request.getHeader(AUTHORIZATION));
 
     var requestWrapper = new RequestWithHeaders(request);

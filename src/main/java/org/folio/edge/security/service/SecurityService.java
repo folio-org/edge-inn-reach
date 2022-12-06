@@ -67,7 +67,7 @@ public class SecurityService {
       .forEach(mappingArray -> tenantMappingMap.put(mappingArray[0], new TenantMapping(mappingArray[0], mappingArray[1], securityStoreConfigProperties.getInnreachClient())))
     );
 
-    log.debug("Tenant map has been initialized: [{}]", tenantMappingMap);
+    log.info("Tenant map has been initialized: [{}]", tenantMappingMap);
   }
 
   public TenantMapping getTenantMappingByLocalServerKey(UUID localServerKey) {
@@ -95,6 +95,7 @@ public class SecurityService {
 
   private ConnectionSystemParameters enrichConnectionSystemParametersWithOkapiToken(String salt, String tenantId, String username) {
     try {
+      log.info("Salt, tenantID, username " + salt + " ---> " + tenantId +" ----> " + username);
       return enrichWithOkapiToken(ConnectionSystemParameters.builder()
         .tenantId(tenantId)
         .username(username)
@@ -112,6 +113,7 @@ public class SecurityService {
       .orElseThrow(() -> new AuthorizationException("Cannot retrieve okapi token"))
       .get(0);
 
+    log.info("Set Okapi token " + token);
     parameters.setOkapiToken(token);
     return parameters;
   }
