@@ -28,7 +28,7 @@ public class JwtTokenVerifyFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
 
     if (doNotFilter(httpServletRequest)) {
-      log.info("JWT token verification isn't needed, since requested URI [{}] is in the ignore URIs list", httpServletRequest.getRequestURI());
+      //log.info("JWT token verification isn't needed, since requested URI [{}] is in the ignore URIs list", httpServletRequest.getRequestURI());
       filterChain.doFilter(httpServletRequest, httpServletResponse);
       return;
     }

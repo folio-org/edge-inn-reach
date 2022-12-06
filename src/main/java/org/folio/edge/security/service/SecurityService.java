@@ -48,17 +48,17 @@ public class SecurityService {
 
   @PostConstruct
   public void init() {
-    log.debug("Starting initialization with securityStoreConfigProperties: [{}]", securityStoreConfigProperties);
+    log.info("Starting initialization with securityStoreConfigProperties: [{}]", securityStoreConfigProperties);
 
     var secureStoreProps = getProperties(securityStoreConfigProperties.getSecureStorePropsFile());
-    log.debug("Secure store properties have been initialized: [{}]", secureStoreProps);
+    log.info("Secure store properties have been initialized: [{}]", secureStoreProps);
 
     this.secureStore = SecureStoreFactory.getSecureStore(securityStoreConfigProperties.getSecureStoreType(), secureStoreProps);
-    log.debug("Secure store has been initialized: [{}]", secureStore);
+    log.info("Secure store has been initialized: [{}]", secureStore);
 
     var tenantsMappings = SecureTenantsProducer.getTenantsMappings(secureStoreProps, secureStore,
         securityStoreConfigProperties.getInnreachTenantsMappings());
-    log.debug("Tenant mappings have been initialized: [{}]", tenantsMappings);
+    log.info("Tenant mappings have been initialized: [{}]", tenantsMappings);
 
     tenantsMappings.ifPresent(mappings ->
       Arrays.stream(mappings.split(TENANT_MAPPINGS_SPLIT_SYMBOL))

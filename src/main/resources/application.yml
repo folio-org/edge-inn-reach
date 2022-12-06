@@ -26,6 +26,8 @@ management:
       exposure:
         include: info,health,env,httptrace,loggers
       base-path: /admin
+    loggers:
+      enabled: true
   #  endpoint:
   #    health:
   #      show-details: always
