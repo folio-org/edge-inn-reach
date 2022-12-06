@@ -34,7 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   public AccessTokenResponse authenticate(@Valid AuthenticationParams authParams) {
     var authenticationRequest = parseBasicAuth(authParams.getAuthorization());
 
-    log.info("Authentication Request " + authenticationRequest);
+    log.info("Authentication Request " + authenticationRequest.getKey() +" -----> "+ authenticationRequest.getSecret());
     log.info("okapi tenant, token " + authParams.getOkapiTenant() + " ----> " + authParams.getOkapiToken());
     var authResult = innReachAuthClient.authenticateCentralServer(authenticationRequest,
       authParams.getOkapiTenant(), authParams.getOkapiToken());
