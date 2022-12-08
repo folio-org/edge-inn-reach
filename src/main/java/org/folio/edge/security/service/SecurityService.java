@@ -48,17 +48,17 @@ public class SecurityService {
 
   @PostConstruct
   public void init() {
-    log.info("Starting initialization with securityStoreConfigProperties: [{}]", securityStoreConfigProperties);
+    log.debug("Starting initialization with securityStoreConfigProperties: [{}]", securityStoreConfigProperties);
 
     var secureStoreProps = getProperties(securityStoreConfigProperties.getSecureStorePropsFile());
-    log.info("Secure store properties have been initialized: [{}]", secureStoreProps);
+    log.debug("Secure store properties have been initialized: [{}]", secureStoreProps);
 
     this.secureStore = SecureStoreFactory.getSecureStore(securityStoreConfigProperties.getSecureStoreType(), secureStoreProps);
-    log.info("Secure store has been initialized: [{}]", secureStore);
+    log.debug("Secure store has been initialized: [{}]", secureStore);
 
     var tenantsMappings = SecureTenantsProducer.getTenantsMappings(secureStoreProps, secureStore,
         securityStoreConfigProperties.getInnreachTenantsMappings());
-    log.info("Tenant mappings have been initialized: [{}]", tenantsMappings);
+    log.debug("Tenant mappings have been initialized: [{}]", tenantsMappings);
 
     tenantsMappings.ifPresent(mappings ->
       Arrays.stream(mappings.split(TENANT_MAPPINGS_SPLIT_SYMBOL))
@@ -67,7 +67,7 @@ public class SecurityService {
       .forEach(mappingArray -> tenantMappingMap.put(mappingArray[0], new TenantMapping(mappingArray[0], mappingArray[1], securityStoreConfigProperties.getInnreachClient())))
     );
 
-    log.info("Tenant map has been initialized: [{}]", tenantMappingMap);
+    log.debug("Tenant map has been initialized: [{}]", tenantMappingMap);
   }
 
   public TenantMapping getTenantMappingByLocalServerKey(UUID localServerKey) {
@@ -95,7 +95,6 @@ public class SecurityService {
 
   private ConnectionSystemParameters enrichConnectionSystemParametersWithOkapiToken(String salt, String tenantId, String username) {
     try {
-      log.info("Salt, tenantID, username " + salt + " ---> " + tenantId +" ----> " + username);
       return enrichWithOkapiToken(ConnectionSystemParameters.builder()
         .tenantId(tenantId)
         .username(username)
@@ -113,7 +112,6 @@ public class SecurityService {
       .orElseThrow(() -> new AuthorizationException("Cannot retrieve okapi token"))
       .get(0);
 
-    log.info("Set Okapi token " + token);
     parameters.setOkapiToken(token);
     return parameters;
   }

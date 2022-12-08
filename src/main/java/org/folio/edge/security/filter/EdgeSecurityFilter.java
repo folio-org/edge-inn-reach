@@ -37,12 +37,11 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
                                   FilterChain filterChain) throws ServletException, IOException {
 
     if (doNotFilter(request)) {
-      //log.info("JWT token verification isn't needed, since requested URI [{}] is in the ignore URIs list", request.getRequestURI());
+      log.debug("JWT token verification isn't needed, since requested URI [{}] is in the ignore URIs list", request.getRequestURI());
       filterChain.doFilter(request, response);
       return;
     }
 
-    log.info("From Do Filter Internal header authorization " + request.getHeader(AUTHORIZATION));
     var okapiParameters = getOkapiConnectionParameters(request.getHeader(AUTHORIZATION));
 
     var requestWrapper = new RequestWithHeaders(request);
