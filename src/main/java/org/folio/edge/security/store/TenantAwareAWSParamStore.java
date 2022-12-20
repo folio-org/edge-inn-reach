@@ -20,7 +20,6 @@ public class TenantAwareAWSParamStore extends AwsParamStore {
   }
 
   public Optional<String> getTenantsMappings(String innreachTenantsMappings) {
-    log.debug("getTenantsMappings :: parameter innreachTenantsMappings : {}", innreachTenantsMappings);
     var getParameterRequest = buildGetParameterRequest(innreachTenantsMappings, DEFAULT_AWS_TENANTS_MAPPINGS_KEY_PARAMETER);
     try {
       return getParameterFromSSM(getParameterRequest);

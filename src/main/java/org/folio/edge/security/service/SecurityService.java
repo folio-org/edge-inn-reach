@@ -88,7 +88,6 @@ public class SecurityService {
   @Cacheable(value = SYSTEM_USER_PARAMETERS_CACHE, key = "#edgeApiKey")
   public ConnectionSystemParameters getOkapiConnectionParameters(String edgeApiKey) {
     try {
-      log.debug("getOkapiConnectionParameters");
       ClientInfo clientInfo = CredentialsUtils.parseApiKey(edgeApiKey);
       return enrichConnectionSystemParametersWithOkapiToken(clientInfo.salt, clientInfo.tenantId, clientInfo.username);
     } catch (ApiKeyParser.MalformedApiKeyException e) {
@@ -105,7 +104,6 @@ public class SecurityService {
         .password(secureStore.get(salt, tenantId, username))
         .build());
     } catch (SecureStore.NotFoundException e) {
-      log.warn("Cannot get system connection properties for: " + tenantId);
       throw new AuthorizationException("Cannot get system connection properties for: " + tenantId);
     }
   }
