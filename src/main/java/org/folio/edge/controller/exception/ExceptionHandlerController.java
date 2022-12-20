@@ -93,7 +93,7 @@ public class ExceptionHandlerController {
     try {
       innReachResponseDTO = objectMapper.readValue(body, InnReachResponseDTO.class);
     } catch (JsonProcessingException e) {
-      log.error("Unexpected exception. Can't retrieve response body: {}", e.getMessage());
+      log.warn("Unexpected exception. Can't retrieve response body: {}", e.getMessage());
       innReachResponseDTO = failed(body);
     }
 

@@ -32,18 +32,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   @Override
   public AccessTokenResponse authenticate(@Valid AuthenticationParams authParams) {
+    log.debug("Authenticate the client by calling the central server :: parameter authParams : {} ", authParams.toString());
     var authenticationRequest = parseBasicAuth(authParams.getAuthorization());
 
     var authResult = innReachAuthClient.authenticateCentralServer(authenticationRequest,
       authParams.getOkapiTenant(), authParams.getOkapiToken());
 
     if (!authResult.getStatusCode().is2xxSuccessful()) {
-      log.debug("Authentication failed with status: {}", authResult.getStatusCodeValue());
+      log.warn("Authentication failed with status: {}", authResult.getStatusCodeValue());
       throw new EdgeServiceException("Authentication failed");
     }
-
+    log.info("Authentication succeeded and generate the access token.");
     var jwtAccessToken = accessTokenService.generateAccessToken(authenticationRequest.getKey());
 
+    log.info("Return the Bearer Token.");
     return new AccessTokenResponse()
       .accessToken(jwtAccessToken.getToken())
       .tokenType(BEARER_AUTH_SCHEME)

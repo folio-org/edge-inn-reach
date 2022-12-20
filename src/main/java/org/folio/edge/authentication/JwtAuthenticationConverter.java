@@ -30,18 +30,22 @@ public class JwtAuthenticationConverter implements AuthenticationConverter {
 
   @Override
   public UsernamePasswordAuthenticationToken convert(HttpServletRequest httpServletRequest) {
+    log.debug("Extract token and verify it :: parameter: {} ", httpServletRequest.toString());
     var jwtAccessToken = extractJwtTokenFromHeader(httpServletRequest);
 
     var verifiedJwtToken = accessTokenService.verifyAccessToken(jwtAccessToken);
     EdgeApiKeyHolder.setEdgeApiKey((String) verifiedJwtToken.getBody().get(EDGE_API_KEY_CLAIM));
 
+    log.info("UsernamePasswordAuthenticationToken generated.");
     return new UsernamePasswordAuthenticationToken(verifiedJwtToken.getBody().getSubject(), null, Collections.emptyList());
   }
 
   private JwtAccessToken extractJwtTokenFromHeader(HttpServletRequest httpServletRequest) {
+    log.debug("extractJwtTokenFromHeader :: parameter httpServletRequest: {} ", httpServletRequest.toString());
     var validatedAuthorizationHeader = getValidatedAuthorizationHeader(httpServletRequest);
     var jwtToken = validatedAuthorizationHeader.replaceAll(BEARER_AUTH_SCHEME, "").trim();
 
+    log.info("JWT token extracted from header.");
     return JwtAccessToken
       .builder()
       .token(jwtToken)
@@ -49,22 +53,26 @@ public class JwtAuthenticationConverter implements AuthenticationConverter {
   }
 
   private String getValidatedAuthorizationHeader(HttpServletRequest httpServletRequest) {
+    log.debug("getValidatedAuthorizationHeader :: parameter httpServletRequest: {} ",httpServletRequest.toString());
     var authorizationHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
     if (authorizationHeader == null) {
+      log.warn("Empty authorization header");
       throw new BadCredentialsException("Empty authorization header");
     }
 
     authorizationHeader = authorizationHeader.trim();
 
     if (!StringUtils.startsWithIgnoreCase(authorizationHeader, BEARER_AUTH_SCHEME)) {
+      log.warn("Invalid authorization scheme");
       throw new BadCredentialsException("Invalid authorization scheme");
     }
 
     if (authorizationHeader.equalsIgnoreCase(BEARER_AUTH_SCHEME)) {
+      log.warn("Empty Bearer authentication token");
       throw new BadCredentialsException("Empty Bearer authentication token");
     }
-
+    log.info("Authorization Header is: {} ",authorizationHeader);
     return authorizationHeader;
   }
 

@@ -26,14 +26,17 @@ public class CredentialsUtils {
   @SneakyThrows
   public static String generateApiKey(String salt, String tenantId, String username) {
     if (isEmpty(salt)) {
+      log.warn("ClientID/Salt cannot be null");
       throw new IllegalArgumentException("ClientID/Salt cannot be null");
     }
 
     if (isEmpty(tenantId)) {
+      log.warn("TenantID cannot be null");
       throw new IllegalArgumentException("TenantID cannot be null");
     }
 
     if (isEmpty(username)) {
+      log.warn("Username cannot be null");
       throw new IllegalArgumentException("Username cannot be null");
     }
 
@@ -51,6 +54,7 @@ public class CredentialsUtils {
       var decodedAuthorizationHeader = decodeAuthorizationHeader(basicAuth);
       var keySecretArray = decodedAuthorizationHeader.split(AUTHENTICATION_TOKEN_KEY_SECRET_DELIMITER);
 
+      log.info("Authorization header parsed successfully.");
       return LocalServerCredentials.builder()
         .key(UUID.fromString(keySecretArray[KEY_POSITION_IN_TOKEN]))
         .secret(UUID.fromString(keySecretArray[SECRET_POSITION_IN_TOKEN]))
@@ -62,9 +66,10 @@ public class CredentialsUtils {
   }
 
   private static String decodeAuthorizationHeader(String authorization) {
+    log.debug("decodeAuthorizationHeader");
     var decodedAuthorizationHeader = Base64.getDecoder()
       .decode(authorization.replaceAll(BASIC_AUTH_SCHEME, "").trim());
-
+    log.info("Authorization header decoded");
     return new String(decodedAuthorizationHeader);
   }
 

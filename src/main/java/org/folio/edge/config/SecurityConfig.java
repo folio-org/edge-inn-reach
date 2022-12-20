@@ -5,6 +5,7 @@ import java.util.List;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,6 +23,7 @@ import org.folio.edge.security.service.SecurityService;
 
 @RequiredArgsConstructor
 @Configuration
+@Log4j2
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final AccessTokenService<JwtAccessToken, Jws<Claims>> accessTokenService;
@@ -29,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
+    log.debug("Configure the SecurityConfig :: parameter http : {} ", http.toString());
     http
       .csrf()
       .disable()
@@ -46,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           UsernamePasswordAuthenticationFilter.class)
       .addFilterAfter(new EdgeSecurityFilter(securityFilterIgnoreURIList(), securityService), JwtTokenVerifyFilter.class)
       .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenVerifyFilter.class);
+    log.info("The security config is configured");
   }
 
   private List<String> securityFilterIgnoreURIList() {

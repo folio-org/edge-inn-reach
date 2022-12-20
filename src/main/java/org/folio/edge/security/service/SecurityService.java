@@ -59,7 +59,7 @@ public class SecurityService {
     var tenantsMappings = SecureTenantsProducer.getTenantsMappings(secureStoreProps, secureStore,
         securityStoreConfigProperties.getInnreachTenantsMappings());
     log.debug("Tenant mappings have been initialized: [{}]", tenantsMappings);
-
+    log.info("Tenant mappings have been initialized");
     tenantsMappings.ifPresent(mappings ->
       Arrays.stream(mappings.split(TENANT_MAPPINGS_SPLIT_SYMBOL))
       .map(mapping -> mapping.split(TENANT_MAPPING_SPLIT_SYMBOL))
@@ -67,16 +67,18 @@ public class SecurityService {
       .forEach(mappingArray -> tenantMappingMap.put(mappingArray[0], new TenantMapping(mappingArray[0], mappingArray[1], securityStoreConfigProperties.getInnreachClient())))
     );
 
-    log.debug("Tenant map has been initialized: [{}]", tenantMappingMap);
+    log.info("Tenant map has been initialized: [{}]", tenantMappingMap);
   }
 
   public TenantMapping getTenantMappingByLocalServerKey(UUID localServerKey) {
+    log.debug("getTenantMappingByLocalServerKey");
     return Optional.ofNullable(tenantMappingMap.get(localServerKey.toString()))
       .orElseThrow(() -> new BadCredentialsException("Tenant mapping for local server key: " + localServerKey + " not found!"));
   }
 
   @Cacheable(value = SYSTEM_USER_PARAMETERS_CACHE, key = "#localServerKey")
   public ConnectionSystemParameters getInnReachConnectionParameters(UUID localServerKey) {
+    log.debug("getInnReachConnectionParameters");
     var tenantMapping = getTenantMappingByLocalServerKey(localServerKey);
 
     return enrichConnectionSystemParametersWithOkapiToken(securityStoreConfigProperties.getInnreachClient(),
@@ -86,6 +88,7 @@ public class SecurityService {
   @Cacheable(value = SYSTEM_USER_PARAMETERS_CACHE, key = "#edgeApiKey")
   public ConnectionSystemParameters getOkapiConnectionParameters(String edgeApiKey) {
     try {
+      log.debug("getOkapiConnectionParameters");
       ClientInfo clientInfo = CredentialsUtils.parseApiKey(edgeApiKey);
       return enrichConnectionSystemParametersWithOkapiToken(clientInfo.salt, clientInfo.tenantId, clientInfo.username);
     } catch (ApiKeyParser.MalformedApiKeyException e) {
@@ -95,17 +98,20 @@ public class SecurityService {
 
   private ConnectionSystemParameters enrichConnectionSystemParametersWithOkapiToken(String salt, String tenantId, String username) {
     try {
+      log.debug("enrichConnectionSystemParametersWithOkapiToken");
       return enrichWithOkapiToken(ConnectionSystemParameters.builder()
         .tenantId(tenantId)
         .username(username)
         .password(secureStore.get(salt, tenantId, username))
         .build());
     } catch (SecureStore.NotFoundException e) {
+      log.warn("Cannot get system connection properties for: " + tenantId);
       throw new AuthorizationException("Cannot get system connection properties for: " + tenantId);
     }
   }
 
   private ConnectionSystemParameters enrichWithOkapiToken(ConnectionSystemParameters parameters) {
+    log.debug("enrichWithOkapiToken");
     final String token = Optional.ofNullable(authnClient.getApiKey(parameters, parameters.getTenantId())
       .getHeaders()
       .get(X_OKAPI_TOKEN))
@@ -113,6 +119,7 @@ public class SecurityService {
       .get(0);
 
     parameters.setOkapiToken(token);
+    log.info("Set okapi token in the header.");
     return parameters;
   }
 

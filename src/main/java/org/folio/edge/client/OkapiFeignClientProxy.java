@@ -8,8 +8,9 @@ import javax.net.ssl.SSLSocketFactory;
 import feign.Client;
 import feign.Request;
 import feign.Response;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-
+@Log4j2
 public class OkapiFeignClientProxy extends Client.Default {
 
   @Value("${okapi_url}")
@@ -21,6 +22,7 @@ public class OkapiFeignClientProxy extends Client.Default {
 
   @Override
   public Response execute(Request request, Request.Options options) throws IOException {
+   log.debug(" OkapiFeignClientProxy execute :: parameter request : {}, options : {}", request.toString(), options.toString());
     if (!okapiUrl.endsWith("/")) {
       okapiUrl = okapiUrl + "/";
     }
@@ -30,6 +32,7 @@ public class OkapiFeignClientProxy extends Client.Default {
     Request proxiedRequest = Request.create(request.httpMethod(), url, request.headers(), request.body(), request
       .charset(), request.requestTemplate());
 
+    log.info("Execute proxy request {}", proxiedRequest.toString());
     return super.execute(proxiedRequest, options);
   }
 
