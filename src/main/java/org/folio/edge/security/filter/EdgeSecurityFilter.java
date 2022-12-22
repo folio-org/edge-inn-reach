@@ -66,9 +66,11 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
   }
 
   private ConnectionSystemParameters getOkapiConnectionParameters(String authToken) {
+    log.debug("getOkapiConnectionParameters :: parameter authToken : {}", authToken);
     var edgeApiKey = EdgeApiKeyHolder.getEdgeApiKey();
 
     if (StringUtils.isNotEmpty(edgeApiKey)) {
+      log.info("Edge Api Key is not empty");
       return securityService.getOkapiConnectionParameters(edgeApiKey);
     }
 

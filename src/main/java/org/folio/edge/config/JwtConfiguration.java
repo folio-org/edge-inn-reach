@@ -9,6 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Getter
 @Configuration
+@Log4j2
 public class JwtConfiguration {
 
   public static final int DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC = 599;
@@ -37,13 +39,17 @@ public class JwtConfiguration {
   private SignatureAlgorithm signatureAlgorithm;
   private SecretKey secretKey;
 
+
   @PostConstruct
   public void initConfig() {
+    log.debug("Intialize JWTConfiguration");
     this.signatureAlgorithm = defineSignatureAlgorithm();
     this.secretKey = new SecretKeySpec(jwtSignatureSecret.getBytes(), signatureAlgorithm.getJcaName());
+    log.info("Initailization of JWTConfiguration completed.");
   }
 
   private SignatureAlgorithm defineSignatureAlgorithm() {
+    log.debug("Determine the SignatureAlgorithm");
     if (isJwtSignatureAlgorithmInitialized()) {
       return SignatureAlgorithm.forName(jwtSignatureAlgorithm);
     }

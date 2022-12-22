@@ -25,6 +25,7 @@ public class InnReachRequestBuilder {
   private String okapiUrl;
 
   public InnReachRequest buildInnReachRequest(HttpServletRequest request) {
+    log.debug("Build inn-reach request :: parameter request : {}", request.toString());
     return InnReachRequest.builder()
       .requestUrl(buildRequestUrl(request))
       .requestBody(requestBodyAsString(request))
@@ -33,6 +34,7 @@ public class InnReachRequestBuilder {
   }
 
   private URI buildRequestUrl(HttpServletRequest request) {
+    log.debug("Build Request URL :: parameter request : {} ", request);
     var requestURI = request.getRequestURI().replaceAll(INN_REACH_URI_PREFIX, StringUtils.EMPTY);
     return URI.create(okapiUrl + INN_REACH_D2IR_URL_PREFIX + requestURI);
   }

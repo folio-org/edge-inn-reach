@@ -19,16 +19,6 @@ public class TenantAwareAWSParamStore extends AwsParamStore {
     super(properties);
   }
 
-  public Optional<String> getTenants(String innreachTenants) {
-    var getParameterRequest = buildGetParameterRequest(innreachTenants, DEFAULT_AWS_TENANTS_KEY_PARAMETER);
-    try {
-      return getParameterFromSSM(getParameterRequest);
-    } catch (Exception e) {
-      log.warn("Cannot get tenants list from key: " + getParameterRequest.getName(), e);
-      return Optional.empty();
-    }
-  }
-
   public Optional<String> getTenantsMappings(String innreachTenantsMappings) {
     var getParameterRequest = buildGetParameterRequest(innreachTenantsMappings, DEFAULT_AWS_TENANTS_MAPPINGS_KEY_PARAMETER);
     try {

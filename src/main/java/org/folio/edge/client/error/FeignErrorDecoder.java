@@ -14,11 +14,11 @@ public class FeignErrorDecoder implements ErrorDecoder {
   @Override
   public Exception decode(String s, Response response) {
     if (HttpStatus.valueOf(response.status()).equals(HttpStatus.UNAUTHORIZED)) {
-      log.info("CentralServer authentication failed with status code: {}", response.status());
+      log.warn("CentralServer authentication failed with status code: {}", response.status());
       return new BadCredentialsException("Token authentication failed");
     }
 
-    log.info("InnReach request failed with status [{}]", response.status());
+    log.warn("InnReach request failed with status [{}]", response.status());
     return new EdgeServiceException(response.status(), response.reason());
   }
 }

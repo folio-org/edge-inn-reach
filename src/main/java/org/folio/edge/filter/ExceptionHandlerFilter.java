@@ -25,10 +25,11 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
       FilterChain filterChain) throws IOException {
     try {
+      log.debug("doFilterInternal");
       filterChain.doFilter(httpServletRequest, httpServletResponse);
 
     } catch (BadCredentialsException e) {
-      log.debug("Authentication request failed!", e);
+      log.warn("Authentication request failed!", e);
 
       httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
       httpServletResponse.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
@@ -37,7 +38,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
       writer.write(getErrorJsonString("invalid_token", e));
 
     } catch (Exception e) {
-      log.error("Request failed!", e);
+      log.warn("Request failed!", e);
 
       httpServletResponse.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
       httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
