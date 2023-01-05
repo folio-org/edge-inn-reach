@@ -11,6 +11,16 @@ public class SecureTenantsProducer {
 
   private SecureTenantsProducer() {}
 
+  public static Optional<String> getTenants(Properties secureStoreProps, SecureStore secureStore, String innreachTenants) {
+    if (secureStore instanceof TenantAwareAWSParamStore) {
+      var stringOptional = ((TenantAwareAWSParamStore) secureStore).getTenants(innreachTenants);
+      if (stringOptional.isEmpty()) {
+        log.warn("Tenants list not found in AWS Param store. Please create variable, which contains comma separated list of tenants");
+      }
+      return stringOptional;
+    }
+    return Optional.of((String) secureStoreProps.get("tenants"));
+  }
   public static Optional<String> getTenantsMappings(Properties secureStoreProps, SecureStore secureStore, String innreachTenantsMappings) {
     if (secureStore instanceof TenantAwareAWSParamStore) {
       log.debug("secureStore is instance of TenantAwareAWSParamStore ");

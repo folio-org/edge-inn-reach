@@ -46,6 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     var jwtAccessToken = accessTokenService.generateAccessToken(authenticationRequest.getKey());
 
     log.info("Return the Bearer Token.");
+    log.info("The Bearer token is " + jwtAccessToken.getToken());
     return new AccessTokenResponse()
       .accessToken(jwtAccessToken.getToken())
       .tokenType(BEARER_AUTH_SCHEME)
