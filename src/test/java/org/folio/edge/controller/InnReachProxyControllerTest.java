@@ -5,6 +5,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,6 +32,13 @@ import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import org.folio.edge.api.utils.security.AwsParamStore;
+import org.folio.edge.api.utils.security.EphemeralStore;
+import org.folio.edge.api.utils.security.SecureStore;
+import org.folio.edge.api.utils.util.PropertiesUtil;
+import org.folio.edge.config.properties.SecurityStoreConfigProperties;
+import org.folio.edge.security.store.SecureStoreFactory;
+import org.folio.edge.security.store.SecureTenantsProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +53,8 @@ import org.folio.edge.dto.InnReachResponseDTO;
 import org.folio.edge.security.service.SecurityService;
 import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
 
+import java.util.Optional;
+
 public class InnReachProxyControllerTest extends BaseControllerTest {
 
   private static final String BASE_URI = "/innreach/v2";
@@ -52,6 +62,7 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
   public static final UrlPattern PATRON_VERIFY_URL_PATTERN = urlEqualTo("/inn-reach/d2ir/circ/verifypatron");
 
   private static final String TEST_JWT_SIGNATURE_SECRET = "secret";
+
 
   private static final SecretKeySpec TEST_JWT_SECRET_KEY = new SecretKeySpec(
     TEST_JWT_SIGNATURE_SECRET.getBytes(),
@@ -77,7 +88,6 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
       .parseClaimsJws(JWT_TOKEN_STRING);
 
     when(accessTokenService.verifyAccessToken(any())).thenReturn(jwt);
-
     when(securityService.getOkapiConnectionParameters(any())).thenReturn(
       new ConnectionSystemParameters().withOkapiToken("token").withTenantId("test"));
 
@@ -94,6 +104,22 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
 
     var requestEntity = new HttpEntity<>(httpHeaders);
+    SecureStore secureStore = SecureStoreFactory.getSecureStore(AwsParamStore.TYPE, PropertiesUtil.getProperties(null));
+    SecureStore ephermalSecureStore = SecureStoreFactory.getSecureStore(EphemeralStore.TYPE, PropertiesUtil.getProperties(null));
+    Optional<String> tenatMapping1 = null;
+   Optional<String> tenatMapping = SecureTenantsProducer.getTenants(PropertiesUtil.getProperties(null), secureStore,
+      "6b583dfe-8c34-40bb-a520-5b49b23edb3d:diku");
+
+   try {
+     tenatMapping1 = SecureTenantsProducer.getTenants(PropertiesUtil.getProperties(null), ephermalSecureStore,
+       "6b583dfe-8c34-40bb-a520-5b49b23edb3d:diku");
+   }
+   catch (Exception e){
+     assertNull(tenatMapping1);
+   }
+
+   assertTrue(tenatMapping.isEmpty());
+
 
     wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
       .willReturn(aResponse().withBody("{}")
