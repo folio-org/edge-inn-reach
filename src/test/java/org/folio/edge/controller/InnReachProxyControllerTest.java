@@ -84,12 +84,6 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
       .parseClaimsJws(JWT_TOKEN_STRING);
 
     when(accessTokenService.verifyAccessToken(any())).thenReturn(jwt);
-
-
-    SecureStore secureStore = SecureStoreFactory.getSecureStore(AwsParamStore.TYPE, PropertiesUtil.getProperties(null));
-    SecureTenantsProducer.getTenantsMappings(PropertiesUtil.getProperties(null), secureStore,
-      "6b583dfe-8c34-40bb-a520-5b49b23edb3d:diku");
-
     when(securityService.getOkapiConnectionParameters(any())).thenReturn(
       new ConnectionSystemParameters().withOkapiToken("token").withTenantId("test"));
 
@@ -106,6 +100,10 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
 
     var requestEntity = new HttpEntity<>(httpHeaders);
+
+    SecureStore secureStore = SecureStoreFactory.getSecureStore(AwsParamStore.TYPE, PropertiesUtil.getProperties(null));
+    SecureTenantsProducer.getTenantsMappings(PropertiesUtil.getProperties(null), secureStore,
+      "6b583dfe-8c34-40bb-a520-5b49b23edb3d:diku");
 
     wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
       .willReturn(aResponse().withBody("{}")
