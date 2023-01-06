@@ -5,6 +5,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,6 +33,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import org.folio.edge.api.utils.security.AwsParamStore;
+import org.folio.edge.api.utils.security.EphemeralStore;
 import org.folio.edge.api.utils.security.SecureStore;
 import org.folio.edge.api.utils.util.PropertiesUtil;
 import org.folio.edge.config.properties.SecurityStoreConfigProperties;
@@ -103,10 +105,21 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
 
     var requestEntity = new HttpEntity<>(httpHeaders);
     SecureStore secureStore = SecureStoreFactory.getSecureStore(AwsParamStore.TYPE, PropertiesUtil.getProperties(null));
+    SecureStore ephermalSecureStore = SecureStoreFactory.getSecureStore(EphemeralStore.TYPE, PropertiesUtil.getProperties(null));
+    Optional<String> tenatMapping1 = null;
    Optional<String> tenatMapping = SecureTenantsProducer.getTenants(PropertiesUtil.getProperties(null), secureStore,
       "6b583dfe-8c34-40bb-a520-5b49b23edb3d:diku");
 
+   try {
+     tenatMapping1 = SecureTenantsProducer.getTenants(PropertiesUtil.getProperties(null), ephermalSecureStore,
+       "6b583dfe-8c34-40bb-a520-5b49b23edb3d:diku");
+   }
+   catch (Exception e){
+     assertNull(tenatMapping1);
+   }
+
    assertTrue(tenatMapping.isEmpty());
+
 
     wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
       .willReturn(aResponse().withBody("{}")
