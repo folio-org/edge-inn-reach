@@ -31,6 +31,12 @@ import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import org.folio.edge.api.utils.security.AwsParamStore;
+import org.folio.edge.api.utils.security.SecureStore;
+import org.folio.edge.api.utils.util.PropertiesUtil;
+import org.folio.edge.config.properties.SecurityStoreConfigProperties;
+import org.folio.edge.security.store.SecureStoreFactory;
+import org.folio.edge.security.store.SecureTenantsProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +58,7 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
   public static final UrlPattern PATRON_VERIFY_URL_PATTERN = urlEqualTo("/inn-reach/d2ir/circ/verifypatron");
 
   private static final String TEST_JWT_SIGNATURE_SECRET = "secret";
+
 
   private static final SecretKeySpec TEST_JWT_SECRET_KEY = new SecretKeySpec(
     TEST_JWT_SIGNATURE_SECRET.getBytes(),
@@ -77,6 +84,11 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
       .parseClaimsJws(JWT_TOKEN_STRING);
 
     when(accessTokenService.verifyAccessToken(any())).thenReturn(jwt);
+
+
+    SecureStore secureStore = SecureStoreFactory.getSecureStore(AwsParamStore.TYPE, PropertiesUtil.getProperties(null));
+    SecureTenantsProducer.getTenantsMappings(PropertiesUtil.getProperties(null), secureStore,
+      "6b583dfe-8c34-40bb-a520-5b49b23edb3d:diku");
 
     when(securityService.getOkapiConnectionParameters(any())).thenReturn(
       new ConnectionSystemParameters().withOkapiToken("token").withTenantId("test"));
