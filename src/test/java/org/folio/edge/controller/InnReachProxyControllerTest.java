@@ -51,6 +51,8 @@ import org.folio.edge.dto.InnReachResponseDTO;
 import org.folio.edge.security.service.SecurityService;
 import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
 
+import java.util.Optional;
+
 public class InnReachProxyControllerTest extends BaseControllerTest {
 
   private static final String BASE_URI = "/innreach/v2";
@@ -102,8 +104,10 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     var requestEntity = new HttpEntity<>(httpHeaders);
 
     SecureStore secureStore = SecureStoreFactory.getSecureStore(AwsParamStore.TYPE, PropertiesUtil.getProperties(null));
-    SecureTenantsProducer.getTenantsMappings(PropertiesUtil.getProperties(null), secureStore,
+   Optional<String> tenatMapping = SecureTenantsProducer.getTenantsMappings(PropertiesUtil.getProperties(null), secureStore,
       "6b583dfe-8c34-40bb-a520-5b49b23edb3d:diku");
+
+   assertTrue(tenatMapping.isEmpty());
 
     wireMock.stubFor(post(PATRON_VERIFY_URL_PATTERN)
       .willReturn(aResponse().withBody("{}")
