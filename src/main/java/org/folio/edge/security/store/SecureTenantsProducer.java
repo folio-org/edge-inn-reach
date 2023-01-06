@@ -21,17 +21,15 @@ public class SecureTenantsProducer {
     }
     return Optional.of((String) secureStoreProps.get("tenants"));
   }
+
   public static Optional<String> getTenantsMappings(Properties secureStoreProps, SecureStore secureStore, String innreachTenantsMappings) {
     if (secureStore instanceof TenantAwareAWSParamStore) {
-      log.debug("secureStore is instance of TenantAwareAWSParamStore ");
       var stringOptional = ((TenantAwareAWSParamStore) secureStore).getTenantsMappings(innreachTenantsMappings);
       if (stringOptional.isEmpty()) {
         log.warn("Tenants mappings list not found in AWS Param store. Please create variable, which contains comma separated list of tenants mappings");
       }
-      log.info("Tenants mapping {}", stringOptional);
       return stringOptional;
     }
-    log.info("Tenants mapping found");
     return Optional.of((String) secureStoreProps.get("tenantsMappings"));
   }
 }
