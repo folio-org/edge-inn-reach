@@ -12,8 +12,8 @@ public class SecureTenantsProducer {
   private SecureTenantsProducer() {}
 
   public static Optional<String> getTenants(Properties secureStoreProps, SecureStore secureStore, String innreachTenants) {
-    if (secureStore instanceof TenantAwareAWSParamStore) {
-      var stringOptional = ((TenantAwareAWSParamStore) secureStore).getTenants(innreachTenants);
+    if (secureStore instanceof TenantAwareAWSParamStore tenantAwareAWSParamStore) {
+      var stringOptional = tenantAwareAWSParamStore.getTenants(innreachTenants);
       if (stringOptional.isEmpty()) {
         log.warn("Tenants list not found in AWS Param store. Please create variable, which contains comma separated list of tenants");
       }
@@ -23,8 +23,8 @@ public class SecureTenantsProducer {
   }
 
   public static Optional<String> getTenantsMappings(Properties secureStoreProps, SecureStore secureStore, String innreachTenantsMappings) {
-    if (secureStore instanceof TenantAwareAWSParamStore) {
-      var stringOptional = ((TenantAwareAWSParamStore) secureStore).getTenantsMappings(innreachTenantsMappings);
+    if (secureStore instanceof TenantAwareAWSParamStore tenantAwareAWSParamStore) {
+      var stringOptional = tenantAwareAWSParamStore.getTenantsMappings(innreachTenantsMappings);
       if (stringOptional.isEmpty()) {
         log.warn("Tenants mappings list not found in AWS Param store. Please create variable, which contains comma separated list of tenants mappings");
       }
