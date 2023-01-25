@@ -1,9 +1,5 @@
 package org.folio.edge.controller;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +22,7 @@ public class AuthenticationController implements AuthenticationApi {
 
   @Override
   @PostMapping("/token")
-  public ResponseEntity<AccessTokenResponse> getToken(@NotNull @Pattern(regexp = "client_credentials") @Valid String grantType,
-                                                      @NotNull @Pattern(regexp = "innreach_tp") @Valid String scope,
+  public ResponseEntity<AccessTokenResponse> getToken(String grantType, String scope,
                                                       String xOkapiTenant, String xOkapiToken, String authorization) {
     log.debug("Get token for authentication :: parameter grantType : {}, scope : {}, " +
       "xOkapiTenant : {}, xOkapiToken : {}, authorization : {} ", grantType, scope, xOkapiTenant,
