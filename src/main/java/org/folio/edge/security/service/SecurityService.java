@@ -3,13 +3,13 @@ package org.folio.edge.security.service;
 import static org.folio.edge.api.utils.Constants.X_OKAPI_TOKEN;
 import static org.folio.edge.api.utils.util.PropertiesUtil.getProperties;
 
+import jakarta.annotation.PostConstruct;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.annotation.PostConstruct;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

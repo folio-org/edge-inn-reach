@@ -4,7 +4,7 @@ import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_A
 
 import java.util.Collections;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

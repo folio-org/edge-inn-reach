@@ -11,8 +11,8 @@ import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletRequest;
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.http.HttpServletRequest;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

@@ -4,7 +4,7 @@ package org.folio.edge.domain.service.impl;
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_AUTH_SCHEME;
 import static org.folio.edge.utils.CredentialsUtils.parseBasicAuth;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

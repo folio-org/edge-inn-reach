@@ -9,6 +9,10 @@ spring:
     default-property-inclusion: NON_EMPTY
   mustache:
     check-template-location: false
+  cloud:
+    openfeign:
+      okhttp:
+        enabled: true
 feign:
   client:
     config:

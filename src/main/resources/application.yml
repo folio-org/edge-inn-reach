@@ -20,6 +20,10 @@ spring:
     type: caffeine
     caffeine:
       spec: maximumSize=200,expireAfterAccess=1h
+  cloud:
+    openfeign:
+      okhttp:
+        enabled: true
 management:
   endpoints:
     web:

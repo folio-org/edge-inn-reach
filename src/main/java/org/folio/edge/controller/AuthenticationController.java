@@ -1,8 +1,8 @@
 package org.folio.edge.controller;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
