@@ -42,13 +42,13 @@ public class SecurityConfig {
       .and()
       .authorizeHttpRequests()
       .requestMatchers(HttpMethod.GET, ADMIN_HEALTH_CHECK_URI).permitAll()
-      .requestMatchers(HttpMethod.POST,"/innreach/v2/oauth2/token").permitAll()
+      .requestMatchers(HttpMethod.POST, "/innreach/v2/oauth2/token").permitAll()
       .anyRequest()
       .authenticated()
       .and()
       .addFilterBefore(
-          new JwtTokenVerifyFilter(jwtTokenVerifyFilterIgnoreURIList(), new JwtAuthenticationConverter(accessTokenService)),
-          UsernamePasswordAuthenticationFilter.class)
+        new JwtTokenVerifyFilter(jwtTokenVerifyFilterIgnoreURIList(), new JwtAuthenticationConverter(accessTokenService)),
+        UsernamePasswordAuthenticationFilter.class)
       .addFilterAfter(new EdgeSecurityFilter(securityFilterIgnoreURIList(), securityService), JwtTokenVerifyFilter.class)
       .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenVerifyFilter.class);
     log.info("The security config is configured");
