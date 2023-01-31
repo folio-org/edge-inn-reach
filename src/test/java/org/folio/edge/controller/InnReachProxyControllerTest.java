@@ -103,7 +103,7 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
 
     var requestEntity = new HttpEntity<>(httpHeaders);
-    SecureStore secureStore = SecureStoreFactory.getSecureStore(AwsParamStore.TYPE, PropertiesUtil.getProperties("us-east-1"));
+    SecureStore secureStore = SecureStoreFactory.getSecureStore(AwsParamStore.TYPE, PropertiesUtil.getProperties(null));
     SecureStore ephermalSecureStore = SecureStoreFactory.getSecureStore(EphemeralStore.TYPE, PropertiesUtil.getProperties(null));
     Optional<String> tenatMapping1 = null;
    Optional<String> tenatMapping = SecureTenantsProducer.getTenants(PropertiesUtil.getProperties(null), secureStore,

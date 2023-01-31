@@ -55,7 +55,7 @@ class JwtAuthenticationConverterTest {
   private JwtAuthenticationConverter jwtAuthenticationConverter;
 
   @BeforeEach
-  private void setupBeforeEach() {
+  public void setupBeforeEach() {
     MockitoAnnotations.initMocks(this);
   }
 
