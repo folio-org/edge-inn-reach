@@ -1,7 +1,6 @@
 package org.folio.edge.domain.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,6 +13,7 @@ import static org.folio.edge.util.TestUtil.randomUUIDString;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import org.folio.edge.domain.exception.EdgeServiceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -57,5 +57,14 @@ class AuthenticationServiceImplTest {
     assertNotNull(accessToken.getTokenType());
     assertEquals(BEARER_AUTH_SCHEME, accessToken.getTokenType());
     assertEquals(DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC, accessToken.getExpiresIn());
+  }
+
+  @Test
+  void shouldThrowEdgeServiceException_when_centralServerIsNotAuthorized() {
+    when(innReachAuthClient.authenticateCentralServer(any(), any(), any())).thenReturn(ResponseEntity.status(401).build());
+    var innReachHeadersHolder = createInnReachHeadersHolder();
+
+    assertThrows(EdgeServiceException.class, () -> authenticationService.authenticate(innReachHeadersHolder));
+    verify(innReachAuthClient).authenticateCentralServer(any(), any(), any());
   }
 }
