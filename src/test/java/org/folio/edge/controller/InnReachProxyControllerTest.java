@@ -36,7 +36,6 @@ import org.folio.edge.api.utils.security.AwsParamStore;
 import org.folio.edge.api.utils.security.EphemeralStore;
 import org.folio.edge.api.utils.security.SecureStore;
 import org.folio.edge.api.utils.util.PropertiesUtil;
-import org.folio.edge.config.properties.SecurityStoreConfigProperties;
 import org.folio.edge.security.store.SecureStoreFactory;
 import org.folio.edge.security.store.SecureTenantsProducer;
 import org.junit.jupiter.api.BeforeEach;
@@ -104,7 +103,7 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
 
     var requestEntity = new HttpEntity<>(httpHeaders);
-    SecureStore secureStore = SecureStoreFactory.getSecureStore(AwsParamStore.TYPE, PropertiesUtil.getProperties(null));
+    SecureStore secureStore = SecureStoreFactory.getSecureStore(AwsParamStore.TYPE, PropertiesUtil.getProperties("us-east-1"));
     SecureStore ephermalSecureStore = SecureStoreFactory.getSecureStore(EphemeralStore.TYPE, PropertiesUtil.getProperties(null));
     Optional<String> tenatMapping1 = null;
    Optional<String> tenatMapping = SecureTenantsProducer.getTenants(PropertiesUtil.getProperties(null), secureStore,
