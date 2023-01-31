@@ -37,8 +37,8 @@ class AuthenticationServiceImplTest {
   private AuthenticationServiceImpl authenticationService;
 
   @BeforeEach
-  public void setupBeforeEach() {
-    MockitoAnnotations.initMocks(this);
+  public void setupBeforeEach() throws Exception {
+    MockitoAnnotations.openMocks(this).close();
   }
 
   @Test
