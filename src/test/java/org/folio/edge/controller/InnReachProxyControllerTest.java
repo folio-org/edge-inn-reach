@@ -114,13 +114,12 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     Optional<String> tenatMapping = SecureTenantsProducer.getTenants(PropertiesUtil.getProperties(null), secureStore,
       "6b583dfe-8c34-40bb-a520-5b49b23edb3d:diku");
 
-     try {
-       tenatMapping1 = SecureTenantsProducer.getTenants(PropertiesUtil.getProperties(null), ephermalSecureStore,
-         "6b583dfe-8c34-40bb-a520-5b49b23edb3d:diku");
-     }
-     catch (Exception e){
-       assertNull(tenatMapping1);
-     }
+    try {
+      tenatMapping1 = SecureTenantsProducer.getTenants(PropertiesUtil.getProperties(null), ephermalSecureStore,
+        "6b583dfe-8c34-40bb-a520-5b49b23edb3d:diku");
+    } catch (Exception e) {
+      assertNull(tenatMapping1);
+    }
 
     assertTrue(tenatMapping.isEmpty());
 
@@ -188,6 +187,7 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     assertEquals("failed", response.getStatus());
     assertEquals("Plain text error msg", response.getReason());
   }
+
   @Test
   void testGetTenantsMappings_withTenantAwareAWSParamStore() {
     Properties secureStoreProps = new Properties();
