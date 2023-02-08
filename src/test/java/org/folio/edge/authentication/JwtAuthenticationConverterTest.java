@@ -9,9 +9,8 @@ import static org.mockito.Mockito.when;
 import static org.folio.edge.config.JwtConfiguration.DEFAULT_SIGNATURE_ALGORITHM;
 import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
-import java.util.List;
-
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import javax.crypto.spec.SecretKeySpec;
 
 import io.jsonwebtoken.Claims;
