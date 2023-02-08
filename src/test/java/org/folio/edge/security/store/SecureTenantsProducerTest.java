@@ -7,9 +7,14 @@ import org.folio.edge.api.utils.util.PropertiesUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
+import java.util.Properties;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class SecureTenantsProducerTest {
 
@@ -35,4 +40,20 @@ class SecureTenantsProducerTest {
 
     assertTrue(tenatMapping.isEmpty());
   }
+
+  @Test
+  void testGetTenantsMappings_withTenantAwareAWSParamStore() {
+    Properties secureStoreProps = new Properties();
+    TenantAwareAWSParamStore secureStore = mock(TenantAwareAWSParamStore.class);
+    String innreachTenantsMappings = "mapping1,mapping2,mapping3";
+    Optional<String> expected = Optional.of(innreachTenantsMappings);
+
+    when(secureStore.getTenantsMappings(innreachTenantsMappings)).thenReturn(expected);
+
+    Optional<String> result = SecureTenantsProducer.getTenantsMappings(secureStoreProps, secureStore, innreachTenantsMappings);
+
+    assertEquals(expected, result);
+    verify(secureStore).getTenantsMappings(innreachTenantsMappings);
+  }
+
 }

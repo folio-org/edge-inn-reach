@@ -8,8 +8,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.ACCEPT_ENCODING;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -33,8 +31,6 @@ import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import org.folio.edge.security.store.SecureTenantsProducer;
-import org.folio.edge.security.store.TenantAwareAWSParamStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +44,6 @@ import org.folio.edge.domain.service.AccessTokenService;
 import org.folio.edge.dto.InnReachResponseDTO;
 import org.folio.edge.security.service.SecurityService;
 import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
-
-import java.util.Optional;
-import java.util.Properties;
 
 public class InnReachProxyControllerTest extends BaseControllerTest {
 
@@ -164,21 +157,6 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
     var response = responseEntity.getBody();
     assertEquals("failed", response.getStatus());
     assertEquals("Plain text error msg", response.getReason());
-  }
-
-  @Test
-  void testGetTenantsMappings_withTenantAwareAWSParamStore() {
-    Properties secureStoreProps = new Properties();
-    TenantAwareAWSParamStore secureStore = mock(TenantAwareAWSParamStore.class);
-    String innreachTenantsMappings = "mapping1,mapping2,mapping3";
-    Optional<String> expected = Optional.of(innreachTenantsMappings);
-
-    when(secureStore.getTenantsMappings(innreachTenantsMappings)).thenReturn(expected);
-
-    Optional<String> result = SecureTenantsProducer.getTenantsMappings(secureStoreProps, secureStore, innreachTenantsMappings);
-
-    assertEquals(expected, result);
-    verify(secureStore).getTenantsMappings(innreachTenantsMappings);
   }
 
 }
