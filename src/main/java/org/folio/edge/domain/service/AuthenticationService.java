@@ -1,6 +1,6 @@
 package org.folio.edge.domain.service;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.folio.edge.domain.dto.AuthenticationParams;
 import org.folio.edge.dto.AccessTokenResponse;

@@ -4,10 +4,10 @@ import lombok.extern.log4j.Log4j2;
 
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BASIC_AUTH_SCHEME;
 
-import java.util.Base64;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import java.util.Base64;
 
 @Log4j2
 public class BasicAuthenticationValidator implements ConstraintValidator<InnReachAuthenticationHeader, String> {

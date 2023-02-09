@@ -1,8 +1,7 @@
 package org.folio.edge.config;
 
+import jakarta.annotation.PostConstruct;
 import java.util.Date;
-
-import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 

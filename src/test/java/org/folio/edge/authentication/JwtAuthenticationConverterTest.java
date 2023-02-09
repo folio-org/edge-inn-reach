@@ -9,10 +9,9 @@ import static org.mockito.Mockito.when;
 import static org.folio.edge.config.JwtConfiguration.DEFAULT_SIGNATURE_ALGORITHM;
 import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
-
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.http.HttpServletRequest;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -55,7 +54,7 @@ class JwtAuthenticationConverterTest {
   private JwtAuthenticationConverter jwtAuthenticationConverter;
 
   @BeforeEach
-  private void setupBeforeEach() {
+  public void setupBeforeEach() {
     MockitoAnnotations.initMocks(this);
   }
 

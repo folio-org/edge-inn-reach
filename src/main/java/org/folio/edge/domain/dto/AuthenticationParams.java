@@ -1,8 +1,6 @@
 package org.folio.edge.domain.dto;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotEmpty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

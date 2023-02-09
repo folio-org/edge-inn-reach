@@ -4,7 +4,7 @@ package org.folio.edge.domain.service.impl;
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_AUTH_SCHEME;
 import static org.folio.edge.utils.CredentialsUtils.parseBasicAuth;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -39,7 +39,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       authParams.getOkapiTenant(), authParams.getOkapiToken());
 
     if (!authResult.getStatusCode().is2xxSuccessful()) {
-      log.warn("Authentication failed with status: {}", authResult.getStatusCodeValue());
+      log.warn("Authentication failed with status: {}", authResult.getStatusCode());
       throw new EdgeServiceException("Authentication failed");
     }
     log.info("Authentication succeeded and generate the access token.");

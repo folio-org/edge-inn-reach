@@ -1,6 +1,6 @@
 package org.folio.edge.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

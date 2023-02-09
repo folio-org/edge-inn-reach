@@ -1,6 +1,6 @@
 package org.folio.edge.controller.exception;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 
 import org.folio.edge.domain.exception.EdgeServiceException;
 import org.folio.edge.dto.Error;

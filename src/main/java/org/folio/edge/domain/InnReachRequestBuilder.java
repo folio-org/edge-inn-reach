@@ -1,10 +1,10 @@
 package org.folio.edge.domain;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
