@@ -1,12 +1,21 @@
-## v2.1.0 IN-PROGRESS
+## v3.0.0 2023-02-23
 
-* [EDGINREACH-41] (https://issues.folio.org/browse/EDGINREACH-41) - Now supports users interface 15.3 16.0
+## Stories
+* [EDGINREACH-30](https://issues.folio.org/browse/EDGINREACH-30) - Logging improvement
+* [EDGINREACH-43](https://issues.folio.org/browse/EDGINREACH-43) - Revise module deployment information
+* [EDGINREACH-46](https://issues.folio.org/browse/EDGINREACH-46) - Logging improvement - Configuration
+* [EDGINREACH-48](https://issues.folio.org/browse/EDGINREACH-48) - Update the module to Spring boot v3.0.0
+
+## v2.0.2 2023-02-17
+
+## Stories
+* [EDGINREACH-41](https://issues.folio.org/browse/EDGINREACH-41) - Now supports users interface 15.3 16.0
 
 ## v2.0.1 2022-08-16
 
 ### Stories
-* [EDGINREACH-35] (https://issues.folio.org/browse/EDGINREACH-35) - edge-inn-reach Spring 2.7 upgrade for Morning Glory 2022 R2
-* [EDGINREACH-42] (https://issues.folio.org/browse/EDGINREACH-42) - bump up edge-common-spring version
+* [EDGINREACH-35](https://issues.folio.org/browse/EDGINREACH-35) - edge-inn-reach Spring 2.7 upgrade for Morning Glory 2022 R2
+* [EDGINREACH-42](https://issues.folio.org/browse/EDGINREACH-42) - bump up edge-common-spring version
 
 
 ## v1.0.5 2022-05-30
