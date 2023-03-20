@@ -1,3 +1,8 @@
+## v3.0.1 2023-03-20
+
+## Stories
+* [EDGINREACH-52](https://issues.folio.org/browse/EDGINREACH-52) - Dockerfile: apk upgrade
+
 ## v3.0.0 2023-02-23
 
 ## Stories
