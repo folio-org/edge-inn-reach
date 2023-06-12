@@ -116,3 +116,6 @@ at the [FOLIO issue tracker](https://dev.folio.org/guidelines/issue-tracker).
 Other [modules](https://dev.folio.org/source-code/#server-side) are described,
 with further FOLIO Developer documentation at
 [dev.folio.org](https://dev.folio.org/)
+
+### CSRF Support
+This module does not currently support CSRF tokens because D2IR does not currently support CSRF tokens for browser-based requests. Therefore CSRF tokens are disabled in the `SecurityConfig` class.
