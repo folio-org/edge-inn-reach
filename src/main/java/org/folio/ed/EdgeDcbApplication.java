@@ -12,8 +12,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class,
   HibernateJpaAutoConfiguration.class})
-public class EdgeCaiaSoftApplication {
+public class EdgeDcbApplication {
   public static void main(String[] args) {
-    SpringApplication.run(EdgeCaiaSoftApplication.class, args);
+    SpringApplication.run(EdgeDcbApplication.class, args);
   }
 }

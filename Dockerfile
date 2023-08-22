@@ -3,7 +3,7 @@ FROM folioci/alpine-jre-openjdk17:latest
 USER root
 
 # Copy your fat jar to the container
-ENV APP_FILE edge-caiasoft-fat.jar
+ENV APP_FILE edge-dcb-fat.jar
 
 # - should be a single jar file
 ARG JAR_FILE=./target/*.jar
