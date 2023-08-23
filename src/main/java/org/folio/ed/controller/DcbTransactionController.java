@@ -2,7 +2,7 @@ package org.folio.ed.controller;
 
 import org.folio.ed.domain.dto.TransactionStatusResponse;
 import org.folio.ed.rest.resource.TransactionsApi;
-import org.folio.ed.service.CaiaSoftSecurityManagerService;
+import org.folio.ed.service.DcbSecurityManagerService;
 import org.folio.ed.service.DcbTransactionService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class DcbTransactionController implements TransactionsApi {
 
   private final DcbTransactionService dcbTransactionService;
-  private final CaiaSoftSecurityManagerService sms;
+  private final DcbSecurityManagerService sms;
 
   @Override
   public ResponseEntity<TransactionStatusResponse> getDcbTransactionStatus(
@@ -30,8 +30,12 @@ public class DcbTransactionController implements TransactionsApi {
     @ApiParam(required = true) @RequestHeader(value = "x-okapi-tenant") String xOkapiTenant){
     var headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    return dcbTransactionService.getDcbTransactionStatus(
-      dcbTransactionId, "diku", sms.getConnectionParameters("diku").getOkapiToken());
+    var tenant = sms.getCaiaSoftUserTenants().stream().findFirst();
+      if(tenant.isPresent()) {
+        return dcbTransactionService.getDcbTransactionStatus(
+          dcbTransactionId, tenant.get(), sms.getConnectionParameters(tenant.get()).getOkapiToken());
+      }
+      return null;
   }
 
 }

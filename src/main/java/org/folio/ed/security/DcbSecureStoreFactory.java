@@ -8,9 +8,9 @@ import org.folio.edge.api.utils.security.SecureStoreFactory;
 import java.util.Properties;
 
 @Log4j2
-public class CaiaSoftSecureStoreFactory {
+public class DcbSecureStoreFactory {
 
-  private CaiaSoftSecureStoreFactory(){}
+  private DcbSecureStoreFactory(){}
 
   public static SecureStore getSecureStore(String secureStoreType, Properties secureStoreProps) {
     log.debug("getSecureStore:: Retrieving SecureStore");

@@ -11,7 +11,7 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class EdgeCaiaSoftSpringConfiguration {
+public class EdgeDcbSpringConfiguration {
 
   @Bean
   public FolioSpringLiquibase folioSpringLiquibase() {

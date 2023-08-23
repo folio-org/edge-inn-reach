@@ -3,7 +3,7 @@ package org.folio.ed.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.folio.ed.security.CaiaSoftSecureStoreFactory;
+import org.folio.ed.security.DcbSecureStoreFactory;
 import org.folio.ed.security.SecureTenantsProducer;
 import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
 import org.folio.edgecommonspring.security.SecurityManagerService;
@@ -24,7 +24,7 @@ import static org.folio.edge.api.utils.util.PropertiesUtil.getProperties;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class CaiaSoftSecurityManagerService {
+public class DcbSecurityManagerService {
 
   private final SecurityManagerService sms;
 
@@ -48,9 +48,9 @@ public class CaiaSoftSecurityManagerService {
 
   @PostConstruct
   public void init() {
-    log.debug("init:: Started Initializing CaiaSoftSecurityManagerService");
+    log.debug("init:: Started Initializing DcbSecurityManagerService");
     var secureStoreProps = getProperties(secureStorePropsFile);
-    var secureStore = CaiaSoftSecureStoreFactory.getSecureStore(secureStoreType, secureStoreProps);
+    var secureStore = DcbSecureStoreFactory.getSecureStore(secureStoreType, secureStoreProps);
     var tenants = SecureTenantsProducer.getTenants(secureStoreProps, secureStore, caiaSoftTenants);
     tenants.ifPresent(tenantsStr -> caiaSoftUserTenants = Arrays.stream(COMMA.split(tenantsStr))
       .collect(toSet()));
