@@ -1,14 +1,10 @@
 package org.folio.ed.controller;
 
-import org.folio.ed.domain.dto.AccessionItem;
 import org.folio.ed.domain.dto.TransactionStatusResponse;
-import org.folio.ed.rest.resource.RequestsApi;
 import org.folio.ed.rest.resource.TransactionsApi;
 import org.folio.ed.service.CaiaSoftSecurityManagerService;
 import org.folio.ed.service.DcbTransactionService;
-import org.folio.ed.service.RemoteStorageService;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/caiasoftService/")
+@RequestMapping(value = "/dcbService/")
 public class DcbTransactionController implements TransactionsApi {
 
   private final DcbTransactionService dcbTransactionService;
@@ -34,9 +30,8 @@ public class DcbTransactionController implements TransactionsApi {
     @ApiParam(required = true) @RequestHeader(value = "x-okapi-tenant") String xOkapiTenant){
     var headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    var dcbTransactionStatusResponse = dcbTransactionService.getDcbTransactionStatus(
+    return dcbTransactionService.getDcbTransactionStatus(
       dcbTransactionId, "diku", sms.getConnectionParameters("diku").getOkapiToken());
-    return dcbTransactionStatusResponse;
   }
 
 }

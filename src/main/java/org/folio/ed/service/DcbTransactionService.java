@@ -1,18 +1,6 @@
 package org.folio.ed.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import org.folio.ed.client.DcbClient;
-import org.folio.ed.domain.dto.AccessionItem;
-import org.folio.ed.domain.dto.AccessionRequest;
-import org.folio.ed.domain.dto.CheckInItem;
-import org.folio.ed.domain.dto.CheckInRequest;
-import org.folio.ed.domain.dto.Configuration;
-import org.folio.ed.domain.dto.DcbTransactionRequest;
-import org.folio.ed.domain.dto.RetrievalQueueRecord;
-import org.folio.ed.domain.dto.ReturnItemResponse;
 import org.folio.ed.domain.dto.TransactionStatusResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

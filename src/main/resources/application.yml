@@ -10,7 +10,7 @@ Dcaia_soft_tenants: caiaSoftClient_tenants
 caia_soft_tenants: ${Dcaia_soft_tenants}
 spring:
   application:
-    name: edge-caiasoft
+    name: edge-dcb
   jackson:
     default-property-inclusion: non_null
   liquibase:

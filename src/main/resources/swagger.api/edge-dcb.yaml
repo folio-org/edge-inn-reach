@@ -1,90 +1,10 @@
 openapi: 3.0.0
 info:
-  title: Edge CasiaSoft API
+  title: Edge DCB API
   version: v1
 servers:
-  - url: /caiasoftService/
+  - url: /dcbService/
 paths:
-  /ItemBarcodes/{itemBarcode}/accessioned/{remoteStorageConfigurationId}:
-    get:
-      responses:
-        '200':
-          description: Success get accession item
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/accessionItem"
-        '500':
-          description: Internal server error
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Internal server error
-      operationId: getAccessionItem
-      parameters:
-        - $ref: "#/components/parameters/item-barcode"
-        - $ref: "#/components/parameters/remote-storage-id"
-        - $ref: "#/components/parameters/x-okapi-token"
-        - $ref: "#/components/parameters/x-okapi-tenant"
-  /RequestBarcodes/{itemBarcode}/reshelved/{remoteStorageConfigurationId}:
-    post:
-      responses:
-        '201':
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/returnItemResponse"
-        '400':
-          description: Bad request
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Bad request
-        '500':
-          description: Internal server error
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: Internal server error
-      description: Perform item return
-      operationId: returnItemByBarcode
-      requestBody:
-        content:
-          text/plain:
-            schema:
-              type: string
-        required: false
-      parameters:
-        - $ref: "#/components/parameters/item-barcode"
-        - $ref: "#/components/parameters/remote-storage-id"
-        - $ref: "#/components/parameters/x-okapi-token"
-        - $ref: "#/components/parameters/x-okapi-tenant"
-  /Requests/{requestId}/route/{remoteStorageConfigurationId}:
-     post:
-       responses:
-         '200':
-           description: Success check-in by requestId and remoteStorageConfigurationId
-           content:
-             text/plain:
-               schema:
-                 type: string
-         '500':
-           description: Internal server error
-           content:
-             text/plain:
-               schema:
-                 type: string
-                 example: Internal server error
-       operationId: checkInByHoldId
-       parameters:
-         - $ref: "#/components/parameters/request-id"
-         - $ref: "#/components/parameters/remote-storage-id"
-         - $ref: "#/components/parameters/x-okapi-token"
-         - $ref: "#/components/parameters/x-okapi-tenant"
   /Transactions/{dcbTransactionId}/status:
     parameters:
       - in: path
@@ -112,20 +32,6 @@ paths:
       operationId: getDcbTransactionStatus
 components:
   schemas:
-    accessionItem:
-      $ref: schemas/accessionItem.json
-    accessionQueues:
-      allOf:
-        - type: object
-          properties:
-            accessions:
-              type: array
-              items:
-                $ref: "#/components/schemas/accessionItem"
-    checkInItem:
-      $ref: schemas/checkInItem.json
-    returnItemResponse:
-      $ref: schemas/returnItemResponse.json
     TransactionStatus:
       type: object
       properties:
@@ -202,24 +108,6 @@ components:
             type: string
 
   parameters:
-    item-barcode:
-      name: itemBarcode
-      in: path
-      required: true
-      schema:
-        type: string
-    remote-storage-id:
-      name: remoteStorageConfigurationId
-      in: path
-      required: true
-      schema:
-        $ref: schemas/uuid.json
-    request-id:
-      name: requestId
-      in: path
-      required: true
-      schema:
-        type: string
     x-okapi-token:
       name: x-okapi-token
       in: header

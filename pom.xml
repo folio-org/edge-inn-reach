@@ -37,7 +37,7 @@
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
     <maven-release-plugin.version>3.0.0-M7</maven-release-plugin.version>
 
-    <edge-caiasoft.yaml.file>src/main/resources/swagger.api/edge-caiasoft.yaml</edge-caiasoft.yaml.file>
+    <edge-dcb.yaml.file>src/main/resources/swagger.api/edge-dcb.yaml</edge-dcb.yaml.file>
     <sonar.exclusions>src/main/java/org/folio/ed/domain/**</sonar.exclusions>
   </properties>
 
@@ -298,7 +298,7 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <inputSpec>${edge-caiasoft.yaml.file}</inputSpec>
+              <inputSpec>${edge-dcb.yaml.file}</inputSpec>
               <output>${project.build.directory}/generated-sources</output>
               <generatorName>spring</generatorName>
               <modelPackage>${project.groupId}.ed.domain.dto</modelPackage>
