@@ -10,6 +10,7 @@ paths:
       - in: path
         name: dcbTransactionId
         description: The ReShare DCB ID for the transaction being brokered.
+        required: true
         schema:
           type: string
       - $ref: "#/components/parameters/x-okapi-token"
