@@ -13,6 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.folio.edgecommonspring.security.SecurityManagerService;
+import org.folio.spring.config.properties.FolioEnvironment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +41,16 @@ public class SecurityService {
   private SecureStore secureStore;
   private final Map<String, TenantMapping> tenantMappingMap = new ConcurrentHashMap<>();
   private final SecurityManagerService securityManagerService;
+
+
+  @Value("${okapi_url}")
+  private String okapiUrl;
+
+  @Value("${folio.okapi_url}")
+  private String folioOkapiUrl;
+
+  private final FolioEnvironment folioEnvironment;
+
 
   @PostConstruct
   public void init() {
@@ -79,6 +91,7 @@ public class SecurityService {
 
   public ConnectionSystemParameters getOkapiConnectionParameters(String edgeApiKey) {
     log.debug("getOkapiConnectionParameters");
+    log.info("folio environment okapi url {} , {} , {}", folioEnvironment.getOkapiUrl(), folioOkapiUrl, okapiUrl);
     return securityManagerService.getParamsWithToken(edgeApiKey);
   }
 
