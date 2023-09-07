@@ -47,6 +47,10 @@ folio:
   tenant:
     validation:
       enabled: false
+  system-user:
+    username: system-user
+  environment: folio
+  okapi_url: ${Dokapi_url}
   jwt:
     signature:
       algorithm: HS256

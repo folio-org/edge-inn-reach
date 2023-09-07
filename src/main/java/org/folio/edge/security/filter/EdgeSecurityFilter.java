@@ -45,7 +45,8 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
     var okapiParameters = getOkapiConnectionParameters(request.getHeader(AUTHORIZATION));
 
     var requestWrapper = new RequestWithHeaders(request);
-    requestWrapper.putHeader(TOKEN, okapiParameters.getOkapiToken());
+    requestWrapper.putHeader(TOKEN, okapiParameters.getOkapiToken() != null
+      ? okapiParameters.getOkapiToken().accessToken() : null);
     requestWrapper.putHeader(TENANT, okapiParameters.getTenantId());
     /*
       * added as edge-common-spring is removing / not capturing headers apart from x-okapi-token

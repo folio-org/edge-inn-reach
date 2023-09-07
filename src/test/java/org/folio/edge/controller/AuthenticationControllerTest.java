@@ -9,7 +9,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import static org.folio.edge.api.utils.Constants.X_OKAPI_TOKEN;
 import static org.folio.edge.config.JwtConfiguration.DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC;
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BASIC_AUTH_SCHEME;
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_AUTH_SCHEME;
@@ -45,10 +44,12 @@ class AuthenticationControllerTest extends BaseControllerTest {
 
   @BeforeEach
   public void setupBeforeEach() {
-    wireMock.stubFor(post(urlEqualTo("/authn/login"))
+    wireMock.stubFor(post(urlEqualTo("/authn/login-with-expiry"))
         .willReturn(aResponse()
             .withStatus(HttpStatus.CREATED.value())
-            .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
+          .withBody("{\"accessTokenExpiration\": \"2030-09-01T13:04:35Z\",\n \"refreshTokenExpiration\": \"2030-09-08T12:54:35Z\"\n}")
+          .withHeader("set-cookie", "folioAccessToken="+TEST_TOKEN)
+      .withHeader("Content-Type", "application/json")));
   }
 
   @Test
