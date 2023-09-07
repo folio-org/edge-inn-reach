@@ -18,6 +18,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.folio.spring.config.properties.FolioEnvironment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import org.folio.edge.security.service.SecurityService;
@@ -32,10 +34,18 @@ public class EdgeSecurityFilter extends OncePerRequestFilter {
   private final List<String> securityFilterIgnoreURIList;
   private final SecurityService securityService;
 
+  @Value("${okapi_url}")
+  private String okapiUrl;
+
+  @Value("${folio.okapi_url}")
+  private String folioOkapiUrl;
+
+  private final FolioEnvironment folioEnvironment;
+
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                   FilterChain filterChain) throws ServletException, IOException {
-
+    log.info("folio environment okapi url {} , {} , {}", folioEnvironment.getOkapiUrl(), folioOkapiUrl, okapiUrl);
     if (doNotFilter(request)) {
       log.debug("JWT token verification isn't needed, since requested URI [{}] is in the ignore URIs list", request.getRequestURI());
       filterChain.doFilter(request, response);
