@@ -31,6 +31,7 @@ import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import org.folio.edgecommonspring.security.SecurityManagerService;
 import org.folio.spring.model.UserToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,6 @@ import org.folio.edge.controller.base.BaseControllerTest;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
 import org.folio.edge.dto.InnReachResponseDTO;
-import org.folio.edge.security.service.SecurityService;
 import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
 import java.time.Instant;
 
@@ -71,7 +71,7 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
   private TestRestTemplate testRestTemplate;
 
   @MockBean
-  private SecurityService securityService;
+  private SecurityManagerService securityManagerService;
 
   @BeforeEach
   void mockTest() {
@@ -80,7 +80,7 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
       .parseClaimsJws(JWT_TOKEN_STRING);
 
     when(accessTokenService.verifyAccessToken(any())).thenReturn(jwt);
-    when(securityService.getOkapiConnectionParameters(any())).thenReturn(
+    when(securityManagerService.getParamsWithToken(any())).thenReturn(
       new ConnectionSystemParameters().withOkapiToken(new UserToken("token", Instant.MAX)).withTenantId("test"));
 
     wireMock.stubFor(post(LOGIN_URL_PATTERN)
