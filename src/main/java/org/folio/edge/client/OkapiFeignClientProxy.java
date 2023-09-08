@@ -13,10 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 @Log4j2
 public class OkapiFeignClientProxy extends Client.Default {
 
-  {
-    log.info("inside OkapiFeignClientProxy");
-  }
-
   @Value("${okapi_url}")
   private String okapiUrl;
 
@@ -26,7 +22,7 @@ public class OkapiFeignClientProxy extends Client.Default {
 
   @Override
   public Response execute(Request request, Request.Options options) throws IOException {
-   log.info(" OkapiFeignClientProxy execute :: parameter request : {}, options : {}", request.toString(), options.toString());
+   log.debug(" OkapiFeignClientProxy execute :: parameter request : {}, options : {}", request.toString(), options.toString());
     if (!okapiUrl.endsWith("/")) {
       okapiUrl = okapiUrl + "/";
     }
