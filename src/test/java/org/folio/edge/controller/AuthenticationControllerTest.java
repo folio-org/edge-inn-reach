@@ -48,7 +48,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
         .willReturn(aResponse()
             .withStatus(HttpStatus.CREATED.value())
           .withBody("{\"accessTokenExpiration\": \"2030-09-01T13:04:35Z\",\n \"refreshTokenExpiration\": \"2030-09-08T12:54:35Z\"\n}")
-          .withHeader("set-cookie", "folioAccessToken="+TEST_TOKEN)
+          .withHeader("set-cookie", "folioAccessToken=" + TEST_TOKEN)
       .withHeader("Content-Type", "application/json")));
   }
 
