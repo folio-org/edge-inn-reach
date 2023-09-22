@@ -15,13 +15,8 @@ public class DcbTransactionService {
 
   private final DcbClient dcbClient;
 
-  public ResponseEntity<TransactionStatusResponse> getDcbTransactionStatus(
-          String dcbTransactionId,
-          String xOkapiTenant,
-          String xOkapiToken) {
-    log.info("getDcbTransactionStatus:: Getting transaction status for id: {}, xOkapiTenant {}" +
-      ", xOkapiToken {}", dcbTransactionId, xOkapiTenant, xOkapiToken);
-    return dcbClient.getDcbTransactionStatus(dcbTransactionId, xOkapiTenant, xOkapiToken);
+  public ResponseEntity<TransactionStatusResponse> getDcbTransactionStatus(String dcbTransactionId) {
+    log.info("getDcbTransactionStatus:: Getting transaction status for id: {}", dcbTransactionId);
+    return dcbClient.getDcbTransactionStatus(dcbTransactionId);
   }
-
 }

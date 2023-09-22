@@ -1,0 +1,16 @@
+DCBPatron:
+  type: object
+  title: DCBPatron
+  properties:
+    id:
+      description: "The unique item identifier as known to Reshare DCB"
+      $ref: "uuid.yaml"
+    patronGroup:
+      description: "The patron group associated with the patron in Reshare DCB"
+      type: string
+    patronBarcode:
+      description: "The barcode of the patron in Reshare DCB"
+      type: string
+    borrowingLibraryCode:
+      description: "The code in Reshare DCB which identifies the borrowing library"
+      type: string

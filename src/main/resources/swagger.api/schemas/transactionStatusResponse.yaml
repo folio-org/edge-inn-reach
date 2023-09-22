@@ -1,0 +1,9 @@
+TransactionStatusResponse:
+  allOf:
+    - $ref: 'transactionStatus.yaml'
+    - type: object
+      properties:
+        item:
+          $ref: 'dcbItem.yaml'
+        patron:
+          $ref: 'dcbPatron.yaml'

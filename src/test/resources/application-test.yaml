@@ -1,0 +1,20 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: edge-dcb
+  liquibase:
+    enabled: false
+  main:
+    allow-bean-definition-overriding: true
+folio:
+  tenant:
+    validation:
+      enabled: false
+management:
+  endpoints:
+    enabled-by-default: false
+logging:
+  level:
+    org.springframework.web: debug
+

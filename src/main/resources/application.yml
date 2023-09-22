@@ -1,16 +1,10 @@
 Dokapi_url: http://localhost:9130
 okapi_url: ${Dokapi_url}
-Dsecure_store_props: src/main/resources/ephemeral.properties
-secure_store_props: ${Dsecure_store_props}
-Dsecure_store: Ephemeral
-secure_store: ${Dsecure_store}
-Dcaia_soft_client: caiaSoftClient
-caia_soft_client: ${Dcaia_soft_client}
-Dcaia_soft_tenants: caiaSoftClient_tenants
-caia_soft_tenants: ${Dcaia_soft_tenants}
 spring:
   application:
     name: edge-dcb
+  main:
+    allow-bean-definition-overriding: true
   jackson:
     default-property-inclusion: non_null
   liquibase:
@@ -35,7 +29,11 @@ feign:
     config:
       default:
         loggerLevel: full
-
+folio:
+  system-user:
+    username: system-user
+  environment: folio
+  okapi_url: ${Dokapi_url}
 logging:
   level:
     org:
