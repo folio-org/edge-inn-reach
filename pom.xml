@@ -37,7 +37,7 @@
     <openapi-generator-maven-plugin.version>6.2.1</openapi-generator-maven-plugin.version>
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
     <maven-release-plugin.version>3.0.0-M7</maven-release-plugin.version>
-    <folio-spring-support.version>7.2.0-SNAPSHOT</folio-spring-support.version>
+    <folio-spring-support.version>7.2.0</folio-spring-support.version>
     <mockwebserver.version>4.11.0</mockwebserver.version>
 
     <edge-dcb.yaml.file>src/main/resources/swagger.api/edge-dcb.yaml</edge-dcb.yaml.file>
@@ -337,6 +337,7 @@
                 <dateLibrary>java</dateLibrary>
                 <interfaceOnly>true</interfaceOnly>
                 <withXml>true</withXml>
+                <additionalModelTypeAnnotations>@lombok.Builder @lombok.NoArgsConstructor @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
                 <useSpringBoot3>true</useSpringBoot3>
               </configOptions>
             </configuration>

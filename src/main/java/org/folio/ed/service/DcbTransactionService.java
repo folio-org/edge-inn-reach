@@ -1,8 +1,9 @@
 package org.folio.ed.service;
 
 import org.folio.ed.client.DcbClient;
+import org.folio.ed.domain.dto.DcbTransaction;
+import org.folio.ed.domain.dto.TransactionStatus;
 import org.folio.ed.domain.dto.TransactionStatusResponse;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,18 @@ public class DcbTransactionService {
 
   private final DcbClient dcbClient;
 
-  public ResponseEntity<TransactionStatusResponse> getDcbTransactionStatus(String dcbTransactionId) {
-    log.info("getDcbTransactionStatus:: Getting transaction status for id: {}", dcbTransactionId);
+  public TransactionStatusResponse getDcbTransactionStatusById(String dcbTransactionId) {
+    log.info("getDcbTransactionStatusById:: Getting transaction status for id: {}", dcbTransactionId);
     return dcbClient.getDcbTransactionStatus(dcbTransactionId);
+  }
+
+  public TransactionStatusResponse createDCBTransaction(String dcbTransactionId, DcbTransaction dcbTransaction) {
+    log.info("createDCBTransaction:: Creating transaction for id: {}", dcbTransactionId);
+    return dcbClient.createCirculationRequest(dcbTransactionId, dcbTransaction);
+  }
+
+  public TransactionStatusResponse updateDCBTransactionStatus(String dcbTransactionId, TransactionStatus transactionStatus) {
+    log.info("updateDCBTransactionStatus:: Updating status transaction for id: {} to {}", dcbTransactionId, transactionStatus.getStatus());
+    return dcbClient.updateTransactionStatus(dcbTransactionId, transactionStatus);
   }
 }
