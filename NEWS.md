@@ -1,3 +1,12 @@
+## v3.1.0 2023-10-12
+
+## Stories
+* [EDGINREACH-56](https://issues.folio.org/browse/EDGINREACH-56) - Migrate to folio-spring-support v7.0.0
+* [EDGINREACH-59](https://issues.folio.org/browse/EDGINREACH-59) - Implement RTR
+* [EDGINREACH-61](https://issues.folio.org/browse/EDGINREACH-61) - Upgrade Spring version for Poppy
+* [EDGINREACH-58](https://issues.folio.org/browse/EDGINREACH-58) - Use GitHub Workflows api-lint and api-schema-lint and api-doc
+
+
 ## v3.0.1 2023-03-20
 
 ## Stories
