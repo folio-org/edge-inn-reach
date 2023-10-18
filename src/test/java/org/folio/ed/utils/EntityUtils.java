@@ -29,7 +29,6 @@ public class EntityUtils {
       .barcode("DCB_ITEM")
       .title("ITEM")
       .lendingLibraryCode("KU")
-      .pickupLocation("Datalogisk Institute")
       .materialType("book")
       .build();
   }

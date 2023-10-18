@@ -1,7 +1,8 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
-  title: Edge DCB API
-  version: 0.0.1
+  title: Edge DCB FOLIO API
+  description: Edge DCB FOLIO API
+  version: 1.0.0
 servers:
   - url: /dcbService/
 paths:
