@@ -17,6 +17,3 @@ DcbItem:
     lendingLibraryCode:
       description: The code which identifies the lending library
       type: string
-    loanType:
-      description: The “hub-normalized” form of the item loan type, used in the circulation rules for determining the correct loan policy.
-      type: string
