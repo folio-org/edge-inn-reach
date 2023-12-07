@@ -2,16 +2,12 @@ package org.folio.ed.client.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import feign.Response;
-import feign.codec.ErrorDecoder;
-import lombok.SneakyThrows;
 import org.folio.spring.DefaultFolioExecutionContext;
 import org.folio.spring.FolioModuleMetadata;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.spring.utils.RequestUtils;
 import org.springframework.context.annotation.Bean;
 
-import java.nio.charset.StandardCharsets;
 
 /**
  * Feign client configuration to add the Okapi headers (x-okapi-tenant, x-okapi-token, x-okapi-user-id) from incoming
@@ -31,20 +27,6 @@ public class OkapiFeignClientConfig {
       addHeaderIfPresent(template, XOkapiHeaders.TENANT, context.getTenantId());
       addHeaderIfPresent(template, XOkapiHeaders.TOKEN, context.getToken());
       addHeaderIfPresent(template, XOkapiHeaders.USER_ID, context.getUserId());
-    };
-  }
-
-  @Bean
-  public ErrorDecoder errorDecoder() {
-    return new ErrorDecoder() {
-      @SneakyThrows
-      @Override
-      public OkapiFeignClientErrorWrapperException decode(String methodKey, Response response) {
-          // Consume the body InputStream here and pass the result to the exception for OkapiFeignClientExceptionHandler
-          // to use. Do it here instead of the handler because otherwise it gets closed before the handler ever sees it
-          var body = new String(response.body().asInputStream().readAllBytes(), StandardCharsets.UTF_8);
-          return new OkapiFeignClientErrorWrapperException(response.status(), body, response.reason(), response.headers());
-      }
     };
   }
 
