@@ -1,5 +1,8 @@
-Dokapi_url: http://localhost:9130
-okapi_url: ${Dokapi_url}
+server:
+  port: 8081
+secure_store: ephemeral
+secure_store_props: src/main/resources/ephemeral.properties
+okapi_url: http://localhost:9130
 spring:
   application:
     name: edge-dcb
@@ -30,17 +33,14 @@ feign:
       default:
         loggerLevel: full
 folio:
+  tenant:
+    validation:
+      enabled: false
   system-user:
     username: system-user
   environment: folio
-  okapi_url: ${Dokapi_url}
 logging:
   level:
     org:
       springframework:
         cache: OFF
-server.port: 8081
-folio.tenant.validation.enabled: false
-
-# configurations update timeframe (millis)
-configurations.update.timeframe: 3600000
