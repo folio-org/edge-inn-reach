@@ -8,6 +8,7 @@ import org.folio.ed.domain.dto.Errors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,7 +37,8 @@ public class ExceptionHandlingController {
     MissingServletRequestParameterException.class,
     MethodArgumentTypeMismatchException.class,
     HttpMessageNotReadableException.class,
-    IllegalArgumentException.class
+    IllegalArgumentException.class,
+    MethodArgumentNotValidException.class
   })
   public Errors handleValidationErrors(Exception ex) {
     logExceptionMessage(ex);

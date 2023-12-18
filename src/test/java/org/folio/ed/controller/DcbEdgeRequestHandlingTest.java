@@ -143,6 +143,29 @@ class DcbEdgeRequestHandlingTest {
   }
 
   @Test
+  void shouldThrowErrorForInvalidUUID() throws Exception {
+    // Given
+    var apiKey = ApiKeyUtils.generateApiKey(10, TENANT, USERNAME);
+    var responseBody = ""; // Arbitrary string. We don't care about the actual content and an empty string is easy
+    setUpMockAuthnClient(TENANT, TOKEN);
+    var dcbTransaction = createDcbTransaction();
+    dcbTransaction.getItem().setId("123");
+    // When we make a valid request to mod-dcb with the API key set
+    mockDcbServer.enqueue(new MockResponse()
+      .setResponseCode(201)
+      .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+      .setBody(responseBody));
+    var postResponse = mockMvc.perform(post("/dcbService/transactions/{transactionId}?apiKey={apiKey}", TRANSACTION_ID, apiKey)
+        .content(asJsonString(dcbTransaction ))
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+      .andReturn()
+      .getResponse();
+
+    assertThat(postResponse.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+  }
+
+  @Test
   void shouldThrowErrorForFeignException() throws Exception {
     // Given
     var apiKey = ApiKeyUtils.generateApiKey(10, TENANT, USERNAME);
