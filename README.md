@@ -43,6 +43,15 @@ The edge-fqm API is secured via the facilities provided by edge-common. More spe
 | `secure_store`       | `Ephemeral`                               | Type of secure store to use.  Valid: `Ephemeral`, `AwsSsm`, `Vault` |
 | `secure_store_props` | `src/main/resources/ephemeral.properties` | Path to a properties file specifying secure store configuration     |
 
+### Ephemeral properties for Karate runs.
+For Karate Tests to run successfully the `ephemeral.properties` values would be as mentioned below -
+```
+secureStore.type=Ephemeral
+tenants=test_edge_dcb
+test_edge_dcb=dcbClient,password
+```
+*Note: The value `test_edge_dcb` is the test tenant needed will be used by Karate test cases to execute all the scenarios.
+
 
 ### Configuring spring-boot
 
