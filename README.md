@@ -28,6 +28,10 @@ API provides the following URLs for working with DCB :
 # Security
 The edge-fqm API is secured via the facilities provided by edge-common. More specifically, via API Key. See edge-common for additional details.See [edge-common-spring](https://github.com/folio-org/edge-common-spring)
 
+## Required Permissions
+Institutional users should be granted the following permissions in order to use this edge API:
+- `dcb.all`
+
 # Installation/Deployment
 
 ## Configuration
