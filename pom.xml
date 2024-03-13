@@ -40,9 +40,9 @@
 
     <!--Plugin versions-->
     <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
-    <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
-    <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-    <maven-release-plugin.version>3.0.0-M7</maven-release-plugin.version>
+    <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
+    <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+    <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
     <argLine />
 
     <sonar.exclusions>
