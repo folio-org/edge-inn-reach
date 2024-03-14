@@ -49,7 +49,7 @@ folio:
       enabled: false
   system-user:
     username: system-user
-    password: system # This is not used but added to avoid DI errors from folio-spring-system-user
+    password: ${SYSTEM_USER_PASSWORD:system} # This is not used but added to avoid DI errors from folio-spring-system-user
   environment: folio
   okapi_url: ${Dokapi_url}
   jwt:
