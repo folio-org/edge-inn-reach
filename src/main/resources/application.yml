@@ -38,6 +38,7 @@ folio:
       enabled: false
   system-user:
     username: system-user
+    password: ${SYSTEM_USER_PASSWORD} # This is not used but added to avoid DI errors from folio-spring-system-user
   environment: folio
 logging:
   level:

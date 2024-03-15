@@ -9,8 +9,9 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.folio.ed.domain.dto.TransactionStatus;
 import org.folio.edge.core.utils.ApiKeyUtils;
 import org.folio.edgecommonspring.client.EnrichUrlClient;
-import org.folio.edgecommonspring.client.AuthnClient;
 import org.folio.spring.integration.XOkapiHeaders;
+import org.folio.spring.model.UserToken;
+import org.folio.spring.service.SystemUserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,18 +22,18 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.folio.ed.utils.EntityUtils.createDcbTransaction;
 import static org.folio.ed.utils.EntityUtils.createTransactionStatus;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -52,7 +53,7 @@ class DcbEdgeRequestHandlingTest {
   @Autowired
   private EnrichUrlClient enrichUrlClient;
   @MockBean
-  private AuthnClient authnClient;
+  private SystemUserService systemUserService;
   private MockWebServer mockDcbServer;
 
   @BeforeEach
@@ -248,12 +249,8 @@ class DcbEdgeRequestHandlingTest {
   }
 
   private void setUpMockAuthnClient(String tenant, String token) {
-    var responseHeaders = new HttpHeaders() {{
-      add(XOkapiHeaders.TENANT, tenant);
-      add(XOkapiHeaders.TOKEN, token);
-    }};
-    when(authnClient.getApiKey(any(), eq(tenant)))
-      .thenReturn(new ResponseEntity<>(null, responseHeaders, HttpStatus.OK));
+    when(systemUserService.authSystemUser(any(), any(), any()))
+      .thenReturn(new UserToken(token, Instant.now().plus(1, TimeUnit.HOURS.toChronoUnit())));
   }
 
   @SneakyThrows
