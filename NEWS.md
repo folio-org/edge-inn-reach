@@ -1,3 +1,9 @@
+## v3.2.0 2024-03-20
+
+## Stories
+* [EDGINREACH-62](https://issues.folio.org/browse/EDGINREACH-62) - Update Spring version for Quesnelia
+
+
 ## v3.1.0 2023-10-12
 
 ## Stories
