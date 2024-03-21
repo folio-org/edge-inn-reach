@@ -1,5 +1,5 @@
 ## v1.1.0 - 2024-03-21
-* 
+
 * EDGEDCB-2-added endoints
 * EDGEDCB-3-Refactoring of yaml files and include pickup related objects
 * EDGEDCB-4-remove loanType from Item object in edge-dcb module
