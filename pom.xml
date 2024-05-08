@@ -333,7 +333,7 @@
               <generateModelDocumentation>true</generateModelDocumentation>
               <configOptions>
                 <java8>true</java8>
-                <dateLibrary>java</dateLibrary>
+                <dateLibrary>java8</dateLibrary>
                 <interfaceOnly>true</interfaceOnly>
                 <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                 <withXml>true</withXml>

@@ -27,6 +27,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -212,6 +214,40 @@ class DcbEdgeRequestHandlingTest {
       .setBody(responseBody));
     var putResponse = mockMvc.perform(put("/dcbService/transactions/{transactionId}/status?apiKey={apiKey}", transactionId, apiKey)
         .content(asJsonString(createTransactionStatus(TransactionStatus.StatusEnum.AWAITING_PICKUP)))
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON))
+      .andReturn()
+      .getResponse();
+
+    // Then the outgoing response from the edge API should contain the Okapi auth headers and the response body should
+    // match mod-dcb response
+    var headers = mockDcbServer.takeRequest().getHeaders();
+    assertThat(headers.get(XOkapiHeaders.TENANT)).isEqualTo(tenant);
+    assertThat(headers.get(XOkapiHeaders.TOKEN)).isEqualTo(token);
+    assertThat(headers.get(XOkapiHeaders.USER_ID)).isNull();
+    assertThat(putResponse.getContentAsString()).isEqualTo(responseBody);
+  }
+
+  @Test
+  void shouldConvertApiKeyToHeadersForGetTransactionStatusList() throws Exception {
+    // Given
+    String tenant = "test_tenant",
+      username = "user",
+      token = "This is totally a real test token!";
+    var apiKey = ApiKeyUtils.generateApiKey(10, tenant, username);
+    var responseBody = ""; // Arbitrary string. We don't care about the actual content and an empty string is easy
+    setUpMockAuthnClient(tenant, token);
+
+    // When we make a valid request to mod-dcb with the API key set
+    mockDcbServer.enqueue(new MockResponse()
+      .setResponseCode(204)
+      .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+      .setBody(responseBody));
+    var startDate = OffsetDateTime.now(ZoneOffset.UTC);
+    var endDate = OffsetDateTime.now(ZoneOffset.UTC);
+    var putResponse = mockMvc.perform(get("/dcbService/transactions/status?apiKey={apiKey}", apiKey)
+        .param("fromDate", String.valueOf(startDate))
+        .param("toDate", String.valueOf(endDate))
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON))
       .andReturn()
