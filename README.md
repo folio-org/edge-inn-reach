@@ -40,12 +40,12 @@ Institutional users should be granted the following permissions in order to use 
 
 ***System properties***
 
-| Property             | Default                                   | Description                                                         |
-|----------------------|-------------------------------------------|---------------------------------------------------------------------|
-| `server.port`        | `8081`                                    | Server port to listen on                                            |
-| `okapi_url`          | `http://okapi:9130`	                      | Okapi (URL)                                                         |
-| `secure_store`       | `Ephemeral`                               | Type of secure store to use.  Valid: `Ephemeral`, `AwsSsm`, `Vault` |
-| `secure_store_props` | `src/main/resources/ephemeral.properties` | Path to a properties file specifying secure store configuration     |
+| Property                | Default                                   | Description                                                         |
+|-------------------------|-------------------------------------------|---------------------------------------------------------------------|
+| `server.port`           | `8081`                                    | Server port to listen on                                            |
+| `folio.client.okapiUrl` | `http://okapi:9130`                      | Okapi (URL)                                                         |
+| `secure_store`          | `Ephemeral`                               | Type of secure store to use.  Valid: `Ephemeral`, `AwsSsm`, `Vault` |
+| `secure_store_props`    | `src/main/resources/ephemeral.properties` | Path to a properties file specifying secure store configuration     |
 
 ### Ephemeral properties for Karate runs.
 For Karate Tests to run successfully the `ephemeral.properties` values would be as mentioned below -
