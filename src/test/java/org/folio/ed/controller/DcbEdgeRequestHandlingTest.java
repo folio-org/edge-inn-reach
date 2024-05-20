@@ -8,6 +8,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.folio.ed.domain.dto.TransactionStatus;
 import org.folio.edge.core.utils.ApiKeyUtils;
+import org.folio.edgecommonspring.client.EdgeFeignClientProperties;
 import org.folio.edgecommonspring.client.EnrichUrlClient;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.spring.model.UserToken;
@@ -53,7 +54,7 @@ class DcbEdgeRequestHandlingTest {
   @Autowired
   private MockMvc mockMvc;
   @Autowired
-  private EnrichUrlClient enrichUrlClient;
+  private EdgeFeignClientProperties properties;
   @MockBean
   private SystemUserService systemUserService;
   private MockWebServer mockDcbServer;
@@ -62,7 +63,8 @@ class DcbEdgeRequestHandlingTest {
   void setUp() throws IOException {
     mockDcbServer = new MockWebServer();
     mockDcbServer.start();
-    ReflectionTestUtils.setField(enrichUrlClient, "okapiUrl", "http://localhost:" + mockDcbServer.getPort());
+    var url = "http://localhost:" + mockDcbServer.getPort();
+    ReflectionTestUtils.setField(properties, "okapiUrl", url);
   }
 
   @AfterEach

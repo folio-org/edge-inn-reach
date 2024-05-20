@@ -2,7 +2,8 @@ server:
   port: 8081
 secure_store: ephemeral
 secure_store_props: src/main/resources/ephemeral.properties
-okapi_url: http://localhost:9130
+# okapi_url is deprecated. Please use folio.client.okapiUrl instead
+# okapi_url: http://localhost:9130
 spring:
   application:
     name: edge-dcb
@@ -40,6 +41,13 @@ folio:
     username: system-user
     password: ${SYSTEM_USER_PASSWORD} # This is not used but added to avoid DI errors from folio-spring-system-user
   environment: folio
+  client:
+    okapiUrl: https://localhost:9130
+    tls:
+      enabled: false
+#      trustStorePath: classpath:test/test.truststore.bcfks
+#      trustStorePassword: "SecretPassword"
+#      trustStoreType: bcfks
 logging:
   level:
     org:
