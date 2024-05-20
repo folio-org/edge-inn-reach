@@ -3,14 +3,19 @@ package org.folio.edge.domain;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
+import org.folio.edge.domain.dto.InnReachRequest;
 import org.folio.edge.domain.exception.EdgeServiceException;
 import org.folio.edgecommonspring.client.EdgeFeignClientProperties;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.net.URI;
@@ -29,6 +34,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @TestPropertySource(locations = "classpath:application-test.yml")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class InnReachRequestBuilderTest {
 
   private static final String INN_REACH_URI_PREFIX = "/innreach/v2";
@@ -51,6 +57,7 @@ class InnReachRequestBuilderTest {
   private ServletInputStream servletInputStream;
 
   @Test
+  @Order(1)
   public void returnInnReachRequestWithURLandRequestBody() throws IOException {
     var httpServletRequest = getMockHttpServletRequest();
 
@@ -73,9 +80,43 @@ class InnReachRequestBuilderTest {
   }
 
   @Test
+  @Order(2)
   public void throwException_when_cantReadRequestBodyAsString() {
     var httpServletRequest = getMockHttpServletRequest();
     assertThrows(EdgeServiceException.class, () -> innReachRequestBuilder.buildInnReachRequest(httpServletRequest));
+  }
+
+  @Test
+  @Order(3)
+  void testUseDeprecatedOkapiUrl() throws IOException {
+    when(servletInputStream.readAllBytes()).thenReturn(new byte[] {});
+
+    String deprecatedOkapiUrl = "http://deprecated-url";
+    ReflectionTestUtils.setField(innReachRequestBuilder, "okapiUrl", deprecatedOkapiUrl);
+    ReflectionTestUtils.setField(properties, "okapiUrl", "http://new-url");
+
+    var httpServletRequest = getMockHttpServletRequest();
+
+    InnReachRequest innReachRequest = innReachRequestBuilder.buildInnReachRequest(httpServletRequest);
+
+    assertNotNull(innReachRequest);
+    assertEquals(URI.create(deprecatedOkapiUrl + INN_REACH_D2IR_URL_PREFIX + "/resource/subresource"), innReachRequest.getRequestUrl());
+  }
+
+  @Test
+  @Order(4)
+  void testUsePropertiesOkapiUrl() throws IOException {
+    when(servletInputStream.readAllBytes()).thenReturn(new byte[] {});
+
+    ReflectionTestUtils.setField(innReachRequestBuilder, "okapiUrl", null);
+    ReflectionTestUtils.setField(properties, "okapiUrl", "http://new-url");
+
+    var httpServletRequest = getMockHttpServletRequest();
+
+    InnReachRequest innReachRequest = innReachRequestBuilder.buildInnReachRequest(httpServletRequest);
+
+    assertNotNull(innReachRequest);
+    assertEquals(URI.create("http://new-url" + INN_REACH_D2IR_URL_PREFIX + "/resource/subresource"), innReachRequest.getRequestUrl());
   }
 
   private HttpServletRequestWrapper getMockHttpServletRequest() {
