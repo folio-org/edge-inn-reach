@@ -23,7 +23,11 @@ logging:
     org:
       springframework:
         cache: OFF
+
+folio.client.okapiUrl: http://localhost:9130
+
 folio:
   tenant:
     validation:
       enabled: false
+

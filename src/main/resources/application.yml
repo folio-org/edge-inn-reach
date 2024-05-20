@@ -59,6 +59,14 @@ folio:
     claims:
       issuer: folio
     expiration-time-sec: ${Djwt_exp_time_sec}
+  client:
+    okapiUrl: http://localhost:9130
+    tls:
+      enabled: false
+#      trustStorePath: ~/test/test.truststore.bcfks
+#      trustStorePassword: "SecretPassword"
+#      trustStoreType: BCFKS
+
 ########################################
 ## disable standard edge security filter
 ########################################
@@ -68,8 +76,10 @@ edge:
       enabled: false
 debug: false
 
-Dokapi_url: http://localhost:9130
-okapi_url: ${Dokapi_url}
+# Dokapi_url is deprecated. Please use folio.client.okapiUrl instead
+#Dokapi_url: http://localhost:9130
+# okapi_url is deprecated. Please use folio.client.okapiUrl instead
+#okapi_url: ${Dokapi_url}
 
 ###################################################
 # JWT configuration properties

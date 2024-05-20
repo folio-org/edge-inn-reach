@@ -22,7 +22,8 @@ public class BaseControllerTest {
 
   @DynamicPropertySource
   static void registerOkapiURL(DynamicPropertyRegistry registry) {
-    registry.add("okapi_url", () -> wireMock.baseUrl());
+    registry.add("folio.client.okapiUrl", () -> wireMock.baseUrl());
+    registry.add("folio.client.tls.enabled", () -> false);
     log.info("OKAPI Url: {}", wireMock.baseUrl());
   }
 
