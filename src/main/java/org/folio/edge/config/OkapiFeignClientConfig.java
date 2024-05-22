@@ -1,21 +1,19 @@
 package org.folio.edge.config;
 
-import feign.Client;
 import feign.codec.ErrorDecoder;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 
-import org.folio.edge.client.OkapiFeignClientProxy;
 import org.folio.edge.client.error.FeignErrorDecoder;
 
+@AllArgsConstructor
+@Log4j2
 public class OkapiFeignClientConfig {
-
-  @Bean
-  public Client OkapiFeignClient() {
-    return new OkapiFeignClientProxy(null, null);
-  }
 
   @Bean
   public ErrorDecoder feignErrorDecoder() {
     return new FeignErrorDecoder();
   }
+
 }
