@@ -8,7 +8,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.folio.ed.domain.dto.TransactionStatus;
 import org.folio.edge.core.utils.ApiKeyUtils;
-import org.folio.edgecommonspring.client.EnrichUrlClient;
+import org.folio.edgecommonspring.client.EdgeFeignClientProperties;
 import org.folio.spring.integration.XOkapiHeaders;
 import org.folio.spring.model.UserToken;
 import org.folio.spring.service.SystemUserService;
@@ -53,7 +53,7 @@ class DcbEdgeRequestHandlingTest {
   @Autowired
   private MockMvc mockMvc;
   @Autowired
-  private EnrichUrlClient enrichUrlClient;
+  private EdgeFeignClientProperties properties;
   @MockBean
   private SystemUserService systemUserService;
   private MockWebServer mockDcbServer;
@@ -62,7 +62,8 @@ class DcbEdgeRequestHandlingTest {
   void setUp() throws IOException {
     mockDcbServer = new MockWebServer();
     mockDcbServer.start();
-    ReflectionTestUtils.setField(enrichUrlClient, "okapiUrl", "http://localhost:" + mockDcbServer.getPort());
+    var url = "http://localhost:" + mockDcbServer.getPort();
+    ReflectionTestUtils.setField(properties, "okapiUrl", url);
   }
 
   @AfterEach
@@ -75,7 +76,7 @@ class DcbEdgeRequestHandlingTest {
     // Given
     var apiKey = ApiKeyUtils.generateApiKey(10, TENANT, USERNAME);
     var responseBody = ""; // Arbitrary string. We don't care about the actual content and an empty string is easy
-    setUpMockAuthnClient(TENANT, TOKEN);
+    setUpMockAuthnClient(TOKEN);
 
     // When we make a valid request to mod-dcb with the API key set
     mockDcbServer.enqueue(new MockResponse()
@@ -100,7 +101,7 @@ class DcbEdgeRequestHandlingTest {
     // Given
     var apiKey = ApiKeyUtils.generateApiKey(10, TENANT, USERNAME);
     var responseBody = ""; // Arbitrary string. We don't care about the actual content and an empty string is easy
-    setUpMockAuthnClient(TENANT, TOKEN);
+    setUpMockAuthnClient(TOKEN);
     // When we make a valid request to mod-dcb with the API key set
     mockDcbServer.enqueue(new MockResponse()
       .setResponseCode(201)
@@ -127,7 +128,7 @@ class DcbEdgeRequestHandlingTest {
     // Given
     var apiKey = ApiKeyUtils.generateApiKey(10, TENANT, USERNAME);
     var responseBody = ""; // Arbitrary string. We don't care about the actual content and an empty string is easy
-    setUpMockAuthnClient(TENANT, TOKEN);
+    setUpMockAuthnClient(TOKEN);
     var dcbTransaction = createDcbTransaction();
     dcbTransaction.setRole(null);
     // When we make a valid request to mod-dcb with the API key set
@@ -150,7 +151,7 @@ class DcbEdgeRequestHandlingTest {
     // Given
     var apiKey = ApiKeyUtils.generateApiKey(10, TENANT, USERNAME);
     var responseBody = ""; // Arbitrary string. We don't care about the actual content and an empty string is easy
-    setUpMockAuthnClient(TENANT, TOKEN);
+    setUpMockAuthnClient(TOKEN);
     var dcbTransaction = createDcbTransaction();
     dcbTransaction.getItem().setId("123");
     // When we make a valid request to mod-dcb with the API key set
@@ -172,7 +173,7 @@ class DcbEdgeRequestHandlingTest {
   void shouldThrowErrorForFeignException() throws Exception {
     // Given
     var apiKey = ApiKeyUtils.generateApiKey(10, TENANT, USERNAME);
-    setUpMockAuthnClient(TENANT, TOKEN);
+    setUpMockAuthnClient(TOKEN);
     var dcbTransaction = createDcbTransaction();
     // When we make a valid request to mod-dcb with the API key set
     org.folio.ed.domain.dto.Errors errors = org.folio.ed.domain.dto.Errors.builder()
@@ -205,7 +206,7 @@ class DcbEdgeRequestHandlingTest {
     var transactionId = "123";
     var apiKey = ApiKeyUtils.generateApiKey(10, tenant, username);
     var responseBody = ""; // Arbitrary string. We don't care about the actual content and an empty string is easy
-    setUpMockAuthnClient(tenant, token);
+    setUpMockAuthnClient(token);
 
     // When we make a valid request to mod-dcb with the API key set
     mockDcbServer.enqueue(new MockResponse()
@@ -236,7 +237,7 @@ class DcbEdgeRequestHandlingTest {
       token = "This is totally a real test token!";
     var apiKey = ApiKeyUtils.generateApiKey(10, tenant, username);
     var responseBody = ""; // Arbitrary string. We don't care about the actual content and an empty string is easy
-    setUpMockAuthnClient(tenant, token);
+    setUpMockAuthnClient(token);
 
     // When we make a valid request to mod-dcb with the API key set
     mockDcbServer.enqueue(new MockResponse()
@@ -268,7 +269,7 @@ class DcbEdgeRequestHandlingTest {
     var apiKey = ApiKeyUtils.generateApiKey(10, TENANT, USERNAME);
     var dcbResponseCode = HttpStatus.I_AM_A_TEAPOT.value(); // Arbitrary HTTP error status code
     var dcbResponseBody = "I'm a teapot, not an dcb transaction!";
-    setUpMockAuthnClient(TENANT, TOKEN);
+    setUpMockAuthnClient(TOKEN);
 
     // When mod-dcb responds with an error
     mockDcbServer.enqueue(new MockResponse()
@@ -284,7 +285,7 @@ class DcbEdgeRequestHandlingTest {
     assertThat(response.getContentAsString()).contains(dcbResponseBody);
   }
 
-  private void setUpMockAuthnClient(String tenant, String token) {
+  private void setUpMockAuthnClient(String token) {
     when(systemUserService.authSystemUser(any(), any(), any()))
       .thenReturn(new UserToken(token, Instant.now().plus(1, TimeUnit.HOURS.toChronoUnit())));
   }
