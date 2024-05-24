@@ -155,6 +155,18 @@ spring.ssl.bundle.jks.web-server.keystore.type=BCFKS
 server.ssl.bundle=web-server
 server.port=8443
 ```
+Also, you can use the relaxed binding with the upper case format, which is recommended when using system environment variables.
+```properties
+SPRING_SSL_BUNDLE_JKS_WEBSERVER_KEY_PASSWORD=SecretPassword
+SPRING_SSL_BUNDLE_JKS_WEBSERVER_KEY_ALIAS=localhost
+SPRING_SSL_BUNDLE_JKS_WEBSERVER_KEYSTORE_LOCATION=classpath:test/test.keystore.bcfks
+SPRING_SSL_BUNDLE_JKS_WEBSERVER_KEYSTORE_PASSWORD=SecretPassword
+SPRING_SSL_BUNDLE_JKS_WEBSERVER_KEYSTORE_TYPE=BCFKS
+
+SERVER_SSL_BUNDLE=web-server
+SERVER_PORT=8443
+```
+
 ### TLS Configuration for Feign HTTP Clients
 
 To configure Transport Layer Security (TLS) for HTTP clients created using Feign annotations in the edge module, you can use the following configuration parameters. These parameters allow you to specify trust store details necessary for setting up TLS for Feign clients.
@@ -194,6 +206,14 @@ folio.client.tls.enabled=true
 folio.client.tls.trustStorePath=classpath:test/test.truststore.bcfks
 folio.client.tls.trustStorePassword=SecretPassword
 folio.client.tls.trustStoreType=bcfks
+```
+Also, you can use the relaxed binding with the upper case format, which is recommended when using system environment variables.
+```properties
+FOLIO_CLIENT_OKAPIURL=https://okapi:443
+FOLIO_CLIENT_TLS_ENABLED=true
+FOLIO_CLIENT_TLS_TRUSTSTOREPATH=classpath:test/test.truststore.bcfks
+FOLIO_CLIENT_TLS_TRUSTSTOREPASSWORD=SecretPassword
+FOLIO_CLIENT_TLS_TRUSTSTORETYPE=bcfks
 ```
 
 ### Issue tracker
