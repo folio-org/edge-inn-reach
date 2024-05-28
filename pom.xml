@@ -11,7 +11,7 @@
 
   <groupId>org.folio</groupId>
   <artifactId>edge-dcb</artifactId>
-  <version>1.1.1-SNAPSHOT</version>
+  <version>1.1.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <licenses>
@@ -359,7 +359,7 @@
               <generateModelDocumentation>true</generateModelDocumentation>
               <configOptions>
                 <java8>true</java8>
-                <dateLibrary>java8</dateLibrary>
+                <dateLibrary>java</dateLibrary>
                 <interfaceOnly>true</interfaceOnly>
                 <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
                 <withXml>true</withXml>

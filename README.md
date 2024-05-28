@@ -23,7 +23,6 @@ API provides the following URLs for working with DCB :
 | GET | /dcbService/transactions/{dcbTransactionId}/status | Get transaction status across circulation institutions |
 | PUT | /dcbService/transactions/{dcbTransactionId}/status | Update transaction status across circulation institutions |
 | POST | /dcbService/transactions/{dcbTransactionId}        | Create a dcb transaction for circulation institutions  |
-| GET    | /dcbService/transactions/status                    | get list of transaction updated between a given query range |
 
 # Security
 The edge-fqm API is secured via the facilities provided by edge-common. More specifically, via API Key. See edge-common for additional details.See [edge-common-spring](https://github.com/folio-org/edge-common-spring)

@@ -1,3 +1,9 @@
+## v1.1.1 - 2024-05-28
+
+* EDGEDCB-21-Enhance DcbClient TLS Configuration for Secure Connections to OKAPI
+* EDGEDCB-22-Enhance HTTP Endpoint Security with TLS and FIPS-140-2 Compliant Cryptography
+
+
 ## v1.1.0 - 2024-03-21
 
 * EDGEDCB-2-added endoints
