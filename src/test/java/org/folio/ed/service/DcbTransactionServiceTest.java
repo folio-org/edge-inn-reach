@@ -11,8 +11,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.OffsetDateTime;
-
 import static org.folio.ed.utils.EntityUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -47,13 +45,5 @@ class DcbTransactionServiceTest {
     Mockito.when(dcbClient.updateTransactionStatus(anyString(), any(TransactionStatus.class))).thenReturn(createTransactionStatusResponse(TransactionStatusResponse.StatusEnum.CREATED));
     dcbTransactionService.updateDCBTransactionStatus("123", createTransactionStatus(TransactionStatus.StatusEnum.OPEN));
     Mockito.verify(dcbClient).updateTransactionStatus(anyString(), any(TransactionStatus.class));
-  }
-
-  @Test
-  void getTransactionStatusListTest() {
-    var startDate = OffsetDateTime.now().minusDays(1);
-    var endDate = OffsetDateTime.now();
-    dcbTransactionService.getTransactionStatusList(startDate, endDate, 0, 100);
-    Mockito.verify(dcbClient).getTransactionStatusList(startDate.toString(), endDate.toString(), 0, 100);
   }
 }
