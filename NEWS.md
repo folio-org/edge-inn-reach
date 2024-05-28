@@ -1,4 +1,4 @@
-## v3.2.1 2024-05-28
+## v3.2.2 2024-05-28
 
 ## Stories
 * [EDGINREACH-64](https://issues.folio.org/browse/EDGINREACH-64) - Enhance all FeignClients TLS Configurations for Secure Connections to OKAPI
