@@ -1,3 +1,8 @@
+## v3.2.3 2024-05-29
+
+## Stories
+* [EDGINREACH-67](https://issues.folio.org/browse/EDGINREACH-67) - edge-inn-reach issue
+
 ## v3.2.2 2024-05-28
 
 ## Stories
