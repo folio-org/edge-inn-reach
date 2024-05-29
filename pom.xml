@@ -11,7 +11,7 @@
 
   <groupId>org.folio</groupId>
   <artifactId>edge-dcb</artifactId>
-  <version>1.1.2-SNAPSHOT</version>
+  <version>1.1.2</version>
   <packaging>jar</packaging>
 
   <licenses>
@@ -412,7 +412,7 @@
     <url>https://github.com/folio-org/${project.artifactId}</url>
     <connection>scm:git:git://github.com/folio-org/${project.artifactId}.git</connection>
     <developerConnection>scm:git:git@github.com:folio-org/${project.artifactId}.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>v1.1.2</tag>
   </scm>
 
 </project>
