@@ -33,12 +33,10 @@
     <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
     <folio-spring-support.version>8.1.0</folio-spring-support.version>
     <mockwebserver.version>4.11.0</mockwebserver.version>
+    <folio-tls-utils.version>1.5.0</folio-tls-utils.version>
 
     <edge-dcb.yaml.file>src/main/resources/swagger.api/edge-dcb.yaml</edge-dcb.yaml.file>
     <sonar.exclusions>src/main/java/org/folio/ed/domain/**, src/main/java/org/folio/ed/EdgeDcbApplication.java</sonar.exclusions>
-    <bc-fips.version>1.0.2.5</bc-fips.version>
-    <bcpkix-fips.version>1.0.7</bcpkix-fips.version>
-    <bctls-fips.version>1.0.19</bctls-fips.version>
   </properties>
 
   <dependencies>
@@ -146,19 +144,9 @@
       <version>${mapstruct.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bc-fips</artifactId>
-      <version>${bc-fips.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcpkix-fips</artifactId>
-      <version>${bcpkix-fips.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bctls-fips</artifactId>
-      <version>${bctls-fips.version}</version>
+      <groupId>org.folio</groupId>
+      <artifactId>folio-tls-utils</artifactId>
+      <version>${folio-tls-utils.version}</version>
     </dependency>
 
     <!-- Test dependencies -->
