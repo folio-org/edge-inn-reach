@@ -1,3 +1,7 @@
+## v1.1.1 - 2024-05-29
+
+* EDGEDCB-22-Re-release the fix for this Jira.
+
 ## v1.1.1 - 2024-05-28
 
 * EDGEDCB-21-Enhance DcbClient TLS Configuration for Secure Connections to OKAPI
