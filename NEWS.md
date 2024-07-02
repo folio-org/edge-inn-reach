@@ -1,3 +1,8 @@
+## v3.2.4 2024-07-02
+
+## Stories
+* [EDGINREACH-69](https://issues.folio.org/browse/EDGINREACH-69) - edge-common-spring 2.4.4, Spring Boot 3.2.6 fixing vulns
+
 ## v3.2.3 2024-05-29
 
 ## Stories
