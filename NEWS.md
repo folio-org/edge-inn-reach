@@ -1,3 +1,20 @@
+## v3.2.4 2024-07-02
+
+## Stories
+* [EDGINREACH-69](https://issues.folio.org/browse/EDGINREACH-69) - edge-common-spring 2.4.4, Spring Boot 3.2.6 fixing vulns
+
+## v3.2.3 2024-05-29
+
+## Stories
+* [EDGINREACH-67](https://issues.folio.org/browse/EDGINREACH-67) - edge-inn-reach issue
+
+## v3.2.2 2024-05-28
+
+## Stories
+* [EDGINREACH-64](https://issues.folio.org/browse/EDGINREACH-64) - Enhance all FeignClients TLS Configurations for Secure Connections to OKAPI
+* [EDGINREACH-65](https://issues.folio.org/browse/EDGINREACH-65) - Enhance HTTP Endpoint Security with TLS and FIPS-140-2 Compliant Cryptography
+
+
 ## v3.2.0 2024-03-20
 
 ## Stories
