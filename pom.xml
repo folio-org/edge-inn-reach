@@ -9,7 +9,7 @@
   </parent>
   <groupId>org.folio</groupId>
   <artifactId>edge-inn-reach</artifactId>
-  <version>3.2.4-SNAPSHOT</version>
+  <version>3.2.4</version>
   <name>edge-inn-reach</name>
   <description>INN-REACH system Edge API module</description>
 
@@ -343,7 +343,7 @@
     <url>https://github.com/folio-org/${project.artifactId}</url>
     <connection>scm:git:git://github.com/folio-org/${project.artifactId}.git</connection>
     <developerConnection>scm:git:git@github.com:folio-org/${project.artifactId}.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>v3.2.4</tag>
   </scm>
 
   <repositories>
