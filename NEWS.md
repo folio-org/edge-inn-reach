@@ -1,4 +1,10 @@
-## v1.1.1 - 2024-05-29
+## v1.1.3 - 2024-05-29
+
+* EDGEDCB-26-edge-common-spring 2.4.5: AwsParamStore to support FIPS-approved crypto modules
+* EDGEDCB-25-Spring Boot 3.2.6, edge-common-spring 2.4.4 fixing vulns
+
+
+## v1.1.2 - 2024-05-29
 
 * EDGEDCB-22-Re-release the fix for this Jira.
 
