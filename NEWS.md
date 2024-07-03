@@ -1,3 +1,9 @@
+## v3.2.5 2024-07-03
+
+## Stories
+* [EDGINREACH-71](https://issues.folio.org/browse/EDGINREACH-71) - edge-common-spring 2.4.5: AwsParamStore to support FIPS-approved crypto modules
+
+
 ## v3.2.4 2024-07-02
 
 ## Stories
