@@ -1,3 +1,13 @@
+## v3.2.6 2024-10-25
+
+### Bugfix
+* [EDGINREACH-75](https://folio-org.atlassian.net/browse/EDGINREACH-75) - edge-common-spring 2.4.6, Spring Boot 3.2.10 fixing vulns
+
+## v3.2.5 2024-07-03
+
+## Stories
+* [EDGINREACH-71](https://folio-org.atlassian.net/browse/EDGINREACH-71) - edge-common-spring 2.4.5: AwsParamStore to support FIPS-approved crypto modules
+
 ## v3.2.4 2024-07-02
 
 ## Stories
