@@ -24,7 +24,7 @@
   <properties>
     <java.version>17</java.version>
     <edge-common-spring.version>2.4.6</edge-common-spring.version>
-    <edge-common.version>4.6.0</edge-common.version>
+    <edge-common.version>4.7.2</edge-common.version>
     <mapstruct.version>1.6.2</mapstruct.version>
     <wiremock-standalone.version>3.4.2</wiremock-standalone.version>
     <awaitility.version>4.2.2</awaitility.version>
