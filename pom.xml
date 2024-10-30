@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.6</version>
+    <version>3.3.5</version>
     <relativePath />
   </parent>
   <groupId>org.folio</groupId>
@@ -24,12 +24,12 @@
     <java.version>17</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <folio-spring-base.version>8.1.0</folio-spring-base.version>
-    <edge-common-spring.version>2.4.5</edge-common-spring.version>
+    <folio-spring-base.version>8.2.0</folio-spring-base.version>
+    <edge-common-spring.version>2.4.6</edge-common-spring.version>
 
-    <openapi-generator.version>7.3.0</openapi-generator.version>
+    <openapi-generator.version>7.9.0</openapi-generator.version>
     <openapi.input.file>${project.basedir}/src/main/resources/swagger.api/edge-inn-reach.yaml</openapi.input.file>
-    <mapstruct.version>1.5.3.Final</mapstruct.version>
+    <mapstruct.version>1.6.2</mapstruct.version>
     <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
     <micrometer.version>1.10.3</micrometer.version>
 
@@ -40,9 +40,9 @@
 
     <!--Plugin versions-->
     <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
-    <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
+    <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
     <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
-    <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
+    <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
     <argLine />
 
     <sonar.exclusions>
