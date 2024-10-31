@@ -1,3 +1,13 @@
+## v3.3.0 2024-10-31
+
+## Stories
+* [EDGINREACH-64](https://folio-org.atlassian.net/browse/EDGINREACH-64) - Enhance all FeignClients TLS Configurations for Secure Connections to OKAPI
+* [EDGINREACH-65](https://issues.folio.org/browse/EDGINREACH-65) - Enhance HTTP Endpoint Security with TLS and FIPS-140-2 Compliant Cryptography
+* [EDGINREACH-67](https://folio-org.atlassian.net/browse/EDGINREACH-67) - edge-inn-reach issue
+* [EDGINREACH-69](https://folio-org.atlassian.net/browse/EDGINREACH-69) - edge-common-spring 2.4.4, Spring Boot 3.2.6 fixing vulns
+* [EDGINREACH-71](https://folio-org.atlassian.net/browse/EDGINREACH-71) - edge-common-spring 2.4.5: AwsParamStore to support FIPS-approved crypto modules
+* [EDGINREACH-76](https://folio-org.atlassian.net/browse/EDGINREACH-76) - Update pom.xml and interface dependencies for ramsons
+
 ## v3.2.4 2024-07-02
 
 ## Stories
