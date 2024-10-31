@@ -1,3 +1,12 @@
+## v1.2.0 - 2024-10-31
+
+* EDGEDCB-20 - Implement GET API for transaction updates
+* EDGEDCB-21 - Enhance DcbClient TLS Configuration for Secure Connections to OKAPI
+* EDGEDCB-22 - Enhance HTTP Endpoint Security with TLS and FIPS-140-2 Compliant Cryptography
+* EDGEDCB-25 - Spring Boot 3.2.6, edge-common-spring 2.4.4 fixing vulns
+* EDGEDCB-26 - edge-common-spring 2.4.5: AwsParamStore to support FIPS-approved crypto modules
+* EDGEDCB-30 - Update pom.xml and interface dependencies for ramsons
+
 ## v1.1.0 - 2024-03-21
 
 * EDGEDCB-2-added endoints
