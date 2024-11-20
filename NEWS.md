@@ -1,3 +1,7 @@
+## v1.2.1 - 2024-11-20
+
+* Changes relate to TLS support
+
 ## v1.2.0 - 2024-10-31
 
 * EDGEDCB-20 - Implement GET API for transaction updates
