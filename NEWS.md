@@ -1,3 +1,7 @@
+## v3.3.1 2024-11-20
+
+* Changes relate to TLS support
+
 ## v3.3.0 2024-10-31
 
 ## Stories
