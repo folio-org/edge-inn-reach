@@ -36,7 +36,6 @@ import org.folio.spring.model.UserToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 
@@ -45,6 +44,8 @@ import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
 import org.folio.edge.dto.InnReachResponseDTO;
 import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
 import java.time.Instant;
 
 public class InnReachProxyControllerTest extends BaseControllerTest {
@@ -64,13 +65,13 @@ public class InnReachProxyControllerTest extends BaseControllerTest {
   public static final String JWT_TOKEN_STRING = readFileContentAsString("/jwt/token/jwt-with-authorities.txt");
   public static final String AUTH_TOKEN_VALUE = String.format("%s %s", "Bearer", JWT_TOKEN_STRING);
 
-  @MockBean
+  @MockitoBean
   private AccessTokenService<JwtAccessToken, Jws<Claims>> accessTokenService;
 
   @Autowired
   private TestRestTemplate testRestTemplate;
 
-  @MockBean
+  @MockitoBean
   private SecurityManagerService securityManagerService;
 
   @BeforeEach
