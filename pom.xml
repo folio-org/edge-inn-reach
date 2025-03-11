@@ -25,7 +25,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <folio-spring-base.version>9.0.0</folio-spring-base.version>
-    <edge-common-spring.version>3.0.0-SNAPSHOT</edge-common-spring.version>
+    <edge-common-spring.version>3.1.0-SNAPSHOT</edge-common-spring.version>
 
     <openapi-generator.version>7.12.0</openapi-generator.version>
     <openapi.input.file>${project.basedir}/src/main/resources/swagger.api/edge-inn-reach.yaml</openapi.input.file>

@@ -3,7 +3,7 @@ package org.folio.edge.security.store;
 import java.util.Optional;
 import java.util.Properties;
 
-import com.amazonaws.services.simplesystemsmanagement.model.GetParameterRequest;
+import software.amazon.awssdk.services.ssm.model.GetParameterRequest;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,7 +24,7 @@ public class TenantAwareAWSParamStore extends AwsParamStore {
     try {
       return getParameterFromSSM(getParameterRequest);
     } catch (Exception e) {
-      log.warn("Cannot get tenants list from key: " + getParameterRequest.getName(), e);
+      log.warn("Cannot get tenants list from key: " + getParameterRequest.name(), e);
       return Optional.empty();
     }
   }
@@ -34,18 +34,20 @@ public class TenantAwareAWSParamStore extends AwsParamStore {
     try {
       return getParameterFromSSM(getParameterRequest);
     } catch (Exception e) {
-      log.warn("Cannot get tenants mappings list from key: " + getParameterRequest.getName(), e);
+      log.warn("Cannot get tenants mappings list from key: " + getParameterRequest.name(), e);
       return Optional.empty();
     }
   }
 
   private GetParameterRequest buildGetParameterRequest(String key, String defaultKey) {
     String name = StringUtils.isNotEmpty(key) ? key : defaultKey;
-    return new GetParameterRequest().withName(name).withWithDecryption(true);
+    return  GetParameterRequest.builder()
+      .name(name)
+      .withDecryption(true).build();
   }
 
   private Optional<String> getParameterFromSSM(GetParameterRequest getParameterRequest) {
-    return Optional.of(this.ssm.getParameter(getParameterRequest).getParameter().getValue());
+    return Optional.of(this.ssm.getParameter(getParameterRequest).parameter().value());
   }
 
 }
