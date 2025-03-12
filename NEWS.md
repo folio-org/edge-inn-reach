@@ -1,3 +1,17 @@
+## v3.4.0 2025-03-12
+* Migrated from Java 17 to Java 21 version
+* Migrated AWS SDK for Java from 1.x to 2.x
+* Migrated from Spring-Boot 3.3.5 to 3.4.3 
+* Upgraded dependencies versions: 
+ - folio-spring-base 9.0.0
+ - edge-common-spring 3.0.0
+ - mupstruct 1.6.3
+ - micrometer 5.2.0
+ - maven-surefire-plugin 3.5.2
+* Upgraded interfaces versions:
+ - users 16.4
+ - permissions 5.8
+
 ## v3.3.1 2024-11-20
 
 * Changes relate to TLS support
