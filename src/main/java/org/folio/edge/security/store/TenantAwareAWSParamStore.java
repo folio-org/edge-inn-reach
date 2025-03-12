@@ -43,7 +43,8 @@ public class TenantAwareAWSParamStore extends AwsParamStore {
     String name = StringUtils.isNotEmpty(key) ? key : defaultKey;
     return  GetParameterRequest.builder()
       .name(name)
-      .withDecryption(true).build();
+      .withDecryption(true)
+      .build();
   }
 
   private Optional<String> getParameterFromSSM(GetParameterRequest getParameterRequest) {
