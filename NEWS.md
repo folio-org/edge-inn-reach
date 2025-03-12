@@ -6,7 +6,11 @@
  - folio-spring-base 9.0.0
  - edge-common-spring 3.0.0
  - mupstruct 1.6.3
- - micrometer 5.2.0
+ - micrometer 1.14.5
+ - wiremock-standalone 3.12.1
+ - junit-extensions 2.6.0
+ - mockito 5.16.0
+ - mockito-inline 5.2.0
  - maven-surefire-plugin 3.5.2
 * Upgraded interfaces versions:
  - users 16.4
