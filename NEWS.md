@@ -1,3 +1,6 @@
+## v3.5.0 2025-03-18
+* release edge-inn-reach for app-inn-reach release
+
 ## v3.4.0 2025-03-13
 * [EDGINREACH-79](https://folio-org.atlassian.net/browse/EDGINREACH-79) - Migrate AWS SDK for Java from 1.x to 2.x
 * [FOLIO-4231](https://folio-org.atlassian.net/browse/FOLIO-423179) - Update to Java 21
