@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-import org.folio.edge.security.SecurityManagerService;
+import org.folio.edge.security.SecurityManagerServiceDev;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -40,7 +40,7 @@ public class SecurityService {
 
   private SecureStore secureStore;
   private final Map<String, TenantMapping> tenantMappingMap = new ConcurrentHashMap<>();
-  private final SecurityManagerService securityManagerService;
+  private final SecurityManagerServiceDev securityManagerServiceDev;
 
   @PostConstruct
   public void init() {
@@ -87,13 +87,13 @@ public class SecurityService {
   public ConnectionSystemParameters getInnReachConnectionParameters(UUID localServerKey) {
     log.debug("getInnReachConnectionParameters");
     var tenantMapping = getTenantMappingByLocalServerKey(localServerKey);
-    return securityManagerService.getParamsDependingOnCachePresent(securityStoreConfigProperties.getInnreachClient(),
+    return securityManagerServiceDev.getParamsDependingOnCachePresent(securityStoreConfigProperties.getInnreachClient(),
       tenantMapping.getTenantId(), tenantMapping.getUsername());
   }
 
   public ConnectionSystemParameters getOkapiConnectionParameters(String edgeApiKey) {
     log.debug("getOkapiConnectionParameters");
-    return securityManagerService.getParamsWithToken(edgeApiKey);
+    return securityManagerServiceDev.getParamsWithToken(edgeApiKey);
   }
 
 }

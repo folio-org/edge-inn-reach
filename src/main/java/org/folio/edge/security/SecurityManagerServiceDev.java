@@ -30,7 +30,7 @@ import static org.folio.edge.api.utils.Constants.PROP_SECURE_STORE_TYPE;
 @Log4j2
 @Service
 @RequiredArgsConstructor
-public class SecurityManagerService {
+public class SecurityManagerServiceDev {
 
   private final SystemUserService systemUserService;
   private SecureStore secureStore;
