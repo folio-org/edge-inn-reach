@@ -8,7 +8,6 @@ USER folio
 
 # Copy your fat jar to the container; if multiple *.jar files exist the .dockerignore file excludes others
 COPY target/*.jar ${JAVA_APP_DIR}
-COPY src/main/resources/ephemeral.properties /etc/edge/
 
 # Expose this port locally in the container.
 EXPOSE 8081

@@ -1,12 +1,15 @@
 package org.folio.edge.security.service;
 
-import static org.folio.edge.api.utils.util.PropertiesUtil.getProperties;
-
 import jakarta.annotation.PostConstruct;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,6 +25,7 @@ import org.folio.edge.domain.dto.TenantMapping;
 import org.folio.edge.security.store.SecureStoreFactory;
 import org.folio.edge.security.store.SecureTenantsProducer;
 import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
+import org.springframework.util.ResourceUtils;
 
 @Log4j2
 @Component
@@ -42,7 +46,7 @@ public class SecurityService {
   public void init() {
     log.debug("Starting initialization with securityStoreConfigProperties: [{}]", securityStoreConfigProperties);
 
-    var secureStoreProps = getProperties(securityStoreConfigProperties.getSecureStorePropsFile());
+    var secureStoreProps = fetchProperties(); //getProperties(securityStoreConfigProperties.getSecureStorePropsFile());
     log.debug("Secure store properties have been initialized: [{}]", secureStoreProps);
 
     this.secureStore = SecureStoreFactory.getSecureStore(securityStoreConfigProperties.getSecureStoreType(), secureStoreProps);
@@ -60,6 +64,18 @@ public class SecurityService {
     );
 
     log.info("Tenant map has been initialized: [{}]", tenantMappingMap);
+  }
+
+  private static Properties fetchProperties(){
+    Properties properties = new Properties();
+    try {
+      File file = ResourceUtils.getFile("classpath:ephemeral.properties");
+      InputStream in = new FileInputStream(file);
+      properties.load(in);
+    } catch (IOException e) {
+      log.error(e.getMessage());
+    }
+    return properties;
   }
 
   public TenantMapping getTenantMappingByLocalServerKey(UUID localServerKey) {
