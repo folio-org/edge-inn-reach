@@ -13,7 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.folio.edgecommonspring.security.SecurityManagerService;
+
+import org.folio.edge.security.SecurityManagerService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -69,7 +70,6 @@ public class SecurityService {
     Properties properties = new Properties();
     try {
       Resource resource = new ClassPathResource("ephemeral.properties");
-      //File file = ResourceUtils.getFile("classpath:ephemeral.properties");
       InputStream in = resource.getInputStream();
       properties.load(in);
     } catch (IOException e) {
