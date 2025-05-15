@@ -102,5 +102,5 @@ innreach_tenants: ${Dinnreach_tenants}
 Dinnreach_tenants_mappings: innreach_tenants_mappings
 innreach_tenants_mappings: ${Dinnreach_tenants_mappings}
 
-Dinnreach_client: diku_admin
+Dinnreach_client: m.yusuf
 innreach_client: ${Dinnreach_client}
