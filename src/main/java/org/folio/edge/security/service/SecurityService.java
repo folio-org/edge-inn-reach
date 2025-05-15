@@ -2,8 +2,6 @@ package org.folio.edge.security.service;
 
 import jakarta.annotation.PostConstruct;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -16,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.folio.edgecommonspring.security.SecurityManagerService;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +25,6 @@ import org.folio.edge.domain.dto.TenantMapping;
 import org.folio.edge.security.store.SecureStoreFactory;
 import org.folio.edge.security.store.SecureTenantsProducer;
 import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
-import org.springframework.util.ResourceUtils;
 
 @Log4j2
 @Component
@@ -46,7 +45,7 @@ public class SecurityService {
   public void init() {
     log.debug("Starting initialization with securityStoreConfigProperties: [{}]", securityStoreConfigProperties);
 
-    var secureStoreProps = fetchProperties(); //getProperties(securityStoreConfigProperties.getSecureStorePropsFile());
+    var secureStoreProps = fetchProperties();
     log.debug("Secure store properties have been initialized: [{}]", secureStoreProps);
 
     this.secureStore = SecureStoreFactory.getSecureStore(securityStoreConfigProperties.getSecureStoreType(), secureStoreProps);
@@ -69,8 +68,9 @@ public class SecurityService {
   private static Properties fetchProperties(){
     Properties properties = new Properties();
     try {
-      File file = ResourceUtils.getFile("classpath:ephemeral.properties");
-      InputStream in = new FileInputStream(file);
+      Resource resource = new ClassPathResource("ephemeral.properties");
+      //File file = ResourceUtils.getFile("classpath:ephemeral.properties");
+      InputStream in = resource.getInputStream();
       properties.load(in);
     } catch (IOException e) {
       log.error(e.getMessage());
