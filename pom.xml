@@ -36,7 +36,7 @@
     <!--Test properties-->
     <wiremock-standalone.version>3.13.1</wiremock-standalone.version>
     <junit-extensions.version>2.6.0</junit-extensions.version>
-    <mockito.version>5.18.0</mockito.version>
+    <mockito.version>5.19.0</mockito.version>
 
     <!--Plugin versions-->
     <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
