@@ -9,7 +9,7 @@
   </parent>
   <groupId>org.folio</groupId>
   <artifactId>edge-inn-reach</artifactId>
-  <version>3.5.0-SNAPSHOT</version>
+  <version>3.4.2-SNAPSHOT</version>
   <name>edge-inn-reach</name>
   <description>INN-REACH system Edge API module</description>
 
@@ -129,6 +129,12 @@
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-openfeign</artifactId>
       <version>${spring-cloud-starter-openfeign.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcprov-jdk18on</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
