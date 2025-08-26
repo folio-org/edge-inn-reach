@@ -1,4 +1,4 @@
-## v3.4.0 2025-03-13
+## v3.4.1 2025-03-13
 
 ### Bugs
 * [EDGINREACH-85](https://folio-org.atlassian.net/browse/EDGINREACH-86) - Fix TLS mode
