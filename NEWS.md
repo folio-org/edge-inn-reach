@@ -1,3 +1,8 @@
+## v3.3.2
+
+### Bug fixes
+* [EDGINREACH-92](https://folio-org.atlassian.net/browse/EDGINREACH-92) - Spring Boot 3.3.13, Tomcat 10.1.46, Netty 4.1.127.Final fixing CVEs (Ramsons)
+
 ## v3.3.1 2024-11-20
 
 * Changes relate to TLS support
