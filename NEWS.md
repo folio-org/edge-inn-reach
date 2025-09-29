@@ -1,3 +1,5 @@
+# [EDGINREACH-91](https://folio-org.atlassian.net/browse/EDGINREACH-91) - Spring Boot 3.4.10 fixing Tomcat and Netty CVEs
+
 ## v3.4.0 2025-03-18
 * updated tag version for app-inn-reach-release
 
