@@ -1,9 +1,15 @@
-## v3.4.1 2025-03-13
+## v3.4.2 2025-09-30
+
+### Bugs
+* [EDGINREACH-91](https://folio-org.atlassian.net/browse/EDGINREACH-91) - Spring Boot 3.4.10 fixing Tomcat and Netty CVEs
+
+## v3.4.1 2025-08-26
 
 ### Bugs
 * [EDGINREACH-85](https://folio-org.atlassian.net/browse/EDGINREACH-86) - Fix TLS mode
 
-## v3.4.0 2025-03-13
+## v3.4.0 2025-03-18
+* updated tag version for app-inn-reach-release
 * [EDGINREACH-79](https://folio-org.atlassian.net/browse/EDGINREACH-79) - Migrate AWS SDK for Java from 1.x to 2.x
 * [FOLIO-4231](https://folio-org.atlassian.net/browse/FOLIO-423179) - Update to Java 21
 
