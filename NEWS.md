@@ -1,4 +1,4 @@
-## v3.3.2
+## v3.3.2 2025-10-07
 
 ### Bug fixes
 * [EDGINREACH-92](https://folio-org.atlassian.net/browse/EDGINREACH-92) - Spring Boot 3.3.13, Tomcat 10.1.46, Netty 4.1.127.Final fixing CVEs (Ramsons)
