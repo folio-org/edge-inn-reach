@@ -1,4 +1,4 @@
-## v3.5.0 - ((in progress))
+## v3.6.0 - ((in progress))
 * [EDGINREACH-91](https://folio-org.atlassian.net/browse/EDGINREACH-91) - Spring Boot 3.4.10 fixing Tomcat and Netty CVEs
 * [EDGINREACH-96](https://folio-org.atlassian.net/browse/EDGINREACH-96) - Use GitHub Workflows for Maven
 
