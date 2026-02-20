@@ -1,3 +1,8 @@
+## v3.4.3 2026-02-20
+
+### Bugs
+* [EDGINEACH-94](https://folio-org.atlassian.net/browse/EDGINREACH-94) - Spring Boot 3.4.13 fixing CVE-2025-67735
+
 ## v3.4.2 2025-09-30
 
 ### Bugs
