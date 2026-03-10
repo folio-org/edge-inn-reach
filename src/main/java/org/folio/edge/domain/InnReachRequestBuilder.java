@@ -9,12 +9,14 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.folio.edgecommonspring.client.EdgeFeignClientProperties;
+import org.folio.edgecommonspring.client.EdgeClientProperties;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import org.folio.edge.domain.dto.InnReachRequest;
 import org.folio.edge.domain.exception.EdgeServiceException;
+import org.folio.edge.external.InnReachHttpHeaders;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -26,7 +28,7 @@ public class InnReachRequestBuilder {
   private static final String INN_REACH_URI_PREFIX = "/innreach/v2";
   private static final String INN_REACH_D2IR_URL_PREFIX = "/inn-reach/d2ir";
 
-  private final EdgeFeignClientProperties properties;
+  private final EdgeClientProperties properties;
 
   @Deprecated
   @Value("${okapi_url:#{null}}")
@@ -71,6 +73,19 @@ public class InnReachRequestBuilder {
     request.getHeaderNames()
       .asIterator()
       .forEachRemaining(headerName -> headers.put(headerName, request.getHeader(headerName)));
+
+    // Rename Authorization to X-D2IR-Authorization for INN-Reach backend (case-insensitive key lookup)
+    var authKey = headers.keySet().stream()
+      .filter(k -> k.equalsIgnoreCase(HttpHeaders.AUTHORIZATION))
+      .findFirst().orElse(null);
+    if (authKey != null) {
+      var authValue = headers.remove(authKey);
+      headers.put(InnReachHttpHeaders.X_D2IR_AUTHORIZATION, authValue);
+      log.info("Authorization header renamed to X-D2IR-Authorization");
+    }
+
+    // Remove Accept-Encoding to avoid compression issues (case-insensitive)
+    headers.keySet().removeIf(k -> k.equalsIgnoreCase(HttpHeaders.ACCEPT_ENCODING));
 
     return headers;
   }
