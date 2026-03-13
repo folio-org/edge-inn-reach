@@ -23,11 +23,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.client.HttpClientErrorException;
 
 import org.folio.edge.client.InnReachAuthClient;
 import org.folio.edge.domain.dto.JwtAccessToken;
+import org.folio.edge.domain.exception.EdgeServiceException;
 import org.folio.edge.domain.service.AccessTokenService;
 
 class AuthenticationServiceImplTest {
@@ -71,7 +71,7 @@ class AuthenticationServiceImplTest {
         HttpHeaders.EMPTY, new byte[0], null));
     var innReachHeadersHolder = createInnReachHeadersHolder();
 
-    assertThrows(BadCredentialsException.class, () -> authenticationService.authenticate(innReachHeadersHolder));
+    assertThrows(EdgeServiceException.class, () -> authenticationService.authenticate(innReachHeadersHolder));
     verify(innReachAuthClient).authenticateCentralServer(any(), any(), any());
   }
 }

@@ -10,15 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.folio.edgecommonspring.client.EdgeClientProperties;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import org.folio.edge.domain.dto.InnReachRequest;
 import org.folio.edge.domain.exception.EdgeServiceException;
 import org.folio.edge.external.InnReachHttpHeaders;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Log4j2
 @Component
@@ -29,11 +26,6 @@ public class InnReachRequestBuilder {
   private static final String INN_REACH_D2IR_URL_PREFIX = "/inn-reach/d2ir";
 
   private final EdgeClientProperties properties;
-
-  @Deprecated
-  @Value("${okapi_url:#{null}}")
-  private String okapiUrl;
-
 
   public InnReachRequest buildInnReachRequest(HttpServletRequest request) {
     log.debug("Build inn-reach request :: parameter request : {}", request.toString());
@@ -47,15 +39,7 @@ public class InnReachRequestBuilder {
   private URI buildRequestUrl(HttpServletRequest request) {
     log.debug("Build Request URL :: parameter request : {} ", request);
     var requestURI = request.getRequestURI().replaceAll(INN_REACH_URI_PREFIX, StringUtils.EMPTY);
-
-    String okapiUrlToUse = okapiUrl;
-    if (isNotBlank(okapiUrlToUse)) {
-      log.warn("deprecated property okapi_url is used. Please use folio.client.okapiUrl instead.");
-    } else {
-      okapiUrlToUse = properties.getOkapiUrl();
-    }
-
-    return URI.create(okapiUrlToUse + INN_REACH_D2IR_URL_PREFIX + requestURI);
+    return URI.create(properties.getOkapiUrl() + INN_REACH_D2IR_URL_PREFIX + requestURI);
   }
 
   private String requestBodyAsString(HttpServletRequest request) {

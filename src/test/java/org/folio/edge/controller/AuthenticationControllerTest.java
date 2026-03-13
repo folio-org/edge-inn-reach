@@ -1,193 +1,165 @@
 package org.folio.edge.controller;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serviceUnavailable;
 import static com.github.tomakehurst.wiremock.client.WireMock.unauthorized;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.folio.edge.config.JwtConfiguration.DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC;
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BASIC_AUTH_SCHEME;
 import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_AUTH_SCHEME;
 import static org.folio.edge.fixture.InnReachFixture.createInnReachHttpHeaders;
-import static org.folio.edge.util.TestUtil.TEST_TOKEN;
 
+import java.time.Instant;
 import java.util.Base64;
-import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.folio.edge.domain.dto.TenantMapping;
+import org.folio.edge.security.service.SecurityService;
+import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
+import org.folio.spring.model.UserToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.resttestclient.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
 
 import org.folio.edge.controller.base.BaseControllerTest;
-import org.folio.edge.dto.AccessTokenResponse;
-import org.folio.edge.dto.Error;
+
+import com.github.tomakehurst.wiremock.client.WireMock;
 
 class AuthenticationControllerTest extends BaseControllerTest {
 
-  private static final String OAUTH_TOKEN_URI = "/innreach/v2/oauth2/token?grant_type={grant_type}&scope={scope}";
+  private static final String OAUTH_TOKEN_URI = "/innreach/v2/oauth2/token?grant_type=client_credentials&scope=innreach_tp";
   private static final String UNKNOWN_LOCAL_SERVER_BASIC_CREDS = "Basic MjJhZGJlYzYtMWVkYy00YjUzLTk1ZDYtOTA3NmE2OGI3NjM0OmIyNTc1N2U1LWE1NTYtNGNlNS1hNjdjLTMyNGE0MDljOWYwZA==";
 
+  @MockitoBean
+  private SecurityService securityService;
+
   @Autowired
-  private TestRestTemplate testRestTemplate;
+  private MockMvc mockMvc;
 
-  @BeforeEach
-  public void setupBeforeEach() {
-    wireMock.stubFor(post(urlEqualTo("/authn/login-with-expiry"))
-        .willReturn(aResponse()
-            .withStatus(HttpStatus.CREATED.value())
-          .withBody("{\"accessTokenExpiration\": \"2030-09-01T13:04:35Z\",\n \"refreshTokenExpiration\": \"2030-09-08T12:54:35Z\"\n}")
-          .withHeader("set-cookie", "folioAccessToken=" + TEST_TOKEN)
-      .withHeader("Content-Type", "application/json")));
+  private void setupConnectionParamsMock() {
+    var connectionParams = new ConnectionSystemParameters()
+      .withOkapiToken(new UserToken("token", Instant.MAX))
+      .withTenantId("test");
+    when(securityService.getInnReachConnectionParameters(any())).thenReturn(connectionParams);
+  }
+
+  private void setupTenantMappingMock() {
+    var tenantMapping = new TenantMapping("test-key", "test", "test-user");
+    when(securityService.getTenantMappingByLocalServerKey(any())).thenReturn(tenantMapping);
   }
 
   @Test
-  void return400HttpCode_when_httpHeaderValueIsInvalid() {
+  void return400HttpCode_when_httpHeaderValueIsInvalid() throws Exception {
     var httpHeaders = createInnReachHttpHeaders();
-    httpHeaders.set(HttpHeaders.AUTHORIZATION, UNKNOWN_LOCAL_SERVER_BASIC_CREDS);
+    httpHeaders.set("Authorization", UNKNOWN_LOCAL_SERVER_BASIC_CREDS);
 
-    var requestEntity = new HttpEntity<>(httpHeaders);
+    when(securityService.getInnReachConnectionParameters(any()))
+      .thenThrow(new BadCredentialsException("Tenant mapping not found"));
 
-    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
-        HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
-
-    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
-
-    Error body = responseEntity.getBody();
-
-    assertNotNull(body);
-    assertEquals("invalid_token", body.getError());
+    mockMvc.perform(post(OAUTH_TOKEN_URI).headers(httpHeaders))
+        .andExpect(status().isUnauthorized())
+        .andExpect(jsonPath("$.error").value("invalid_token"));
   }
 
   @Test
-  void return400HttpCode_when_missingRequiredRequestParameter() {
+  void return400HttpCode_when_missingRequiredRequestParameter() throws Exception {
+    setupConnectionParamsMock();
     var httpHeaders = createInnReachHttpHeaders();
-    var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange("/innreach/v2/oauth2/token?grant_type={grant_type}", HttpMethod.POST,
-        requestEntity, Error.class, "client_credentials");
-
-    assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-
-    Error body = responseEntity.getBody();
-
-    assertNotNull(body);
-    assertEquals("invalid_request", body.getError());
-    assertEquals("The scope parameter is required.", body.getErrorDescription());
+    mockMvc.perform(post("/innreach/v2/oauth2/token?grant_type=client_credentials").headers(httpHeaders))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("invalid_request"))
+        .andExpect(jsonPath("$.error_description").value("The scope parameter is required."));
   }
 
   @Test
-  void return400HttpCode_when_requestParameterIsInvalid() {
+  void return400HttpCode_when_requestParameterIsInvalid() throws Exception {
+    setupConnectionParamsMock();
     var httpHeaders = createInnReachHttpHeaders();
-    var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
-        HttpMethod.POST, requestEntity, Error.class, "client_credent", "reach_tp");
-
-    assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-
-    Error body = responseEntity.getBody();
-
-    assertNotNull(body);
-    assertEquals("invalid_request", body.getError());
+    mockMvc.perform(post("/innreach/v2/oauth2/token?grant_type=client_credent&scope=reach_tp").headers(httpHeaders))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("invalid_request"));
   }
 
   @ParameterizedTest
   @MethodSource("incorrectFormattedAuthTokenList")
-  void return400HttpCode_when_authenticationTokenHasIncorrectFormat(String incorrectFormattedAuthToken) {
+  void return400HttpCode_when_authenticationTokenHasIncorrectFormat(String incorrectFormattedAuthToken) throws Exception {
+    setupConnectionParamsMock();
     var httpHeaders = createInnReachHttpHeaders();
-    httpHeaders.set(HttpHeaders.AUTHORIZATION, incorrectFormattedAuthToken);
+    httpHeaders.set("Authorization", incorrectFormattedAuthToken);
 
-    var requestEntity = new HttpEntity<>(httpHeaders);
-
-    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
-        HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
-
-    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
-
-    Error body = responseEntity.getBody();
-
-    assertNotNull(body);
-    assertEquals("invalid_token", body.getError());
+    mockMvc.perform(post(OAUTH_TOKEN_URI).headers(httpHeaders))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error").value("invalid_request"));
   }
 
-  private static List<String> incorrectFormattedAuthTokenList() {
-    return List.of(
+  private static Stream<String> incorrectFormattedAuthTokenList() {
+    return Stream.of(
         Base64.getEncoder().encodeToString(String.format("%s:%s", UUID.randomUUID(), UUID.randomUUID()).getBytes()),
-
-        String.format("%s %s", BASIC_AUTH_SCHEME, Base64.getEncoder().encodeToString(UUID.randomUUID().toString()
-            .getBytes())),
-
-        String.format("%s %s", BASIC_AUTH_SCHEME, Base64.getEncoder().encodeToString(String.format("%s:%s:%s", UUID
-            .randomUUID(), UUID.randomUUID(), UUID.randomUUID()).getBytes()))
+        String.format("%s %s", BASIC_AUTH_SCHEME, Base64.getEncoder().encodeToString(String.format("%s:%s:%s", UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()).getBytes()))
     );
   }
 
   @Test
-  void return401HttpCode_when_keySecretIsNotAuthenticated() {
-    wireMock.stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(unauthorized()));
-
+  void return401HttpCode_when_authorizationTokenHasMissingSecret() throws Exception {
+    var token = String.format("%s %s", BASIC_AUTH_SCHEME,
+        Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes()));
     var httpHeaders = createInnReachHttpHeaders();
-    var requestEntity = new HttpEntity<>(httpHeaders);
+    httpHeaders.set("Authorization", token);
 
-    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
-        HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
-
-    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
-
-    var body = responseEntity.getBody();
-
-    assertNotNull(body);
-    assertEquals("invalid_token", body.getError());
-    assertEquals("Token authentication failed", body.getErrorDescription());
+    mockMvc.perform(post(OAUTH_TOKEN_URI).headers(httpHeaders))
+        .andExpect(status().isUnauthorized())
+        .andExpect(jsonPath("$.error").value("invalid_token"));
   }
 
   @Test
-  void return503HttpCode_when_modInnReachServiceIsUnavailable() {
-    wireMock.stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(serviceUnavailable()));
+  void return401HttpCode_when_keySecretIsNotAuthenticated() throws Exception {
+    setupConnectionParamsMock();
+    wireMock.stubFor(WireMock.post(urlEqualTo("/inn-reach/authentication")).willReturn(unauthorized()));
 
     var httpHeaders = createInnReachHttpHeaders();
-    var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
-        HttpMethod.POST, requestEntity, Error.class, "client_credentials", "innreach_tp");
-
-    assertEquals(HttpStatus.SERVICE_UNAVAILABLE, responseEntity.getStatusCode());
-
-    var body = responseEntity.getBody();
-
-    assertNotNull(body);
+    mockMvc.perform(post(OAUTH_TOKEN_URI).headers(httpHeaders))
+        .andExpect(status().isUnauthorized())
+        .andExpect(jsonPath("$.error").value("invalid_request"));
   }
 
   @Test
-  void return200HttpCode_and_validAuthToken_when_keySecretIsSuccessfullyAuthenticated() {
-    wireMock.stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(ok()));
+  void return503HttpCode_when_modInnReachServiceIsUnavailable() throws Exception {
+    setupConnectionParamsMock();
+    wireMock.stubFor(WireMock.post(urlEqualTo("/inn-reach/authentication")).willReturn(serviceUnavailable()));
 
     var httpHeaders = createInnReachHttpHeaders();
-    var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange(OAUTH_TOKEN_URI,
-        HttpMethod.POST, requestEntity, AccessTokenResponse.class, "client_credentials", "innreach_tp");
+    mockMvc.perform(post(OAUTH_TOKEN_URI).headers(httpHeaders))
+        .andExpect(status().isServiceUnavailable());
+  }
 
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+  @Test
+  void return200HttpCode_and_validAuthToken_when_keySecretIsSuccessfullyAuthenticated() throws Exception {
+    setupConnectionParamsMock();
+    setupTenantMappingMock();
+    wireMock.stubFor(WireMock.post(urlEqualTo("/inn-reach/authentication")).willReturn(ok()));
 
-    var body = responseEntity.getBody();
+    var httpHeaders = createInnReachHttpHeaders();
 
-    assertNotNull(body);
-    assertEquals(BEARER_AUTH_SCHEME, body.getTokenType());
-    assertEquals(DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC, body.getExpiresIn());
-    assertNotNull(body.getAccessToken());
+    mockMvc.perform(post(OAUTH_TOKEN_URI).headers(httpHeaders))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.token_type").value(BEARER_AUTH_SCHEME))
+        .andExpect(jsonPath("$.expires_in").value(DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC))
+        .andExpect(jsonPath("$.access_token").isNotEmpty());
   }
 
 }
