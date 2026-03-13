@@ -2,104 +2,84 @@ package org.folio.edge.filter;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.folio.edge.api.utils.Constants.X_OKAPI_TOKEN;
-import static org.folio.edge.config.JwtConfiguration.DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC;
-import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BEARER_AUTH_SCHEME;
 import static org.folio.edge.fixture.InnReachFixture.createInnReachHttpHeaders;
 import static org.folio.edge.util.TestUtil.TEST_TOKEN;
 import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import org.folio.edge.controller.base.BaseControllerTest;
 import org.folio.edge.dto.AccessTokenResponse;
+
+import tools.jackson.databind.ObjectMapper;
 
 @Disabled
 class JwtTokenVerifyFilterTest extends BaseControllerTest {
 
   @Autowired
-  private TestRestTemplate testRestTemplate;
+  private MockMvc mockMvc;
 
+  private static final ObjectMapper objectMapper = new ObjectMapper();
 
   @BeforeEach
   public void setupBeforeEach() {
-    wireMock.stubFor(post(urlEqualTo("/authn/login"))
+    wireMock.stubFor(WireMock.post(urlEqualTo("/authn/login"))
         .willReturn(aResponse()
             .withStatus(HttpStatus.CREATED.value())
             .withHeader(X_OKAPI_TOKEN, TEST_TOKEN)));
   }
 
   @Test
-  void return200HttpCode_when_sendRequestWithValidJwtToken() {
-    wireMock.stubFor(post(urlEqualTo("/inn-reach/authentication")).willReturn(ok()));
+  void return200HttpCode_when_sendRequestWithValidJwtToken() throws Exception {
+    wireMock.stubFor(WireMock.post(urlEqualTo("/inn-reach/authentication")).willReturn(ok()));
 
     var httpHeaders = new HttpHeaders();
     httpHeaders.set(HttpHeaders.AUTHORIZATION, "Bearer " + getJwtToken());
 
-    var requestEntity = new HttpEntity<>(httpHeaders);
-
-    var responseEntity = testRestTemplate.exchange("/innreach/demo", HttpMethod.GET, requestEntity, String.class);
-
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-    var body = responseEntity.getBody();
-
-    assertNotNull(body);
-    assertEquals("Demo!", body);
+    mockMvc.perform(get("/innreach/demo").headers(httpHeaders))
+      .andExpect(status().isOk());
   }
 
-  private String getJwtToken() {
+  private String getJwtToken() throws Exception {
     var httpHeaders = createInnReachHttpHeaders();
-    var requestEntity = new HttpEntity<>(httpHeaders);
 
-    var responseEntity = testRestTemplate.exchange("/v2/oauth2/token?grant_type={grant_type}&scope={scope}",
-        HttpMethod.POST, requestEntity, AccessTokenResponse.class, "client_credentials", "innreach_tp");
+    MvcResult result = mockMvc.perform(post("/innreach/v2/oauth2/token?grant_type=client_credentials&scope=innreach_tp")
+        .headers(httpHeaders))
+      .andExpect(status().isOk())
+      .andReturn();
 
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-    var body = responseEntity.getBody();
-
-    assertNotNull(body);
-    assertEquals(BEARER_AUTH_SCHEME, body.getTokenType());
-    assertEquals(DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC, body.getExpiresIn());
-    assertNotNull(body.getAccessToken());
-
+    var body = objectMapper.readValue(result.getResponse().getContentAsString(), AccessTokenResponse.class);
     return body.getAccessToken();
   }
 
   @Test
-  void return401HttpCode_when_sendRequestWithInvalidJwtToken() {
+  void return401HttpCode_when_sendRequestWithInvalidJwtToken() throws Exception {
     var invalidJwtToken = readFileContentAsString("/jwt/token/invalid-jwt-token.txt");
 
     var httpHeaders = new HttpHeaders();
     httpHeaders.set(HttpHeaders.AUTHORIZATION, "Bearer " + invalidJwtToken);
 
-    var requestEntity = new HttpEntity<>(httpHeaders);
-
-    var responseEntity = testRestTemplate.exchange("/innreach/demo", HttpMethod.GET, requestEntity, String.class);
-
-    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
+    mockMvc.perform(get("/innreach/demo").headers(httpHeaders))
+      .andExpect(status().isUnauthorized());
   }
 
   @Test
-  void return401HttpCode_when_sendRequestWithoutJwtToken() {
-    var requestEntity = new HttpEntity<>(new HttpHeaders());
-
-    var responseEntity = testRestTemplate.exchange("/innreach/demo", HttpMethod.GET, requestEntity, String.class);
-
-    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
+  void return401HttpCode_when_sendRequestWithoutJwtToken() throws Exception {
+    mockMvc.perform(get("/innreach/demo"))
+      .andExpect(status().isUnauthorized());
   }
 }

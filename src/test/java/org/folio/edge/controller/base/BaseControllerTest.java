@@ -8,12 +8,16 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
+import org.folio.edge.security.store.EdgeApiKeyHolder;
+
 @Log4j2
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class BaseControllerTest {
 
@@ -42,6 +46,7 @@ public class BaseControllerTest {
   @AfterEach
   void tearDown() {
     wireMock.resetAll();
+    EdgeApiKeyHolder.clear();
   }
 
 }

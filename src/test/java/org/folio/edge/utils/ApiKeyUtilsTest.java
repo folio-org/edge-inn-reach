@@ -3,10 +3,9 @@ package org.folio.edge.utils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
 import java.util.Base64;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import io.github.glytching.junit.extension.random.Random;
 import io.github.glytching.junit.extension.random.RandomBeansExtension;
 import org.assertj.core.api.Assertions;
@@ -29,7 +28,7 @@ class ApiKeyUtilsTest {
 
   @Test
   void generateApiKey_when_saltTenantUsernameProvided(@Random String salt, @Random String tenantId,
-      @Random String username) throws IOException {
+      @Random String username) {
 
     var key = CredentialsUtils.generateApiKey(salt, tenantId, username);
 

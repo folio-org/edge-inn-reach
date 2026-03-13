@@ -1,6 +1,7 @@
 ## v3.6.0 - ((in progress))
 * [EDGINREACH-91](https://folio-org.atlassian.net/browse/EDGINREACH-91) - Spring Boot 3.4.10 fixing Tomcat and Netty CVEs
 * [EDGINREACH-96](https://folio-org.atlassian.net/browse/EDGINREACH-96) - Use GitHub Workflows for Maven
+* [EDGINREACH-93](https://folio-org.atlassian.net/browse/EDGINREACH-93) - Upgrade module to Spring Boot v4.0.2
 
 ## v3.4.0 2025-03-18
 * updated tag version for app-inn-reach-release

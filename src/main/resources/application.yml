@@ -5,9 +5,8 @@ spring:
     name: edge-inn-reach
   autoconfigure:
     exclude: |-
-      org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,
-      org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,
-      org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration,
+      org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerAutoConfiguration
   liquibase:
     enabled: false
   jackson:
@@ -20,10 +19,6 @@ spring:
     type: caffeine
     caffeine:
       spec: maximumSize=200,expireAfterAccess=1h
-  cloud:
-    openfeign:
-      okhttp:
-        enabled: true
 management:
   endpoints:
     web:
@@ -51,7 +46,6 @@ folio:
     username: system-user
     password: ${SYSTEM_USER_PASSWORD} # This is not used but added to avoid DI errors from folio-spring-system-user
   environment: folio
-  okapi_url: ${Dokapi_url}
   jwt:
     signature:
       algorithm: HS256
@@ -75,11 +69,6 @@ edge:
     filter:
       enabled: false
 debug: false
-
-# Dokapi_url is deprecated. Please use folio.client.okapiUrl instead
-#Dokapi_url: http://localhost:9130
-# okapi_url is deprecated. Please use folio.client.okapiUrl instead
-#okapi_url: ${Dokapi_url}
 
 ###################################################
 # JWT configuration properties

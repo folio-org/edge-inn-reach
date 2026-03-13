@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import org.folio.edge.client.InnReachAuthClient;
 import org.folio.edge.domain.dto.AuthenticationParams;
@@ -35,13 +36,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     log.debug("Authenticate the client by calling the central server :: parameter authParams : {} ", authParams.toString());
     var authenticationRequest = parseBasicAuth(authParams.getAuthorization());
 
-    var authResult = innReachAuthClient.authenticateCentralServer(authenticationRequest,
-      authParams.getOkapiTenant(), authParams.getOkapiToken());
-
-    if (!authResult.getStatusCode().is2xxSuccessful()) {
-      log.warn("Authentication failed with status: {}", authResult.getStatusCode());
-      throw new EdgeServiceException("Authentication failed");
+    try {
+      innReachAuthClient.authenticateCentralServer(authenticationRequest,
+        authParams.getOkapiTenant(), authParams.getOkapiToken());
+    } catch (HttpStatusCodeException e) {
+      log.warn("Authentication failed with status: {}", e.getStatusCode());
+      throw new EdgeServiceException(e.getStatusCode().value(), e.getMessage());
     }
+
     log.info("Authentication succeeded and generate the access token.");
     var jwtAccessToken = accessTokenService.generateAccessToken(authenticationRequest.getKey());
 
