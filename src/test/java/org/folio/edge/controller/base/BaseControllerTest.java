@@ -13,6 +13,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
+import org.folio.edge.security.store.EdgeApiKeyHolder;
+
 @Log4j2
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -44,6 +46,7 @@ public class BaseControllerTest {
   @AfterEach
   void tearDown() {
     wireMock.resetAll();
+    EdgeApiKeyHolder.clear();
   }
 
 }
