@@ -11,6 +11,7 @@ spring:
     check-template-location: false
 logging:
   level:
+    com.github.tomakehurst.wiremock: debug
     org:
       springframework:
         cache: OFF
@@ -21,4 +22,3 @@ folio:
   tenant:
     validation:
       enabled: false
-

@@ -26,6 +26,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.UrlPattern;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -43,6 +44,7 @@ import org.folio.edge.domain.service.AccessTokenService;
 import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
 
 import java.time.Instant;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -124,6 +126,9 @@ class InnReachProxyControllerTest extends BaseControllerTest {
       .andExpect(status().isBadRequest())
       .andExpect(jsonPath("$.status").value("failed"))
       .andExpect(jsonPath("$.reason").value("Appeared common error"));
+
+    var allServeEvents = wireMock.getAllServeEvents();
+    System.out.println(allServeEvents);
   }
 
   @Test

@@ -11,12 +11,17 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 public class HttpExchangeConfiguration {
 
+  @Qualifier("edgeHttpServiceProxyFactory")
+  private final HttpServiceProxyFactory factory;
+
   @Bean
-  public InnReachAuthClient innReachAuthClient(
-      @Qualifier("edgeHttpServiceProxyFactory") HttpServiceProxyFactory factory) {
+  public InnReachAuthClient innReachAuthClient() {
     return factory.createClient(InnReachAuthClient.class);
   }
 
@@ -27,12 +32,6 @@ public class HttpExchangeConfiguration {
    */
   @Bean
   public InnReachClient innReachClient() {
-    var httpClient = HttpClients.custom().disableContentCompression().build();
-    var restClient = RestClient.builder()
-        .requestFactory(new HttpComponentsClientHttpRequestFactory(httpClient))
-        .build();
-    var adapter = RestClientAdapter.create(restClient);
-    var factory = HttpServiceProxyFactory.builderFor(adapter).build();
     return factory.createClient(InnReachClient.class);
   }
 }

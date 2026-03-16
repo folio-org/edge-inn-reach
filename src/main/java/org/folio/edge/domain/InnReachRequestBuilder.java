@@ -23,7 +23,7 @@ import org.folio.edge.external.InnReachHttpHeaders;
 public class InnReachRequestBuilder {
 
   private static final String INN_REACH_URI_PREFIX = "/innreach/v2";
-  private static final String INN_REACH_D2IR_URL_PREFIX = "/inn-reach/d2ir";
+  private static final String INN_REACH_D2IR_URL_PREFIX = "inn-reach/d2ir";
 
   private final EdgeClientProperties properties;
 
@@ -39,7 +39,7 @@ public class InnReachRequestBuilder {
   private URI buildRequestUrl(HttpServletRequest request) {
     log.debug("Build Request URL :: parameter request : {} ", request);
     var requestURI = request.getRequestURI().replaceAll(INN_REACH_URI_PREFIX, StringUtils.EMPTY);
-    return URI.create(properties.getOkapiUrl() + INN_REACH_D2IR_URL_PREFIX + requestURI);
+    return URI.create(INN_REACH_D2IR_URL_PREFIX + requestURI);
   }
 
   private String requestBodyAsString(HttpServletRequest request) {
