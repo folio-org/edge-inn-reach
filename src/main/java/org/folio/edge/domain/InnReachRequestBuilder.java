@@ -25,8 +25,6 @@ public class InnReachRequestBuilder {
   private static final String INN_REACH_URI_PREFIX = "/innreach/v2";
   private static final String INN_REACH_D2IR_URL_PREFIX = "inn-reach/d2ir";
 
-  private final EdgeClientProperties properties;
-
   public InnReachRequest buildInnReachRequest(HttpServletRequest request) {
     log.debug("Build inn-reach request :: parameter request : {}", request.toString());
     return InnReachRequest.builder()
@@ -67,9 +65,6 @@ public class InnReachRequestBuilder {
       headers.put(InnReachHttpHeaders.X_D2IR_AUTHORIZATION, authValue);
       log.info("Authorization header renamed to X-D2IR-Authorization");
     }
-
-    // Remove Accept-Encoding to avoid compression issues (case-insensitive)
-    headers.keySet().removeIf(k -> k.equalsIgnoreCase(HttpHeaders.ACCEPT_ENCODING));
 
     return headers;
   }

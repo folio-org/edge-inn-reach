@@ -2,9 +2,9 @@ package org.folio.edge.controller;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.including;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.springframework.http.HttpHeaders.ACCEPT_ENCODING;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -26,7 +26,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.UrlPattern;
-import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -44,7 +43,6 @@ import org.folio.edge.domain.service.AccessTokenService;
 import org.folio.edgecommonspring.domain.entity.ConnectionSystemParameters;
 
 import java.time.Instant;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -92,7 +90,6 @@ class InnReachProxyControllerTest extends BaseControllerTest {
   @Test
   void shouldUpdateRequestHeaders() throws Exception {
     var httpHeaders = createInnReachHttpHeaders();
-    httpHeaders.set(ACCEPT_ENCODING, "gzip");
     httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
 
     wireMock.stubFor(WireMock.post(PATRON_VERIFY_URL_PATTERN)
@@ -106,7 +103,6 @@ class InnReachProxyControllerTest extends BaseControllerTest {
 
     wireMock.verify(postRequestedFor(PATRON_VERIFY_URL_PATTERN)
       .withoutHeader(AUTHORIZATION)
-      .withoutHeader(ACCEPT_ENCODING)
       .withHeader(X_D2IR_AUTHORIZATION, equalTo(AUTH_TOKEN_VALUE))
     );
   }

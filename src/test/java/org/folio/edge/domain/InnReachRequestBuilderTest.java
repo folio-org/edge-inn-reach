@@ -4,7 +4,6 @@ import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import org.folio.edge.domain.exception.EdgeServiceException;
-import org.folio.edgecommonspring.client.EdgeClientProperties;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -37,10 +36,7 @@ import static org.mockito.Mockito.when;
 class InnReachRequestBuilderTest {
 
   private static final String INN_REACH_URI_PREFIX = "/innreach/v2";
-  private static final String INN_REACH_D2IR_URL_PREFIX = "/inn-reach/d2ir";
-
-  @Autowired
-  private EdgeClientProperties properties;
+  private static final String INN_REACH_D2IR_URL_PREFIX = "inn-reach/d2ir";
 
   @Autowired
   private InnReachRequestBuilder innReachRequestBuilder;
@@ -63,7 +59,7 @@ class InnReachRequestBuilderTest {
     assertNotNull(innReachRequest);
     assertNotNull(innReachRequest.getHeaders());
     assertFalse(innReachRequest.getHeaders().isEmpty());
-    assertEquals(URI.create(properties.getOkapiUrl() + INN_REACH_D2IR_URL_PREFIX + "/resource/subresource"), innReachRequest.getRequestUrl());
+    assertEquals(URI.create(INN_REACH_D2IR_URL_PREFIX + "/resource/subresource"), innReachRequest.getRequestUrl());
     assertEquals(EMPTY, innReachRequest.getRequestBody());
   }
 

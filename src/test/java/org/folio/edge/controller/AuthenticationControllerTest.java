@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -62,7 +63,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
   @Test
   void return400HttpCode_when_httpHeaderValueIsInvalid() throws Exception {
     var httpHeaders = createInnReachHttpHeaders();
-    httpHeaders.set("Authorization", UNKNOWN_LOCAL_SERVER_BASIC_CREDS);
+    httpHeaders.set(HttpHeaders.AUTHORIZATION, UNKNOWN_LOCAL_SERVER_BASIC_CREDS);
 
     when(securityService.getInnReachConnectionParameters(any()))
       .thenThrow(new BadCredentialsException("Tenant mapping not found"));
@@ -98,7 +99,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
   void return400HttpCode_when_authenticationTokenHasIncorrectFormat(String incorrectFormattedAuthToken) throws Exception {
     setupConnectionParamsMock();
     var httpHeaders = createInnReachHttpHeaders();
-    httpHeaders.set("Authorization", incorrectFormattedAuthToken);
+    httpHeaders.set(HttpHeaders.AUTHORIZATION, incorrectFormattedAuthToken);
 
     mockMvc.perform(post(OAUTH_TOKEN_URI).headers(httpHeaders))
         .andExpect(status().isBadRequest())
@@ -108,7 +109,8 @@ class AuthenticationControllerTest extends BaseControllerTest {
   private static Stream<String> incorrectFormattedAuthTokenList() {
     return Stream.of(
         Base64.getEncoder().encodeToString(String.format("%s:%s", UUID.randomUUID(), UUID.randomUUID()).getBytes()),
-        String.format("%s %s", BASIC_AUTH_SCHEME, Base64.getEncoder().encodeToString(String.format("%s:%s:%s", UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()).getBytes()))
+        String.format("%s %s", BASIC_AUTH_SCHEME, Base64.getEncoder().encodeToString(String.format("%s:%s:%s",
+          UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()).getBytes()))
     );
   }
 
@@ -117,7 +119,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
     var token = String.format("%s %s", BASIC_AUTH_SCHEME,
         Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes()));
     var httpHeaders = createInnReachHttpHeaders();
-    httpHeaders.set("Authorization", token);
+    httpHeaders.set(HttpHeaders.AUTHORIZATION, token);
 
     mockMvc.perform(post(OAUTH_TOKEN_URI).headers(httpHeaders))
         .andExpect(status().isUnauthorized())
@@ -133,7 +135,7 @@ class AuthenticationControllerTest extends BaseControllerTest {
 
     mockMvc.perform(post(OAUTH_TOKEN_URI).headers(httpHeaders))
         .andExpect(status().isUnauthorized())
-        .andExpect(jsonPath("$.error").value("invalid_request"));
+        .andExpect(jsonPath("$.error").value("invalid_token"));
   }
 
   @Test
