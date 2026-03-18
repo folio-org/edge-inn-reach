@@ -14,8 +14,7 @@ public class BasicAuthenticationValidator implements ConstraintValidator<InnReac
 
   @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
-    log.debug("BasicAuthenticationValidator isValid :: parameter value : {}, context : {}",
-      value, context.toString());
+    log.debug("Validating basic authentication header");
     if (!value.startsWith(BASIC_AUTH_SCHEME)) {
       log.info("Invalid basic auth scheme");
       return false;

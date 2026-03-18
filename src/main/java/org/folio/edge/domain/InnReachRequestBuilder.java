@@ -26,7 +26,7 @@ public class InnReachRequestBuilder {
   private static final String INN_REACH_D2IR_URL_PREFIX = "inn-reach/d2ir";
 
   public InnReachRequest buildInnReachRequest(HttpServletRequest request) {
-    log.debug("Build inn-reach request :: parameter request : {}", request.toString());
+    log.debug("Building INN-Reach request");
     return InnReachRequest.builder()
       .requestUrl(buildRequestUrl(request))
       .requestBody(requestBodyAsString(request))
@@ -35,7 +35,7 @@ public class InnReachRequestBuilder {
   }
 
   private URI buildRequestUrl(HttpServletRequest request) {
-    log.debug("Build Request URL :: parameter request : {} ", request);
+    log.debug("Building INN-Reach request URL");
     var requestURI = request.getRequestURI().replaceAll(INN_REACH_URI_PREFIX, StringUtils.EMPTY);
     return URI.create(INN_REACH_D2IR_URL_PREFIX + requestURI);
   }
