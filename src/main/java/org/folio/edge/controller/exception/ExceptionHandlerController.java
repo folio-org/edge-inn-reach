@@ -14,11 +14,10 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpStatusCodeException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import feign.FeignException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -83,17 +82,17 @@ public class ExceptionHandlerController {
     return new ResponseEntity<>(new Error().error(INVALID_REQUEST_ERROR_TYPE), HttpStatus.valueOf(e.getStatus()));
   }
 
-  @ExceptionHandler(FeignException.class)
-  public ResponseEntity<InnReachResponseDTO> handleFeignStatusException(FeignException feignException) {
-    log.error("Unexpected exception: {}", feignException.getMessage());
+  @ExceptionHandler(HttpStatusCodeException.class)
+  public ResponseEntity<InnReachResponseDTO> handleHttpStatusException(HttpStatusCodeException e) {
+    log.error("Unexpected exception: {}", e.getMessage());
 
-    var status = HttpStatus.resolve(feignException.status());
-    String body = feignException.contentUTF8();
-    InnReachResponseDTO innReachResponseDTO = null;
+    var status = HttpStatus.resolve(e.getStatusCode().value());
+    String body = e.getResponseBodyAsString();
+    InnReachResponseDTO innReachResponseDTO;
     try {
       innReachResponseDTO = objectMapper.readValue(body, InnReachResponseDTO.class);
-    } catch (JsonProcessingException e) {
-      log.warn("Unexpected exception. Can't retrieve response body: {}", e.getMessage());
+    } catch (JacksonException ex) {
+      log.warn("Unexpected exception. Can't retrieve response body: {}", ex.getMessage());
       innReachResponseDTO = failed(body);
     }
 

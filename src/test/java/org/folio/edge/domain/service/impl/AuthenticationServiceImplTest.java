@@ -21,11 +21,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import org.folio.edge.client.InnReachAuthClient;
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
+import org.springframework.web.client.HttpServerErrorException;
 
 class AuthenticationServiceImplTest {
 
@@ -45,7 +47,6 @@ class AuthenticationServiceImplTest {
 
   @Test
   void returnAccessToken_when_centralServerIsAuthorized() {
-    when(innReachAuthClient.authenticateCentralServer(any(), any(), any())).thenReturn(ResponseEntity.ok().build());
     when(accessTokenService.generateAccessToken(any())).thenReturn(createRandomJwtAccessToken(randomUUIDString()));
 
     var innReachHeadersHolder = createInnReachHeadersHolder();
@@ -62,11 +63,21 @@ class AuthenticationServiceImplTest {
   }
 
   @Test
-  void shouldThrowEdgeServiceException_when_centralServerIsNotAuthorized() {
-    when(innReachAuthClient.authenticateCentralServer(any(), any(), any())).thenReturn(ResponseEntity.status(401).build());
+  void shouldThrowBadCredentialsException_when_centralServerIsNotAuthorized() {
+    when(innReachAuthClient.authenticateCentralServer(any(), any(), any()))
+      .thenThrow(new BadCredentialsException("Token authentication failed"));
+    var innReachHeadersHolder = createInnReachHeadersHolder();
+
+    assertThrows(BadCredentialsException.class, () -> authenticationService.authenticate(innReachHeadersHolder));
+    verify(innReachAuthClient).authenticateCentralServer(any(), any(), any());
+  }
+
+  @Test
+  void shouldThrowEdgeServiceException_when_centralServerIsUnavailable() {
+    when(innReachAuthClient.authenticateCentralServer(any(), any(), any()))
+      .thenThrow(new HttpServerErrorException(HttpStatus.SERVICE_UNAVAILABLE));
     var innReachHeadersHolder = createInnReachHeadersHolder();
 
     assertThrows(EdgeServiceException.class, () -> authenticationService.authenticate(innReachHeadersHolder));
-    verify(innReachAuthClient).authenticateCentralServer(any(), any(), any());
   }
 }

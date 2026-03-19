@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -48,7 +48,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     }
   }
 
-  public String getErrorJsonString(String reason, Exception exception) throws JsonProcessingException {
+  public String getErrorJsonString(String reason, Exception exception) {
     var error = new Error()
       .error(reason)
       .errorDescription(exception.getMessage());

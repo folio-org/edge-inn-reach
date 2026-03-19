@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.UUID;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 
 public class TestUtil {
@@ -36,7 +36,7 @@ public class TestUtil {
 
   @SneakyThrows
   public static <T> T deserializeFromJsonFile(String path, Class<T> type) {
-    return objectMapper.readValue(TestUtil.class.getResource(path), type);
+    return objectMapper.readValue(TestUtil.class.getResourceAsStream(path), type);
   }
 
 }

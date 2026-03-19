@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -35,17 +36,12 @@ public class SecurityConfig {
   protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     log.debug("Configure the SecurityConfig :: parameter http : {} ", http.toString());
     http
-      .csrf()
-      .disable()
-      .sessionManagement()
-      .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-      .and()
-      .authorizeHttpRequests()
-      .requestMatchers(HttpMethod.GET, ADMIN_HEALTH_CHECK_URI).permitAll()
-      .requestMatchers(HttpMethod.POST, "/innreach/v2/oauth2/token").permitAll()
-      .anyRequest()
-      .authenticated()
-      .and()
+      .csrf(AbstractHttpConfigurer::disable)
+      .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+      .authorizeHttpRequests(auth -> auth
+        .requestMatchers(HttpMethod.GET, ADMIN_HEALTH_CHECK_URI).permitAll()
+        .requestMatchers(HttpMethod.POST, "/innreach/v2/oauth2/token").permitAll()
+        .anyRequest().authenticated())
       .addFilterBefore(
         new JwtTokenVerifyFilter(jwtTokenVerifyFilterIgnoreURIList(), new JwtAuthenticationConverter(accessTokenService)),
         UsernamePasswordAuthenticationFilter.class)

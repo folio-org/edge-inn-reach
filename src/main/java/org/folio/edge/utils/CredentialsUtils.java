@@ -7,7 +7,7 @@ import static org.folio.edge.config.SecurityConfig.AuthenticationScheme.BASIC_AU
 import java.util.Base64;
 import java.util.UUID;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.BadCredentialsException;

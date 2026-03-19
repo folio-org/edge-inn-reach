@@ -3,30 +3,28 @@ package org.folio.edge.client;
 import java.net.URI;
 import java.util.Map;
 
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.service.annotation.DeleteExchange;
+import org.springframework.web.service.annotation.GetExchange;
+import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.service.annotation.PostExchange;
+import org.springframework.web.service.annotation.PutExchange;
 
-import org.folio.edge.config.InnReachClientConfig;
-
-@FeignClient(value = "inn-reach/d2ir", configuration = InnReachClientConfig.class)
+@HttpExchange(contentType = MediaType.APPLICATION_JSON_VALUE)
 public interface InnReachClient {
 
-  @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  @GetExchange
   ResponseEntity<?> getCall(URI modInnReachURI, @RequestHeader Map<String, String> headers);
 
-  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostExchange
   ResponseEntity<?> postCall(URI modInnReachURI, @RequestBody String requestBody, @RequestHeader Map<String, String> headers);
 
-  @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @PutExchange
   ResponseEntity<?> putCall(URI modInnReachURI, @RequestBody String requestBody, @RequestHeader Map<String, String> headers);
 
-  @DeleteMapping
+  @DeleteExchange
   void deleteCall(URI modInnReachURI, @RequestHeader Map<String, String> headers);
 }
