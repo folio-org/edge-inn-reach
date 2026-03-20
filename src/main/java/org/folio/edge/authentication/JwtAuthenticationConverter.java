@@ -30,7 +30,7 @@ public class JwtAuthenticationConverter implements AuthenticationConverter {
 
   @Override
   public UsernamePasswordAuthenticationToken convert(HttpServletRequest httpServletRequest) {
-    log.debug("Extract token and verify it :: parameter: {} ", httpServletRequest.toString());
+    log.debug("Extracting and verifying JWT token");
     var jwtAccessToken = extractJwtTokenFromHeader(httpServletRequest);
 
     var verifiedJwtToken = accessTokenService.verifyAccessToken(jwtAccessToken);
@@ -41,7 +41,7 @@ public class JwtAuthenticationConverter implements AuthenticationConverter {
   }
 
   private JwtAccessToken extractJwtTokenFromHeader(HttpServletRequest httpServletRequest) {
-    log.debug("extractJwtTokenFromHeader :: parameter httpServletRequest: {} ", httpServletRequest.toString());
+    log.debug("Extracting JWT token from header");
     var validatedAuthorizationHeader = getValidatedAuthorizationHeader(httpServletRequest);
     var jwtToken = validatedAuthorizationHeader.replaceAll(BEARER_AUTH_SCHEME, "").trim();
 
@@ -53,7 +53,7 @@ public class JwtAuthenticationConverter implements AuthenticationConverter {
   }
 
   private String getValidatedAuthorizationHeader(HttpServletRequest httpServletRequest) {
-    log.debug("getValidatedAuthorizationHeader :: parameter httpServletRequest: {} ",httpServletRequest.toString());
+    log.debug("Validating authorization header");
     var authorizationHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
     if (authorizationHeader == null) {
@@ -72,7 +72,7 @@ public class JwtAuthenticationConverter implements AuthenticationConverter {
       log.warn("Empty Bearer authentication token");
       throw new BadCredentialsException("Empty Bearer authentication token");
     }
-    log.info("Authorization Header is: {} ",authorizationHeader);
+    log.debug("Authorization header is valid");
     return authorizationHeader;
   }
 

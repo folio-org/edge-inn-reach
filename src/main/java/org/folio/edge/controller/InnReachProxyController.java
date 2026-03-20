@@ -26,7 +26,7 @@ public class InnReachProxyController {
 
   @GetMapping
   public ResponseEntity<?> handleGETRequest(HttpServletRequest request) {
-    log.debug("Handler Get Request :: parameter request : {}", request.toString());
+    log.debug("Handling GET request");
     var innReachRequest = innReachRequestBuilder.buildInnReachRequest(request);
     log.info("The GET call being handled by Inn-Reach proxy.");
     return innReachClient.getCall(innReachRequest.getRequestUrl(), innReachRequest.getHeaders());
@@ -34,7 +34,7 @@ public class InnReachProxyController {
 
   @PostMapping
   public ResponseEntity<?> handlePOSTRequest(HttpServletRequest request) {
-    log.debug("Handler POST Request :: parameter request : {}", request.toString());
+    log.debug("Handling POST request");
     var innReachRequest = innReachRequestBuilder.buildInnReachRequest(request);
     log.info("The POST call being handled by Inn-Reach proxy.");
     return innReachClient.postCall(innReachRequest.getRequestUrl(), innReachRequest.getRequestBody(), innReachRequest.getHeaders());
@@ -42,7 +42,7 @@ public class InnReachProxyController {
 
   @PutMapping
   public ResponseEntity<?> handlePUTRequest(HttpServletRequest request) {
-    log.debug("Handler PUT Request :: parameter request : {}", request.toString());
+    log.debug("Handling PUT request");
     var innReachRequest = innReachRequestBuilder.buildInnReachRequest(request);
     log.info("The PUT call being handled by Inn-Reach proxy.");
     return innReachClient.putCall(innReachRequest.getRequestUrl(), innReachRequest.getRequestBody(), innReachRequest.getHeaders());
@@ -50,7 +50,7 @@ public class InnReachProxyController {
 
   @DeleteMapping
   public ResponseEntity<?> handleDELETERequest(HttpServletRequest request) {
-    log.debug("Handler DELETE Request :: parameter request : {}", request.toString());
+    log.debug("Handling DELETE request");
     var innReachRequest = innReachRequestBuilder.buildInnReachRequest(request);
     innReachClient.deleteCall(innReachRequest.getRequestUrl(), innReachRequest.getHeaders());
     log.info("The DELETE call being handled by Inn-Reach proxy.");

@@ -40,17 +40,17 @@ public class SecurityService {
 
   @PostConstruct
   public void init() {
-    log.debug("Starting initialization with securityStoreConfigProperties: [{}]", securityStoreConfigProperties);
+    log.debug("Starting security service initialization");
 
     var secureStoreProps = getProperties(securityStoreConfigProperties.getSecureStorePropsFile());
-    log.debug("Secure store properties have been initialized: [{}]", secureStoreProps);
+    log.debug("Secure store properties have been initialized");
 
     this.secureStore = SecureStoreFactory.getSecureStore(securityStoreConfigProperties.getSecureStoreType(), secureStoreProps);
-    log.debug("Secure store has been initialized: [{}]", secureStore);
+    log.debug("Secure store has been initialized");
 
     var tenantsMappings = SecureTenantsProducer.getTenantsMappings(secureStoreProps, secureStore,
         securityStoreConfigProperties.getInnreachTenantsMappings());
-    log.debug("Tenant mappings have been initialized: [{}]", tenantsMappings);
+    log.debug("Tenant mappings have been initialized");
     log.info("Tenant mappings have been initialized");
     tenantsMappings.ifPresent(mappings ->
       Arrays.stream(mappings.split(TENANT_MAPPINGS_SPLIT_SYMBOL))
@@ -59,7 +59,7 @@ public class SecurityService {
       .forEach(mappingArray -> tenantMappingMap.put(mappingArray[0], new TenantMapping(mappingArray[0], mappingArray[1], securityStoreConfigProperties.getInnreachClient())))
     );
 
-    log.info("Tenant map has been initialized: [{}]", tenantMappingMap);
+    log.info("Tenant map has been initialized");
   }
 
   public TenantMapping getTenantMappingByLocalServerKey(UUID localServerKey) {

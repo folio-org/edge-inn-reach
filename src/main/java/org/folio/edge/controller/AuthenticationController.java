@@ -24,9 +24,7 @@ public class AuthenticationController implements AuthenticationApi {
   @PostMapping("/token")
   public ResponseEntity<AccessTokenResponse> getToken(String grantType, String scope,
                                                       String xOkapiTenant, String xOkapiToken, String authorization) {
-    log.debug("Get token for authentication :: parameter grantType : {}, scope : {}, " +
-      "xOkapiTenant : {}, xOkapiToken : {}, authorization : {} ", grantType, scope, xOkapiTenant,
-      xOkapiToken, authorization);
+    log.debug("Handling access token request");
     var authenticationRequest = buildInnReachHeadersHolder(authorization, xOkapiTenant, xOkapiToken);
 
     var accessTokenResponse = authenticationService.authenticate(authenticationRequest);
@@ -36,8 +34,7 @@ public class AuthenticationController implements AuthenticationApi {
   }
 
   private AuthenticationParams buildInnReachHeadersHolder(String authorization, String okapiTenant, String okapiToken) {
-    log.debug("Build inn-reach headers :: parameter authorization : {}, okapiTenant : {}, okapiToken : {}",authorization,
-    okapiTenant, okapiToken);
+    log.debug("Building authentication parameters");
     return AuthenticationParams
       .builder()
       .authorization(authorization)

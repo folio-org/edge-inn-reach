@@ -33,7 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   @Override
   public AccessTokenResponse authenticate(@Valid AuthenticationParams authParams) {
-    log.debug("Authenticate the client by calling the central server :: parameter authParams : {} ", authParams.toString());
+    log.debug("Authenticating client against the central server");
     var authenticationRequest = parseBasicAuth(authParams.getAuthorization());
 
     try {
