@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import javax.crypto.spec.SecretKeySpec;
 
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -25,6 +25,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.folio.edge.config.JwtConfiguration;
 
 class JwtAccessTokenServiceImplTest {
+
+  private static final byte[] SECRET_KEY = "test-jwt-secret-for-hs256-algo!!".getBytes();
 
   @Mock
   private JwtConfiguration jwtConfiguration;
@@ -38,9 +40,8 @@ class JwtAccessTokenServiceImplTest {
 
     when(jwtConfiguration.getIssuer()).thenReturn("folio");
     when(jwtConfiguration.getExpirationTimeSec()).thenReturn(JwtConfiguration.DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC);
-    when(jwtConfiguration.getSignatureAlgorithm()).thenReturn(SignatureAlgorithm.HS256);
-    when(jwtConfiguration.getSecretKey()).thenReturn(new SecretKeySpec("test-jwt-secret-for-hs256-algo!!".getBytes(), SignatureAlgorithm.HS256
-        .getJcaName()));
+    when(jwtConfiguration.getSignatureAlgorithm()).thenReturn(Jwts.SIG.HS256);
+    when(jwtConfiguration.getSecretKey()).thenReturn(new SecretKeySpec(SECRET_KEY, Jwts.SIG.HS256.getId()));
   }
 
   @Test
@@ -58,7 +59,7 @@ class JwtAccessTokenServiceImplTest {
     var jwtTokenString = readFileContentAsString("/jwt/token/jwt-simple.txt");
 
     when(jwtConfiguration.getSecretKey()).thenReturn(new SecretKeySpec("wrong-jwt-secret-for-hs256-test!".getBytes(),
-        SignatureAlgorithm.HS256.getJcaName()));
+        Jwts.SIG.HS256.getId()));
 
     var jwtAccessToken = createRandomJwtAccessToken(jwtTokenString);
 
@@ -69,8 +70,7 @@ class JwtAccessTokenServiceImplTest {
   void returnVerifiedParsedJwtToken_when_jwtAccessTokenIsValid() {
     var jwtTokenString = readFileContentAsString("/jwt/token/jwt-simple.txt");
 
-    when(jwtConfiguration.getSecretKey()).thenReturn(new SecretKeySpec("test-jwt-secret-for-hs256-algo!!".getBytes(), SignatureAlgorithm.HS256
-        .getJcaName()));
+    when(jwtConfiguration.getSecretKey()).thenReturn(new SecretKeySpec(SECRET_KEY, Jwts.SIG.HS256.getId()));
 
     var jwtAccessToken = createRandomJwtAccessToken(jwtTokenString);
 

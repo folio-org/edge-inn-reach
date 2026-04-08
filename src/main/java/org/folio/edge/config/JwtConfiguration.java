@@ -5,7 +5,8 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.MacAlgorithm;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -21,7 +22,7 @@ public class JwtConfiguration {
 
   public static final int DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC = 599;
 
-  public static final SignatureAlgorithm DEFAULT_SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
+  public static final MacAlgorithm DEFAULT_SIGNATURE_ALGORITHM = Jwts.SIG.HS256;
 
   @Value("${folio.jwt.signature.algorithm}")
   private String jwtSignatureAlgorithm;
@@ -35,22 +36,21 @@ public class JwtConfiguration {
   @Value("${folio.jwt.claims.issuer}")
   private String issuer;
 
-  private SignatureAlgorithm signatureAlgorithm;
+  private MacAlgorithm signatureAlgorithm;
   private SecretKey secretKey;
-
 
   @PostConstruct
   public void initConfig() {
-    log.debug("Intialize JWTConfiguration");
+    log.debug("Initialize JWTConfiguration");
     this.signatureAlgorithm = defineSignatureAlgorithm();
-    this.secretKey = new SecretKeySpec(jwtSignatureSecret.getBytes(), signatureAlgorithm.getJcaName());
-    log.info("Initailization of JWTConfiguration completed.");
+    this.secretKey = new SecretKeySpec(jwtSignatureSecret.getBytes(), signatureAlgorithm.getId());
+    log.info("Initialization of JWTConfiguration completed.");
   }
 
-  private SignatureAlgorithm defineSignatureAlgorithm() {
+  private MacAlgorithm defineSignatureAlgorithm() {
     log.debug("Determine the SignatureAlgorithm");
     if (isJwtSignatureAlgorithmInitialized()) {
-      return SignatureAlgorithm.forName(jwtSignatureAlgorithm);
+      return (MacAlgorithm) Jwts.SIG.get().forKey(jwtSignatureAlgorithm);
     }
     return DEFAULT_SIGNATURE_ALGORITHM;
   }
