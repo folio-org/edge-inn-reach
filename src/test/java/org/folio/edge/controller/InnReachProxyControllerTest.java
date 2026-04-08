@@ -73,8 +73,9 @@ class InnReachProxyControllerTest extends BaseControllerTest {
   @BeforeEach
   void setUp() {
     var jwt = Jwts.parser()
-      .setSigningKey(TEST_JWT_SECRET_KEY)
-      .parseClaimsJws(JWT_TOKEN_STRING);
+      .verifyWith(TEST_JWT_SECRET_KEY)
+      .build()
+      .parseSignedClaims(JWT_TOKEN_STRING);
 
     when(accessTokenService.verifyAccessToken(any())).thenReturn(jwt);
     when(securityManagerService.getParamsWithToken(any())).thenReturn(

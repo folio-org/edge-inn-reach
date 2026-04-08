@@ -92,8 +92,9 @@ class JwtAuthenticationConverterTest {
     var jwtTokenString = readFileContentAsString("/jwt/token/jwt-simple.txt");
 
     var jwt = Jwts.parser()
-      .setSigningKey(TEST_JWT_SECRET_KEY)
-      .parseClaimsJws(jwtTokenString);
+      .verifyWith(TEST_JWT_SECRET_KEY)
+      .build()
+      .parseSignedClaims(jwtTokenString);
 
     when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(String.format("%s %s",
         AUTHENTICATION_SCHEME_BEARER, jwtTokenString));
@@ -111,8 +112,9 @@ class JwtAuthenticationConverterTest {
     var jwtTokenString = readFileContentAsString("/jwt/token/jwt-with-authorities.txt");
 
     var jwt = Jwts.parser()
-      .setSigningKey(TEST_JWT_SECRET_KEY)
-      .parseClaimsJws(jwtTokenString);
+      .verifyWith(TEST_JWT_SECRET_KEY)
+      .build()
+      .parseSignedClaims(jwtTokenString);
 
     when(httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(String.format("%s %s",
         AUTHENTICATION_SCHEME_BEARER, jwtTokenString));

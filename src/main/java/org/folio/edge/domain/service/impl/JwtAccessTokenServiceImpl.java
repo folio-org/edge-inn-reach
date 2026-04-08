@@ -60,9 +60,10 @@ public class JwtAccessTokenServiceImpl implements AccessTokenService<JwtAccessTo
     try {
       log.debug("Verify access token");
       return Jwts.parser()
-        .setSigningKey(jwtConfiguration.getSecretKey())
+        .verifyWith(jwtConfiguration.getSecretKey())
         .requireIssuer(jwtConfiguration.getIssuer())
-        .parseClaimsJws(accessToken.getToken());
+        .build()
+        .parseSignedClaims(accessToken.getToken());
     } catch (JwtException e) {
       log.warn("Bad credentials");
       throw new BadCredentialsException(e.getMessage());
