@@ -15,14 +15,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.folio.edge.api.utils.Constants.X_OKAPI_TOKEN;
-import static org.folio.edge.config.JwtConfiguration.DEFAULT_SIGNATURE_ALGORITHM;
 import static org.folio.edge.external.InnReachHttpHeaders.X_D2IR_AUTHORIZATION;
 import static org.folio.edge.fixture.InnReachFixture.createInnReachHttpHeaders;
 import static org.folio.edge.util.TestUtil.TEST_TOKEN;
 import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
-import javax.crypto.spec.SecretKeySpec;
-
+import javax.crypto.SecretKey;
+import io.jsonwebtoken.security.Keys;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import io.jsonwebtoken.Claims;
@@ -52,10 +51,9 @@ class InnReachProxyControllerTest extends BaseControllerTest {
   private static final UrlPattern LOGIN_URL_PATTERN = urlEqualTo("/authn/login");
   private static final UrlPattern PATRON_VERIFY_URL_PATTERN = urlEqualTo("/inn-reach/d2ir/circ/verifypatron");
 
-  private static final String TEST_JWT_SIGNATURE_SECRET = "secret";
-  private static final SecretKeySpec TEST_JWT_SECRET_KEY = new SecretKeySpec(
-    TEST_JWT_SIGNATURE_SECRET.getBytes(),
-    DEFAULT_SIGNATURE_ALGORITHM.getJcaName()
+  private static final String TEST_JWT_SIGNATURE_SECRET = "test-jwt-secret-for-hs256-algo!!";
+  private static final SecretKey TEST_JWT_SECRET_KEY = Keys.hmacShaKeyFor(
+    TEST_JWT_SIGNATURE_SECRET.getBytes()
   );
 
   private static final String JWT_TOKEN_STRING = readFileContentAsString("/jwt/token/jwt-with-authorities.txt");
@@ -73,8 +71,9 @@ class InnReachProxyControllerTest extends BaseControllerTest {
   @BeforeEach
   void setUp() {
     var jwt = Jwts.parser()
-      .setSigningKey(TEST_JWT_SECRET_KEY)
-      .parseClaimsJws(JWT_TOKEN_STRING);
+      .verifyWith(TEST_JWT_SECRET_KEY)
+      .build()
+      .parseSignedClaims(JWT_TOKEN_STRING);
 
     when(accessTokenService.verifyAccessToken(any())).thenReturn(jwt);
     when(securityManagerService.getParamsWithToken(any())).thenReturn(

@@ -40,11 +40,11 @@ public class JwtAccessTokenServiceImpl implements AccessTokenService<JwtAccessTo
   private String buildJwtAccessToken(UUID localServerKey) {
     log.debug("Build the JWT Access Token for the local server key.");
     return Jwts.builder()
-      .setIssuer(jwtConfiguration.getIssuer())
-      .setSubject(localServerKey.toString())
+      .issuer(jwtConfiguration.getIssuer())
+      .subject(localServerKey.toString())
       .claim(EDGE_API_KEY, generateEdgeApiKey(localServerKey))
-      .setExpiration(jwtConfiguration.calculateExpirationTime())
-      .signWith(jwtConfiguration.getSignatureAlgorithm(), jwtConfiguration.getSecretKey())
+      .expiration(jwtConfiguration.calculateExpirationTime())
+      .signWith(jwtConfiguration.getSecretKey(), jwtConfiguration.getSignatureAlgorithm())
       .compact();
   }
 
@@ -60,9 +60,10 @@ public class JwtAccessTokenServiceImpl implements AccessTokenService<JwtAccessTo
     try {
       log.debug("Verify access token");
       return Jwts.parser()
-        .setSigningKey(jwtConfiguration.getSecretKey())
+        .verifyWith(jwtConfiguration.getSecretKey())
         .requireIssuer(jwtConfiguration.getIssuer())
-        .parseClaimsJws(accessToken.getToken());
+        .build()
+        .parseSignedClaims(accessToken.getToken());
     } catch (JwtException e) {
       log.warn("Bad credentials");
       throw new BadCredentialsException(e.getMessage());
