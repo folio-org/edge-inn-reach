@@ -39,7 +39,7 @@ class JwtAccessTokenServiceImplTest {
     when(jwtConfiguration.getIssuer()).thenReturn("folio");
     when(jwtConfiguration.getExpirationTimeSec()).thenReturn(JwtConfiguration.DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC);
     when(jwtConfiguration.getSignatureAlgorithm()).thenReturn(SignatureAlgorithm.HS256);
-    when(jwtConfiguration.getSecretKey()).thenReturn(new SecretKeySpec("secret".getBytes(), SignatureAlgorithm.HS256
+    when(jwtConfiguration.getSecretKey()).thenReturn(new SecretKeySpec("test-jwt-secret-for-hs256-algo!!".getBytes(), SignatureAlgorithm.HS256
         .getJcaName()));
   }
 
@@ -57,7 +57,7 @@ class JwtAccessTokenServiceImplTest {
   void throwException_when_jwtAccessTokenIsInvalid() {
     var jwtTokenString = readFileContentAsString("/jwt/token/jwt-simple.txt");
 
-    when(jwtConfiguration.getSecretKey()).thenReturn(new SecretKeySpec("wrongSecret".getBytes(),
+    when(jwtConfiguration.getSecretKey()).thenReturn(new SecretKeySpec("wrong-jwt-secret-for-hs256-test!".getBytes(),
         SignatureAlgorithm.HS256.getJcaName()));
 
     var jwtAccessToken = createRandomJwtAccessToken(jwtTokenString);
@@ -69,7 +69,7 @@ class JwtAccessTokenServiceImplTest {
   void returnVerifiedParsedJwtToken_when_jwtAccessTokenIsValid() {
     var jwtTokenString = readFileContentAsString("/jwt/token/jwt-simple.txt");
 
-    when(jwtConfiguration.getSecretKey()).thenReturn(new SecretKeySpec("secret".getBytes(), SignatureAlgorithm.HS256
+    when(jwtConfiguration.getSecretKey()).thenReturn(new SecretKeySpec("test-jwt-secret-for-hs256-algo!!".getBytes(), SignatureAlgorithm.HS256
         .getJcaName()));
 
     var jwtAccessToken = createRandomJwtAccessToken(jwtTokenString);

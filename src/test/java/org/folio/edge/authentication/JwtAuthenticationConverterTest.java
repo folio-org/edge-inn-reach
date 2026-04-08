@@ -31,7 +31,7 @@ import org.folio.edge.domain.service.AccessTokenService;
 class JwtAuthenticationConverterTest {
 
   private static final String AUTHENTICATION_SCHEME_BEARER = "Bearer";
-  private static final String TEST_JWT_SIGNATURE_SECRET = "secret";
+  private static final String TEST_JWT_SIGNATURE_SECRET = "test-jwt-secret-for-hs256-algo!!";
   private static final String TEST_PRINCIPAL = "1234567890";
 
   private static final SecretKeySpec TEST_JWT_SECRET_KEY = new SecretKeySpec(

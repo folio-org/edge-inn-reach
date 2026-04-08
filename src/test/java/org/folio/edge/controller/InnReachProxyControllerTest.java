@@ -52,7 +52,7 @@ class InnReachProxyControllerTest extends BaseControllerTest {
   private static final UrlPattern LOGIN_URL_PATTERN = urlEqualTo("/authn/login");
   private static final UrlPattern PATRON_VERIFY_URL_PATTERN = urlEqualTo("/inn-reach/d2ir/circ/verifypatron");
 
-  private static final String TEST_JWT_SIGNATURE_SECRET = "secret";
+  private static final String TEST_JWT_SIGNATURE_SECRET = "test-jwt-secret-for-hs256-algo!!";
   private static final SecretKeySpec TEST_JWT_SECRET_KEY = new SecretKeySpec(
     TEST_JWT_SIGNATURE_SECRET.getBytes(),
     DEFAULT_SIGNATURE_ALGORITHM.getJcaName()
