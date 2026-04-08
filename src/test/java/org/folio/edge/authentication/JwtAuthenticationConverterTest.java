@@ -6,42 +6,34 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import static org.folio.edge.config.JwtConfiguration.DEFAULT_SIGNATURE_ALGORITHM;
 import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.List;
-import javax.crypto.spec.SecretKeySpec;
-
+import javax.crypto.SecretKey;
+import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import org.folio.edge.domain.dto.JwtAccessToken;
 import org.folio.edge.domain.service.AccessTokenService;
 
+@ExtendWith(MockitoExtension.class)
 class JwtAuthenticationConverterTest {
 
   private static final String AUTHENTICATION_SCHEME_BEARER = "Bearer";
   private static final String TEST_JWT_SIGNATURE_SECRET = "test-jwt-secret-for-hs256-algo!!";
   private static final String TEST_PRINCIPAL = "1234567890";
 
-  private static final SecretKeySpec TEST_JWT_SECRET_KEY = new SecretKeySpec(
-    TEST_JWT_SIGNATURE_SECRET.getBytes(),
-    DEFAULT_SIGNATURE_ALGORITHM.getJcaName()
-  );
-
-  private static final List<SimpleGrantedAuthority> TEST_AUTHORITIES = List.of(
-    new SimpleGrantedAuthority("authority_a"),
-    new SimpleGrantedAuthority("authority_b")
+  private static final SecretKey TEST_JWT_SECRET_KEY = Keys.hmacShaKeyFor(
+    TEST_JWT_SIGNATURE_SECRET.getBytes()
   );
 
   @Mock
@@ -52,11 +44,6 @@ class JwtAuthenticationConverterTest {
 
   @InjectMocks
   private JwtAuthenticationConverter jwtAuthenticationConverter;
-
-  @BeforeEach
-  public void setupBeforeEach() {
-    MockitoAnnotations.initMocks(this);
-  }
 
   @Test
   void throwException_when_thereIsNoAuthorizationHeader() {

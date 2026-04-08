@@ -43,7 +43,7 @@ public class JwtConfiguration {
   public void initConfig() {
     log.debug("Initialize JWTConfiguration");
     this.signatureAlgorithm = defineSignatureAlgorithm();
-    this.secretKey = new SecretKeySpec(jwtSignatureSecret.getBytes(), signatureAlgorithm.getId());
+    this.secretKey = new SecretKeySpec(jwtSignatureSecret.getBytes(), resolveJcaName(signatureAlgorithm));
     log.info("Initialization of JWTConfiguration completed.");
   }
 
@@ -57,6 +57,10 @@ public class JwtConfiguration {
 
   private boolean isJwtSignatureAlgorithmInitialized() {
     return StringUtils.isNotBlank(jwtSignatureAlgorithm);
+  }
+
+  private static String resolveJcaName(MacAlgorithm algorithm) {
+    return algorithm.key().build().getAlgorithm();
   }
 
   public Date calculateExpirationTime() {
