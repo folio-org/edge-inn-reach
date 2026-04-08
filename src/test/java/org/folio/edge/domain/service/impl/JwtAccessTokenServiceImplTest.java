@@ -11,6 +11,7 @@ import static org.folio.edge.util.TestUtil.readFileContentAsString;
 
 import java.util.UUID;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -44,7 +45,7 @@ class JwtAccessTokenServiceImplTest {
   @Disabled
   void returnJwtAccessToken() {
     when(jwtConfiguration.getExpirationTimeSec()).thenReturn(JwtConfiguration.DEFAULT_TOKEN_EXPIRATION_TIME_IN_SEC);
-    when(jwtConfiguration.getSignatureAlgorithm()).thenReturn(Jwts.SIG.HS256);
+    when(jwtConfiguration.getSignatureAlgorithm()).thenReturn(SignatureAlgorithm.HS256);
 
     var jwtAccessToken = accessTokenService.generateAccessToken(UUID.randomUUID());
 
