@@ -1,7 +1,23 @@
-## v3.6.0 - ((in progress))
-* [EDGINREACH-91](https://folio-org.atlassian.net/browse/EDGINREACH-91) - Spring Boot 3.4.10 fixing Tomcat and Netty CVEs
-* [EDGINREACH-96](https://folio-org.atlassian.net/browse/EDGINREACH-96) - Use GitHub Workflows for Maven
-* [EDGINREACH-93](https://folio-org.atlassian.net/browse/EDGINREACH-93) - Upgrade module to Spring Boot v4.0.2
+## v4.0.0 2026-04-17
+
+### Breaking changes
+* Upgrade module to Spring Boot v4.0.2 ([EDGINREACH-93](https://folio-org.atlassian.net/browse/EDGINREACH-93))
+
+### Features
+* Limit PII logs and set BASIC level ([EDGINREACH-81](https://folio-org.atlassian.net/browse/EDGINREACH-81))
+
+### Bug fixes
+* Spring Boot 3.4.10 fixing Tomcat and Netty CVEs ([EDGINREACH-91](https://folio-org.atlassian.net/browse/EDGINREACH-91))
+* Exclude bouncy castle libraries ([EDGINREACH-85](https://folio-org.atlassian.net/browse/EDGINREACH-85))
+
+### Tech Dept
+* Use GitHub Workflows for Maven ([EDGINREACH-96](https://folio-org.atlassian.net/browse/EDGINREACH-96))
+* Add config file for dependabot and pull request template ([EDGINREACH-86](https://folio-org.atlassian.net/browse/EDGINREACH-86))
+
+### Dependencies
+* Bump `spring-boot` from `3.4.3` to `4.0.5`
+* Bump `folio-spring-base` from `9.0.0` to `10.0.0`
+* Bump `edge-common-spring` from `3.0.0` to `4.0.0`
 
 ## v3.4.0 2025-03-18
 * updated tag version for app-inn-reach-release
