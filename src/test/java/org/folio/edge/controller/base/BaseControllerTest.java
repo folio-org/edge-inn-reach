@@ -33,14 +33,18 @@ public class BaseControllerTest {
 
   @BeforeAll
   static void beforeAll() {
-    wireMock.start();
-    log.info("Wire mock started");
+    if (!wireMock.isRunning()) {
+      wireMock.start();
+    }
+
+    log.info("Wire mock started on port {}", wireMock.port());
   }
 
   @AfterAll
   static void afterAll() {
-    wireMock.stop();
-    log.info("Wire mock stopped");
+    // WireMock is intentionally kept running between test classes that share the same
+    // Spring context (same mock beans). Stopping it here would invalidate the cached
+    // context for subsequent classes. Stubs are reset per test in tearDown().
   }
 
   @AfterEach
