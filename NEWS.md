@@ -1,7 +1,7 @@
 ## v4.1.0-SNAPSHOT In progress
 
 ### Bug fixes
-
+* Restore Accept/Content-Type header forwarding to mod-inn-reach D2IR endpoints ([EDGINREACH-98](https://folio-org.atlassian.net/browse/EDGINREACH-98))
 
 
 ## v4.0.0 2026-04-17
