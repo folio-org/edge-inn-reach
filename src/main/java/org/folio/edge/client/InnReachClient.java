@@ -13,16 +13,16 @@ import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 import org.springframework.web.service.annotation.PutExchange;
 
-@HttpExchange(contentType = MediaType.APPLICATION_JSON_VALUE)
+@HttpExchange
 public interface InnReachClient {
 
   @GetExchange
   ResponseEntity<?> getCall(URI modInnReachURI, @RequestHeader Map<String, String> headers);
 
-  @PostExchange
+  @PostExchange(contentType = MediaType.APPLICATION_JSON_VALUE, accept = MediaType.APPLICATION_JSON_VALUE)
   ResponseEntity<?> postCall(URI modInnReachURI, @RequestBody String requestBody, @RequestHeader Map<String, String> headers);
 
-  @PutExchange
+  @PutExchange(contentType = MediaType.APPLICATION_JSON_VALUE, accept = MediaType.APPLICATION_JSON_VALUE)
   ResponseEntity<?> putCall(URI modInnReachURI, @RequestBody String requestBody, @RequestHeader Map<String, String> headers);
 
   @DeleteExchange
