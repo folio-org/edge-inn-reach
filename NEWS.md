@@ -1,8 +1,9 @@
-## v4.1.0-SNAPSHOT In progress
+## v4.0.1 2026-05-21
 
 ### Bug fixes
 * Restore Accept/Content-Type header forwarding to mod-inn-reach D2IR endpoints ([EDGINREACH-98](https://folio-org.atlassian.net/browse/EDGINREACH-98))
 
+---
 
 ## v4.0.0 2026-04-17
 
@@ -24,6 +25,8 @@
 * Bump `spring-boot` from `3.4.3` to `4.0.5`
 * Bump `folio-spring-base` from `9.0.0` to `10.0.0`
 * Bump `edge-common-spring` from `3.0.0` to `4.0.0`
+
+---
 
 ## v3.4.0 2025-03-18
 * updated tag version for app-inn-reach-release
