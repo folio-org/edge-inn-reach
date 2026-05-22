@@ -2,6 +2,7 @@ package org.folio.edge.controller;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -50,6 +51,7 @@ class InnReachProxyControllerTest extends BaseControllerTest {
   private static final String BASE_URI = "/innreach/v2";
   private static final UrlPattern LOGIN_URL_PATTERN = urlEqualTo("/authn/login");
   private static final UrlPattern PATRON_VERIFY_URL_PATTERN = urlEqualTo("/inn-reach/d2ir/circ/verifypatron");
+  private static final UrlPattern PATRON_HOLD_URL_PATTERN = urlEqualTo("/inn-reach/d2ir/circ/patronhold/tracking01/d2irm");
 
   private static final String TEST_JWT_SIGNATURE_SECRET = "test-jwt-secret-for-hs256-algo!!";
   private static final SecretKey TEST_JWT_SECRET_KEY = Keys.hmacShaKeyFor(
@@ -140,6 +142,37 @@ class InnReachProxyControllerTest extends BaseControllerTest {
       .andExpect(status().isBadRequest())
       .andExpect(jsonPath("$.status").value("failed"))
       .andExpect(jsonPath("$.reason").value("Plain text error msg"));
+  }
+
+  @Test
+  void shouldForwardRequestBodyAsRawJson() throws Exception {
+    var httpHeaders = createInnReachHttpHeaders();
+    httpHeaders.set(AUTHORIZATION, AUTH_TOKEN_VALUE);
+
+    var requestBody = """
+        {
+          "pickupLocation": "API:API:APIDeliveryStop",
+          "centralItemType": 205,
+          "title": "Test1 inn-reach virtual031",
+          "author": "Virtual Author1",
+          "patronId": "tmivzhx3cvgbvb5taiat3elwgm"
+        }
+        """;
+
+    wireMock.stubFor(WireMock.post(PATRON_HOLD_URL_PATTERN)
+      .willReturn(aResponse().withBody("{}")
+        .withStatus(OK.value())
+        .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)));
+
+    mockMvc.perform(post(BASE_URI + "/circ/patronhold/tracking01/d2irm")
+        .headers(httpHeaders)
+        .contentType(APPLICATION_JSON_VALUE)
+        .content(requestBody))
+      .andExpect(status().isOk());
+
+    // Verify the body was forwarded as a raw JSON object, not double-encoded as a JSON string
+    wireMock.verify(postRequestedFor(PATRON_HOLD_URL_PATTERN)
+      .withRequestBody(equalToJson(requestBody)));
   }
 
 }
