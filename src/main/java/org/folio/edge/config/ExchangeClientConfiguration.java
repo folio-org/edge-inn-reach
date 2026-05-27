@@ -14,7 +14,12 @@ public class ExchangeClientConfiguration {
   @Bean("edgeRestClientCustomizer")
   public UnaryOperator<RestClient.Builder> edgeRestClientCustomizer() {
     return restClientBuilder ->
-      restClientBuilder.defaultStatusHandler(
+      restClientBuilder
+        .configureMessageConverters(builder -> builder
+          .registerDefaults()
+          .configureMessageConvertersList(converters -> converters.addFirst(new RawJsonStringHttpMessageConverter()))
+        )
+        .defaultStatusHandler(
           status -> status.value() == HttpStatus.UNAUTHORIZED.value(), (request, response) -> {
             throw new BadCredentialsException("Token authentication failed");
           });
