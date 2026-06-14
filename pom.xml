@@ -27,7 +27,7 @@
     <folio-spring-base.version>10.0.0</folio-spring-base.version>
     <edge-common-spring.version>4.0.0</edge-common-spring.version>
 
-    <openapi-generator.version>7.22.0</openapi-generator.version>
+    <openapi-generator.version>7.23.0</openapi-generator.version>
     <openapi.input.file>${project.basedir}/src/main/resources/swagger.api/edge-inn-reach.yaml</openapi.input.file>
     <mapstruct.version>1.6.3</mapstruct.version>
     <io.jsonwebtoken.version>0.13.0</io.jsonwebtoken.version>
