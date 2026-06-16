@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>4.0.6</version>
+    <version>4.1.0</version>
     <relativePath />
   </parent>
   <groupId>org.folio</groupId>
@@ -31,7 +31,7 @@
     <openapi.input.file>${project.basedir}/src/main/resources/swagger.api/edge-inn-reach.yaml</openapi.input.file>
     <mapstruct.version>1.6.3</mapstruct.version>
     <io.jsonwebtoken.version>0.13.0</io.jsonwebtoken.version>
-    <micrometer.version>1.16.5</micrometer.version>
+    <micrometer.version>1.17.0</micrometer.version>
 
     <!--Test properties-->
     <wiremock-standalone.version>3.13.2</wiremock-standalone.version>
