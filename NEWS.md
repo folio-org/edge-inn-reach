@@ -1,3 +1,10 @@
+## v4.0.3 2026-07-28
+
+### Dependencies
+* Bump `edge-common-spring` from `4.0.0` to `4.0.1` ([EDGINREACH-102](https://folio-org.atlassian.net/browse/EDGINREACH-102))
+
+---
+
 ## v4.0.2 2026-05-27
 
 ### Bug fixes
