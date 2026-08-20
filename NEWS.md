@@ -1,3 +1,10 @@
+## v4.0.4 2026-08-20
+
+### Tech Dept
+* Add missing interface dependency ([EDGINREACH-106](https://folio-org.atlassian.net/browse/EDGINREACH-106))
+
+---
+
 ## v4.0.3 2026-07-28
 
 ### Dependencies
