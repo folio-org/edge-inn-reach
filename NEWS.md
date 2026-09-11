@@ -1,3 +1,8 @@
+## v4.0.5 2026-09-11
+
+### Tech Dept
+* Fix interface dependency version ([EDGINREACH-110](https://folio-org.atlassian.net/browse/EDGINREACH-110))
+
 ## v4.0.4 2026-08-20
 
 ### Tech Dept
