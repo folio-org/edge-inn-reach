@@ -1,3 +1,8 @@
+## v4.0.6 2026-11-17
+
+### Dependencies
+* Upgrade `folio-spring-support` to 10.0.1 ([EDGINREACH-113](https://folio-org.atlassian.net/browse/EDGINREACH-113))
+
 ## v4.0.5 2026-09-11
 
 ### Tech Dept

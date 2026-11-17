@@ -4,12 +4,12 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>4.0.5</version>
+    <version>4.1.1</version>
     <relativePath />
   </parent>
   <groupId>org.folio</groupId>
   <artifactId>edge-inn-reach</artifactId>
-  <version>4.0.6-SNAPSHOT</version>
+  <version>4.0.7-SNAPSHOT</version>
   <name>edge-inn-reach</name>
   <description>INN-REACH system Edge API module</description>
 
@@ -24,10 +24,10 @@
     <java.version>21</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <folio-spring-base.version>10.0.0</folio-spring-base.version>
-    <edge-common-spring.version>4.0.1</edge-common-spring.version>
+    <folio-spring-base.version>10.0.1</folio-spring-base.version>
+    <edge-common-spring.version>4.0.4</edge-common-spring.version>
 
-    <openapi-generator.version>7.21.0</openapi-generator.version>
+    <openapi-generator.version>7.25.0</openapi-generator.version>
     <openapi.input.file>${project.basedir}/src/main/resources/swagger.api/edge-inn-reach.yaml</openapi.input.file>
     <mapstruct.version>1.6.3</mapstruct.version>
     <io.jsonwebtoken.version>0.13.0</io.jsonwebtoken.version>
@@ -287,7 +287,8 @@
                 <java8>true</java8>
                 <dateLibrary>java</dateLibrary>
                 <interfaceOnly>true</interfaceOnly>
-                <useSpringBoot3>true</useSpringBoot3>
+                <useJackson3>true</useJackson3>
+                <useSpringBoot4>true</useSpringBoot4>
                 <useTags>true</useTags>
               </configOptions>
             </configuration>
